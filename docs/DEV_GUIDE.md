@@ -504,9 +504,9 @@ export function primeFactors(n: number): Array<[prime: number, power: number]>; 
 
 Start with `src/lib/fraction.ts`: `fraction(num, den)` that rejects a 0 denominator and keeps the sign on top, then `simplify`, `equals`, `compare` and `add`. Then copy the Einmaleins page's state machine (setup, play, result) for the game. A question generator should take a `Random`, exactly like `makeRound`.
 
-### Level 3: #5 quartiles, then #7 primes
+### Level 3: #5, quartiles
 
-Quartiles reuses the Statistics registry, and adds an SVG box plot alongside the existing number line in `src/pages/stats.ts`. #7 is described in Level 1 above; do it before #13 if you want GCD ready for simplifying fractions.
+Quartiles reuses the Statistics registry, and adds an SVG box plot alongside the existing number line in `src/pages/stats.ts`. (Do #7 from Level 1 before #13 if you want GCD ready for simplifying fractions.)
 
 ### Level 4: #9 matrices, then #10 simultaneous equations
 
