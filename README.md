@@ -82,8 +82,13 @@ npm run test:report  # run tests and write public/test-results.json for the Test
 npm run dev          # local dev server
 npm run build        # type-check + production build into dist/
 npm run icons        # redraw the favicon and Home Screen icons
+npm run e2e          # browser test of offline support (run npm run build first)
 ```
 
 ## Using it on an iPhone
 
-Open the live site in Safari, then Share → Add to Home Screen.
+Open the live site in Safari, then Share → Add to Home Screen. After the first visit everything works offline: the homepage footer shows "✓ works offline" once the whole site is stored.
+
+## Offline support
+
+`build/sw-plugin.ts` adds `dist/sw.js` after each build, listing every built file and a version hash of their contents; `build/sw-template.js` is the service worker itself. Pages are fetched network-first (so updates arrive when online) with the stored copy as fallback; scripts and styles are served from the store. Each deploy gets a new cache and the old one is deleted. `e2e/offline.spec.ts` checks it in a real browser by switching the server off.

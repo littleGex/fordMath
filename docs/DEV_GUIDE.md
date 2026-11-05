@@ -339,6 +339,10 @@ A plain object like `{ num: 1, den: 0 }` doesn't have the hidden `[valid]` prope
 
 The question generator test is worth reading too. It generates 300 questions per level and checks that *exactly one* choice is right each time. That test found a real bug, where the compare level could show the same fraction on both sides.
 
+### Offline (#8): a bug the first test missed
+
+In the first version of `e2e/offline.spec.ts`, the loop over all pages only checked that each heading appeared offline, and it passed while every script was failing to load; only the final "start a game" check caught it. The headings are plain HTML; the scripts weren't being found in the store, because the server adds `Vary: Origin` and module scripts are requested with an `Origin` header. The fix was one option (`ignoreVary: true` in `build/sw-template.js`), but the lesson is in the test: check for something only the *script* draws (a tile, a plot line), not something that's there anyway.
+
 ## 7. Warm-up: add Range to Statistics
 
 **Goal:** a new "Range" tile on the Statistics page, showing largest − smallest, with its working. It's small, it touches every layer, and it's the first piece of #5.
@@ -545,6 +549,7 @@ npx tsc --noEmit                         # type-check only
 npm run build                            # type-check + production build
 npm run test:report                      # write the Tests page data locally
 npm run icons                            # redraw favicon and Home Screen icons
+npm run build && npm run e2e             # browser test: every page works offline
 
 git switch -c issue-N-name               # start work on an issue
 git push -u origin issue-N-name          # then open a PR containing "Closes #N"

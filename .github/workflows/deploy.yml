@@ -29,6 +29,9 @@ jobs:
       # Runs every test and saves the results for the Tests page; fails the job (and blocks publishing) if any test fails
       - run: npm run test:report
       - run: npm run build
+      # End-to-end: a real (headless) browser checks every page still works with the server switched off
+      - run: npx playwright install --with-deps chromium
+      - run: npm run e2e
 
       - name: Publish dist/ to the gh-pages branch
         if: github.ref == 'refs/heads/main'

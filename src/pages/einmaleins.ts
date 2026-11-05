@@ -1,3 +1,4 @@
+import "./sw-register";
 import "../styles/zone.css";
 import "../styles/einmaleins.css";
 import {

@@ -1,3 +1,4 @@
+import "./sw-register";
 import "../styles/zone.css";
 import "../styles/quadratic.css";
 import { evaluateQuadratic, solveQuadratic, type QuadraticSolution } from "../lib";

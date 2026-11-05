@@ -1,3 +1,4 @@
+import "./sw-register";
 import "../styles/zone.css";
 import "../styles/tests.css";
 import { loadTestReport, type AssertionResult } from "./report";

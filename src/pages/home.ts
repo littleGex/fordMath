@@ -1,11 +1,16 @@
 import "../styles/zone.css";
 import { version } from "../../package.json";
 import { loadTestReport } from "./report";
+import { offlineReady } from "./sw-register";
 
-// ---- version footer ----
-document.getElementById("version")!.innerHTML =
+// ---- version footer, plus a note once everything is stored for offline use ----
+const footer = document.getElementById("version")!;
+footer.innerHTML =
   `v${version} · <a href="https://github.com/littleGex/fordMath">GitHub</a> · ` +
   `<a href="https://github.com/littleGex/fordMath/issues">Ideas and plans</a>`;
+offlineReady.then((ready) => {
+  if (ready) footer.append(" · ", Object.assign(document.createElement("span"), { textContent: "✓ works offline", className: "offline" }));
+});
 
 // ---- school level filter (remembered on this device) ----
 const LEVELS = ["all", "grundschule", "sek1", "oberstufe"] as const;

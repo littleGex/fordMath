@@ -1,3 +1,4 @@
+import "./sw-register";
 import "../styles/zone.css";
 import "../styles/function.css";
 import { ExpressionError, FUNCTIONS, evaluate, formatExpr, parse, type Expr } from "../lib/expression";

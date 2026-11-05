@@ -1,3 +1,4 @@
+import "./sw-register";
 import "../styles/zone.css";
 import "../styles/brueche.css";
 import { LEVELS, makeFractionRound, type Choice, type Fraction, type FractionLevel, type FractionQuestion } from "../lib/fraction";

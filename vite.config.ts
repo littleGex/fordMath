@@ -1,9 +1,11 @@
 import { resolve } from "node:path";
 import { defineConfig } from "vitest/config";
+import { serviceWorker } from "./build/sw-plugin";
 
 export default defineConfig({
   // GitHub Pages serves the site from /fordMath/
   base: "/fordMath/",
+  plugins: [serviceWorker(resolve(__dirname, "build/sw-template.js"))],
   define: {
     // commit shown on the Tests page; GitHub Actions sets GITHUB_SHA
     __BUILD_SHA__: JSON.stringify(process.env.GITHUB_SHA ?? "local"),
@@ -27,6 +29,6 @@ export default defineConfig({
   test: {
     globals: true,
     environment: "node",
-    include: ["src/**/*.test.ts"],
+    include: ["src/**/*.test.ts", "build/**/*.test.ts"],
   },
 });
