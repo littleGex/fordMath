@@ -4,6 +4,8 @@ A growing toolkit of maths helpers in TypeScript. Each one has tests and a step-
 
 Live site: https://littlegex.github.io/fordMath/ (deployed by GitHub Actions on every push to `main`, only if every test passes).
 
+**Want to build features yourself and learn TypeScript?** Start with the [dev guide](docs/DEV_GUIDE.md).
+
 Planned helpers are tracked as [issues](https://github.com/littleGex/fordMath/issues) and shown as "Coming soon" tiles on the homepage.
 
 ## Helpers
