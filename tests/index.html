@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#141c2e">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="apple-mobile-web-app-title" content="fordMath">
+<title>Tests · fordMath</title>
+</head>
+<body>
+<main class="narrow">
+  <header>
+    <a class="back" href="../">← fordMath</a>
+    <h1>✅ Tests</h1>
+    <p class="subtitle">Every check the maths had to pass before this version went live</p>
+  </header>
+
+  <div class="summary" id="summary">
+    <div class="tile c-tests"><span class="big mono" id="n-pass">–</span><h3>passed</h3></div>
+    <div class="tile" id="fail-tile"><span class="big mono" id="n-fail">–</span><h3>failed</h3></div>
+    <div class="tile c-stats"><span class="big mono" id="n-files">–</span><h3>test files</h3></div>
+  </div>
+  <p class="note" id="when"></p>
+
+  <div class="panel" id="empty" hidden>
+    <p class="note">This build has no test report. The GitHub deploy creates one automatically; locally, run <code>npm run test:report</code> and reload.</p>
+  </div>
+
+  <div id="files" class="files"></div>
+
+  <p class="version"><a href="https://github.com/littleGex/fordMath/actions">Test runs on GitHub</a></p>
+</main>
+<script type="module" src="/src/pages/tests.ts"></script>
+</body>
+</html>

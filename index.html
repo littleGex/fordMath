@@ -1,39 +1,90 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-title" content="fordMath" />
-    <meta name="theme-color" content="#2e43c4" />
-    <title>fordMath</title>
-  </head>
-  <body>
-    <main class="wrap">
-      <header>
-        <span class="eyebrow">fordMath</span>
-        <h1>Number toolkit</h1>
-        <p class="lede">Type some numbers and every method below updates as you go.</p>
-      </header>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#141c2e">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="fordMath">
+<title>fordMath</title>
+</head>
+<body>
+<main>
+  <header>
+    <h1>🧮 fordMath</h1>
+    <p class="subtitle">Pick a maths helper</p>
+  </header>
 
-      <section class="input">
-        <label for="values">Numbers</label>
-        <textarea id="values" rows="2" inputmode="decimal" spellcheck="false">3, 1.5, 4, 1.5, 2, 4</textarea>
-        <p class="hint">Separate with commas, spaces or semicolons. Use a dot for decimals (2.5, not 2,5).</p>
-        <div class="chips">
-          <button type="button" data-example="3, 1.5, 4, 1.5, 2, 4">Two modes</button>
-          <button type="button" data-example="7, 2, 9, 4, 4">Odd count</button>
-          <button type="button" data-example="0.25, 1.75, 3.5, -2">No mode</button>
-          <button type="button" data-example="2, 3, 3, 4, 5, 40">Outlier</button>
-        </div>
-        <p class="error" id="error" hidden></p>
-      </section>
+  <a class="tile feature c-stats" href="stats/">
+    <span class="emoji" aria-hidden="true">📊</span>
+    <div>
+      <h3>Statistics</h3>
+      <p class="desc">Mean, median, mode and standard deviation, with the working shown</p>
+    </div>
+  </a>
 
-      <section>
-        <dl class="results" id="results"></dl>
-        <p class="meta" id="meta"></p>
-      </section>
-    </main>
-    <script type="module" src="/src/main.ts"></script>
-  </body>
+  <div class="chips" role="group" aria-label="Show helpers">
+    <button class="chip" type="button" data-filter="all" aria-pressed="true">Everything</button>
+    <button class="chip" type="button" data-filter="ready" aria-pressed="false">Ready to use</button>
+    <button class="chip" type="button" data-filter="planned" aria-pressed="false">Coming soon</button>
+  </div>
+
+  <div class="grid" id="helpers">
+    <a class="tile c-stats" href="stats/" data-state="ready">
+      <span class="badge">Ready</span>
+      <span class="emoji" aria-hidden="true">📊</span>
+      <h3>Statistics</h3>
+      <p class="desc">Averages and spread</p>
+    </a>
+    <a class="tile c-tests" href="tests/" data-state="ready">
+      <span class="badge" id="tests-badge">Tests</span>
+      <span class="emoji" aria-hidden="true">✅</span>
+      <h3>Tests</h3>
+      <p class="desc">Every check the maths passes</p>
+    </a>
+    <a class="tile c-quadratic planned" href="https://github.com/littleGex/fordMath/issues/2" data-state="planned">
+      <span class="badge">#2</span>
+      <span class="emoji" aria-hidden="true">🎢</span>
+      <h3>Quadratics</h3>
+      <p class="desc">Solve ax² + bx + c = 0</p>
+    </a>
+    <a class="tile c-integral planned" href="https://github.com/littleGex/fordMath/issues/3" data-state="planned">
+      <span class="badge">#3</span>
+      <span class="emoji" aria-hidden="true">⛰️</span>
+      <h3>Integration</h3>
+      <p class="desc">Area under a curve</p>
+    </a>
+    <a class="tile c-derivative planned" href="https://github.com/littleGex/fordMath/issues/4" data-state="planned">
+      <span class="badge">#4</span>
+      <span class="emoji" aria-hidden="true">⛷️</span>
+      <h3>Slopes</h3>
+      <p class="desc">Differentiation</p>
+    </a>
+    <a class="tile c-quartiles planned" href="https://github.com/littleGex/fordMath/issues/5" data-state="planned">
+      <span class="badge">#5</span>
+      <span class="emoji" aria-hidden="true">📦</span>
+      <h3>Quartiles</h3>
+      <p class="desc">Percentiles and box plots</p>
+    </a>
+    <a class="tile c-regression planned" href="https://github.com/littleGex/fordMath/issues/6" data-state="planned">
+      <span class="badge">#6</span>
+      <span class="emoji" aria-hidden="true">📈</span>
+      <h3>Best fit line</h3>
+      <p class="desc">Correlation and regression</p>
+    </a>
+    <a class="tile c-primes planned" href="https://github.com/littleGex/fordMath/issues/7" data-state="planned">
+      <span class="badge">#7</span>
+      <span class="emoji" aria-hidden="true">🔢</span>
+      <h3>Primes</h3>
+      <p class="desc">GCD, LCM and factors</p>
+    </a>
+  </div>
+
+  <p class="version" id="version"></p>
+</main>
+<script type="module" src="/src/pages/home.ts"></script>
+</body>
 </html>

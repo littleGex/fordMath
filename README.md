@@ -1,51 +1,71 @@
 # fordMath
 
-A small, growing toolkit of math methods in TypeScript, with tests and one shared web front end.
+A growing toolkit of maths helpers in TypeScript. Each one has tests and a step-by-step explanation of the working, and they share one Game Zone-style web front end.
 
-Live site: https://littlegex.github.io/fordMath/ (deployed by GitHub Actions on every push to `main`, only if the tests pass).
+Live site: https://littlegex.github.io/fordMath/ (deployed by GitHub Actions on every push to `main`, only if every test passes).
 
-## Methods
+Planned helpers are tracked as [issues](https://github.com/littleGex/fordMath/issues) and shown as "Coming soon" tiles on the homepage.
 
-| Method   | Function            | Notes                                                        |
-| -------- | ------------------- | ------------------------------------------------------------ |
-| Mean     | `mean(values)`      | Sum ÷ count                                                  |
-| Median   | `median(values)`    | Average of the middle pair for an even count                 |
-| Mode     | `mode(values)`      | Returns every tied value; `[]` when all values are unique    |
-| All three| `getStats(values)`  | Validates once, then runs each method                        |
+## Helpers
+
+| Helper              | Function                              | Notes                                                       |
+| ------------------- | ------------------------------------- | ----------------------------------------------------------- |
+| Mean                | `mean(values)`                        | Sum ÷ count                                                 |
+| Median              | `median(values)`                      | Average of the middle pair for an even count                |
+| Mode                | `mode(values)`                        | Returns every tied value; `[]` when all values are unique   |
+| Variance            | `variance(values, kind?)`             | `kind` is `"population"` (÷ n, default) or `"sample"` (÷ n − 1) |
+| Standard deviation  | `standardDeviation(values, kind?)`    | √variance; sample needs at least 2 values                   |
+| Everything at once  | `getStats(values)`                    | Validates once and computes the mean once                   |
 
 All functions take `readonly number[]` (ints and floats), never mutate the input, and throw on an empty array, `NaN` or `Infinity`.
+
+## Pages
+
+| Path      | What it is                                                             |
+| --------- | ---------------------------------------------------------------------- |
+| `/`       | Homepage: ready helpers, tests, and "Coming soon" tiles linking to issues |
+| `/stats/` | Live calculator, number line with mean ± σ, and the working for each result |
+| `/tests/` | Every test from the deployed build, read from `test-results.json`      |
 
 ## Project layout
 
 ```
+index.html  stats/index.html  tests/index.html   pages (Vite multi-page build)
+public/          favicon, Home Screen icons, manifest
 src/
-  lib/            pure math, no DOM; one module + one test file per method
-    validate.ts   shared input guard (assertValid) and sortNumeric
-    mean.ts  median.ts  mode.ts  stats.ts
-    index.ts      public API
-  registry.ts     list of methods shown in the front end
-  parse.ts        text input → number[]
-  main.ts         front end entry point
-index.html
+  lib/           pure maths, no DOM; one module + one test file per helper
+    validate.ts  shared input guard (assertValid) and sortNumeric
+    mean.ts  median.ts  mode.ts  deviation.ts  stats.ts
+    index.ts     public API
+  explain/       step-by-step working, using the user's numbers (+ tests)
+  registry.ts    which helpers the Statistics page shows
+  parse.ts       text input → number[]
+  pages/         entry script for each page
+  styles/        zone.css (shared Game Zone look) + per-page CSS
+tools/make-icons.mjs
 ```
 
-Each method module exports a validated public function (`mean`) and an internal unchecked one (`meanUnchecked`), so `getStats` can validate the input only once.
+Each helper module exports a validated public function (`mean`) and an internal unchecked one (`meanUnchecked`), so orchestrators like `getStats` validate only once.
 
-## Adding a method
+## Adding a helper
 
-1. Create `src/lib/<name>.ts` with a public function that calls `assertValid` once, plus an unchecked helper if orchestrators will reuse it.
-2. Add `src/lib/<name>.test.ts`.
+1. Create `src/lib/<name>.ts`: a public function that validates once, plus unchecked internals for reuse.
+2. Add `src/lib/<name>.test.ts` with normal, edge and invalid cases.
 3. Export it from `src/lib/index.ts`.
-4. Add an entry to `methods` in `src/registry.ts`. The front end picks it up automatically.
+4. Write an explanation in `src/explain/` (with a test) that walks through the working using the user's numbers.
+5. Add it to `src/registry.ts`, or give it its own page and add the page to `vite.config.ts`.
+6. Swap its "Coming soon" tile on the homepage for a live one, and close the issue.
 
 ## Scripts
 
 ```bash
 npm install
-npm test          # run Vitest once
+npm test             # run Vitest once
 npm run test:watch
-npm run dev       # local dev server
-npm run build     # type-check + production build into dist/
+npm run test:report  # run tests and write public/test-results.json for the Tests page
+npm run dev          # local dev server
+npm run build        # type-check + production build into dist/
+npm run icons        # redraw the favicon and Home Screen icons
 ```
 
 ## Using it on an iPhone

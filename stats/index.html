@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#141c2e">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="apple-mobile-web-app-title" content="fordMath">
+<title>Statistics · fordMath</title>
+</head>
+<body>
+<main class="narrow">
+  <header>
+    <a class="back" href="../">← fordMath</a>
+    <h1>📊 Statistics</h1>
+    <p class="subtitle">Type numbers and everything updates as you go</p>
+  </header>
+
+  <section class="panel input">
+    <label for="values">Numbers</label>
+    <textarea id="values" rows="2" inputmode="decimal" spellcheck="false">2, 4, 4, 4, 5, 5, 7, 9</textarea>
+    <p class="note">Separate with commas, spaces or semicolons. Use a dot for decimals (2.5, not 2,5).</p>
+    <p class="error" id="error" hidden></p>
+  </section>
+
+  <div class="chips" role="group" aria-label="Example numbers">
+    <button class="chip" type="button" data-example="2, 4, 4, 4, 5, 5, 7, 9">Textbook</button>
+    <button class="chip" type="button" data-example="3, 1.5, 4, 1.5, 2, 4">Two modes</button>
+    <button class="chip" type="button" data-example="7, 2, 9, 4, 4">Odd count</button>
+    <button class="chip" type="button" data-example="0.25, 1.75, 3.5, -2">No mode</button>
+    <button class="chip" type="button" data-example="2, 3, 3, 4, 5, 40">Outlier</button>
+  </div>
+
+  <div class="results" id="results"></div>
+  <p class="note" id="meta"></p>
+
+  <figure class="panel plot">
+    <svg id="plot" viewBox="0 0 600 200" role="img" aria-label="The numbers on a number line, with the mean, median and one standard deviation either side of the mean marked"></svg>
+    <figcaption class="legend">
+      <span><i class="k-mean"></i>mean</span>
+      <span><i class="k-median"></i>median</span>
+      <span><i class="k-band"></i>mean ± σ</span>
+      <span><i class="k-mode"></i>filled dots are the mode</span>
+    </figcaption>
+  </figure>
+
+  <h2 class="section">How it's worked out</h2>
+  <div id="explain" class="explain"></div>
+
+  <p class="version"><a href="../tests/">See the tests</a> · <a href="https://github.com/littleGex/fordMath/tree/main/src/lib">Source</a></p>
+</main>
+<script type="module" src="/src/pages/stats.ts"></script>
+</body>
+</html>
