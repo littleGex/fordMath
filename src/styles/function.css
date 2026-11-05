@@ -1,0 +1,62 @@
+.fn-panel { display: grid; gap: 10px; }
+.fx { display: flex; align-items: center; gap: 10px; font: 700 20px var(--f-mono); color: #ffd84d; }
+.fx span { flex: none; }
+.fx input {
+  flex: 1;
+  min-width: 0;
+  font: 600 19px var(--f-mono);
+  padding: 11px 12px;
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  background: var(--bg);
+  color: var(--ink);
+}
+.fx input:focus { border-color: #ffd84d; }
+.read { margin: 0; font: 500 15px var(--f-mono); color: var(--muted); overflow-wrap: anywhere; }
+.caret-box { display: grid; gap: 6px; }
+.caret {
+  margin: 0;
+  font: 600 16px/1.3 var(--f-mono);
+  color: var(--ink);
+  overflow-x: auto;
+  white-space: pre;
+}
+.caret b { color: var(--fail); }
+.chips { margin: 14px 0 16px; }
+
+.xs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-bottom: 16px; }
+.field { display: grid; gap: 6px; min-width: 0; }
+.field label { font: 600 14px var(--f-body); color: var(--muted); text-align: center; }
+.field .row { display: flex; gap: 6px; min-width: 0; }
+.field input {
+  flex: 1; min-width: 0; width: 100%;
+  font: 600 17px var(--f-mono);
+  padding: 9px 4px;
+  text-align: center;
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  background: var(--bg);
+  color: var(--ink);
+}
+.field input:focus { border-color: #ffd84d; }
+.flip {
+  flex: none; width: 36px;
+  font: 700 18px var(--f-mono);
+  border: 0; border-radius: 12px;
+  background: var(--tile-hi); color: var(--ink);
+  cursor: pointer;
+}
+.flip:hover { background: var(--line); }
+
+.fx-value { margin-bottom: 22px; }
+
+.plot text { font-family: var(--f-mono); font-size: 21px; fill: var(--muted); }
+.plot .lbl-point { fill: #ffd84d; font-weight: 700; }
+.k-curve { background: #ffd84d; }
+.k-point { background: var(--ink); width: 10px !important; height: 10px !important; border-radius: 50% !important; }
+
+.help { margin-top: 18px; }
+.help summary { cursor: pointer; font-weight: 600; }
+.help ul { margin: 10px 0 0; padding-left: 20px; display: grid; gap: 6px; color: var(--muted); }
+.help b { color: var(--ink); font-weight: 600; }
+#fn-list { font-family: var(--f-mono); font-size: 14px; }

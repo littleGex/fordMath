@@ -18,6 +18,7 @@ Planned helpers are tracked as [issues](https://github.com/littleGex/fordMath/is
 | Everything at once  | `getStats(values)`                    | Validates once and computes the mean once                   |
 | Quadratic equation  | `solveQuadratic(a, b, c)`             | Roots as a discriminated union (two real, repeated, complex, linear, none, every x), plus vertex; numerically stable |
 | Discriminant        | `discriminant(a, b, c)`               | b² − 4ac, snapped to 0 within floating-point noise          |
+| Expressions         | `compile(text)` → `(x) => number`     | Safe parser for f(x): never uses eval; `parse`, `evaluate`, `formatExpr` and `ExpressionError` (with a position) also exported from `lib/expression` |
 
 All functions take `readonly number[]` (ints and floats), never mutate the input, and throw on an empty array, `NaN` or `Infinity`.
 
@@ -28,17 +29,19 @@ All functions take `readonly number[]` (ints and floats), never mutate the input
 | `/`       | Homepage: ready helpers, tests, and "Coming soon" tiles linking to issues |
 | `/stats/` | Live calculator, number line with mean ± σ, and the working for each result |
 | `/quadratic/` | Solver for ax² + bx + c = 0 with a graph and the working |
+| `/function/` | Type any f(x): how it was read, its graph, and f(x) worked out step by step |
 | `/tests/` | Every test from the deployed build, read from `test-results.json`      |
 
 ## Project layout
 
 ```
-index.html  stats/  quadratic/  tests/   pages (Vite multi-page build)
+index.html  stats/  quadratic/  function/  tests/   pages (Vite multi-page build)
 public/          favicon, Home Screen icons, manifest
 src/
   lib/           pure maths, no DOM; one module + one test file per helper
     validate.ts  shared input guard (assertValid) and sortNumeric
     mean.ts  median.ts  mode.ts  deviation.ts  stats.ts  quadratic.ts
+    expression/  tokenize → parse → evaluate, plus format (the f(x) parser)
     index.ts     public API
   explain/       step-by-step working, using the user's numbers (+ tests)
   registry.ts    which helpers the Statistics page shows

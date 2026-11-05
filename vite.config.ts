@@ -15,6 +15,7 @@ export default defineConfig({
         home: resolve(__dirname, "index.html"),
         stats: resolve(__dirname, "stats/index.html"),
         quadratic: resolve(__dirname, "quadratic/index.html"),
+        function: resolve(__dirname, "function/index.html"),
         tests: resolve(__dirname, "tests/index.html"),
       },
     },

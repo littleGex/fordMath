@@ -162,6 +162,8 @@ a.tile:active {
 .c-quartiles  { --c: #ff7043; }
 .c-regression { --c: #ff4da6; }
 .c-primes     { --c: #34d399; }
+.c-func       { --c: #ffd84d; }
+.c-kids       { --c: #ff9ad5; }
 .c-median     { --c: #ffb347; }
 .c-mode       { --c: #ff4da6; }
 .c-sd         { --c: #b967ff; }
