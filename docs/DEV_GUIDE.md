@@ -312,6 +312,19 @@ Patterns worth copying:
 
 **Try:** step through `parse("1 + 2 * 3")` with a debugger or `console.log` in each method, and watch `term()` grab `2 * 3` before `expression()` adds the `1`.
 
+### Einmaleins (#14): new TypeScript ideas worth reading
+
+`src/lib/times-tables.ts`, `src/explain/times-tables.ts` and `src/pages/einmaleins.ts` add a few ideas the earlier helpers didn't need:
+
+- **Template literal types:** `type FactKey = \`${"m" | "d"}:${number}x${number}\``, so only strings like `"m:7x8"` are allowed as keys.
+- **`Partial<Record<FactKey, FactStats>>`** for `Mastery`: a lookup where most keys are missing, so `mastery[key]` has type `FactStats | undefined` and must be checked.
+- **Your own generic function:** `pickWeighted<T>(items: readonly T[], weight: (item: T) => number, random: Random): T` in `src/lib/random.ts` works for questions, fractions or anything else, and returns the same type it was given.
+- **Passing randomness in** (`random: Random`) instead of calling `Math.random()` inside, so tests use `seededRandom(42)` and get the same round every time.
+- **Returning new objects instead of changing old ones:** `record(mastery, key, correct)` returns an updated copy, and a test checks the original is untouched.
+- **`satisfies Record<Lang, Words>`** for the German and English wording: forget a sentence in one language and it won't compile.
+- **The page as a state machine:** `type State = { screen: "setup" } | { screen: "play"; … } | { screen: "result"; … }`, a discriminated union again. Each screen's data exists only while that screen is showing.
+- **Reading `unknown` safely:** `load()` treats whatever is in `localStorage` as `unknown` and checks each field before trusting it.
+
 ## 7. Warm-up: add Range to Statistics
 
 **Goal:** a new "Range" tile on the Statistics page, showing largest − smallest, with its working. It's small, it touches every layer, and it's the first piece of #5.
@@ -459,7 +472,7 @@ Open the pull request on GitHub, wait for the green tick, and merge. The site up
 
 ## 8. Your turn: the exercise ladder
 
-Ordered roughly from easiest to hardest to *build*, which isn't the same as the school level. The class 3 trainers (#14 times tables, #15 written addition and subtraction) are also good early exercises, because the logic is small and the design is all about step data. Each level lists the TypeScript ideas it will exercise.
+Ordered roughly from easiest to hardest to *build*, which isn't the same as the school level. The class 3 trainer #15 (written addition and subtraction) is also a good early exercise, because the logic is small and the design is all about step data. #14 (Einmaleins) is finished: read it as an example of a game rather than a calculator. Each level lists the TypeScript ideas it will exercise.
 
 ### Level 1: #7, GCD, LCM and prime factorisation
 

@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#141c2e">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="apple-mobile-web-app-title" content="fordMath">
+<title>Einmaleins · fordMath</title>
+</head>
+<body>
+<main class="narrow">
+  <header class="em-head">
+    <div>
+      <a class="back" href="../">← fordMath</a>
+      <h1>✖️ <span data-t="title">Einmaleins</span></h1>
+      <p class="subtitle" data-t="subtitle"></p>
+    </div>
+    <div class="lang" role="group" aria-label="Sprache / Language">
+      <button class="chip" type="button" data-lang="de" aria-pressed="true">DE</button>
+      <button class="chip" type="button" data-lang="en" aria-pressed="false">EN</button>
+    </div>
+  </header>
+
+  <!-- ===== Setup ===== -->
+  <section id="setup">
+    <h2 class="section" data-t="tablesTitle"></h2>
+    <div class="tables" id="tables"></div>
+    <div class="chips setup-chips">
+      <button class="chip" type="button" id="all-tables" data-t="all"></button>
+    </div>
+
+    <h2 class="section" data-t="modeTitle"></h2>
+    <div class="chips setup-chips" role="group" id="modes">
+      <button class="chip" type="button" data-mode="multiply" data-t="multiply"></button>
+      <button class="chip" type="button" data-mode="divide" data-t="divide"></button>
+      <button class="chip" type="button" data-mode="mixed" data-t="mixed"></button>
+      <button class="chip" type="button" id="timer" data-t="timer"></button>
+    </div>
+
+    <p class="error" id="setup-error" hidden></p>
+    <div class="actions">
+      <button class="tile big-btn c-times" type="button" id="start"><span class="emoji" aria-hidden="true">🚀</span><h3 data-t="start"></h3></button>
+      <button class="tile big-btn c-order" type="button" id="tricky"><span class="emoji" aria-hidden="true">🧠</span><h3 id="tricky-label"></h3></button>
+    </div>
+
+    <h2 class="section" data-t="gridTitle"></h2>
+    <div class="panel board-panel">
+      <div class="board" id="board" role="img"></div>
+      <p class="note" data-t="gridNote"></p>
+      <div class="reset">
+        <button class="link-btn" type="button" id="reset" data-t="reset"></button>
+        <span id="reset-confirm" hidden>
+          <span data-t="resetSure"></span>
+          <button class="link-btn danger" type="button" id="reset-yes" data-t="yes"></button>
+          <button class="link-btn" type="button" id="reset-no" data-t="no"></button>
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Play ===== -->
+  <section id="play" hidden>
+    <div class="play-top">
+      <div class="dots-progress" id="progress" aria-hidden="true"></div>
+      <span class="streak" id="streak"></span>
+    </div>
+    <div class="question panel" id="question-card" aria-live="polite">
+      <span id="question"></span> = <span class="answer" id="answer">?</span>
+    </div>
+    <div class="feedback" id="feedback" hidden>
+      <p class="verdict" id="verdict"></p>
+      <figure class="panel dots-fig" id="dots-fig" hidden><svg id="dots" role="img"></svg></figure>
+      <div class="explain" id="explain"></div>
+      <button class="tile big-btn c-times next" type="button" id="next"><h3 data-t="next"></h3></button>
+    </div>
+    <div class="keypad" id="keypad">
+      <button type="button" data-key="1">1</button><button type="button" data-key="2">2</button><button type="button" data-key="3">3</button>
+      <button type="button" data-key="4">4</button><button type="button" data-key="5">5</button><button type="button" data-key="6">6</button>
+      <button type="button" data-key="7">7</button><button type="button" data-key="8">8</button><button type="button" data-key="9">9</button>
+      <button type="button" data-key="del" aria-label="Löschen">⌫</button><button type="button" data-key="0">0</button><button type="button" data-key="ok" class="ok">OK</button>
+    </div>
+    <button class="link-btn stop" type="button" id="stop" data-t="stop"></button>
+  </section>
+
+  <!-- ===== Result ===== -->
+  <section id="result" hidden>
+    <div class="panel result-card">
+      <p class="stars" id="stars"></p>
+      <p class="praise" id="praise"></p>
+      <p class="score" id="score"></p>
+      <p class="note" id="result-extra"></p>
+    </div>
+    <div class="mistakes" id="mistakes-box" hidden>
+      <h2 class="section" data-t="mistakes"></h2>
+      <ul id="mistakes"></ul>
+    </div>
+    <div class="actions">
+      <button class="tile big-btn c-times" type="button" id="again"><span class="emoji" aria-hidden="true">🔁</span><h3 data-t="again"></h3></button>
+      <button class="tile big-btn c-order" type="button" id="tricky2"><span class="emoji" aria-hidden="true">🧠</span><h3 id="tricky-label2"></h3></button>
+    </div>
+    <button class="link-btn stop" type="button" id="change" data-t="change"></button>
+  </section>
+</main>
+<script type="module" src="/src/pages/einmaleins.ts"></script>
+</body>
+</html>
