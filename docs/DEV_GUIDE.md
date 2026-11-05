@@ -82,7 +82,7 @@ The same eight steps work for every issue:
 3. **Write failing tests.** In `src/lib/<name>.test.ts`, use the cases listed in the issue. Watch them go red.
 4. **Make them pass**, one at a time. Keep the public function as validate-then-delegate (see [4.9](#49-modules-public-vs-internal)).
 5. **Write the explanation.** In `src/explain/<name>.ts`, return `ExplainSection[]` (or `string[]` for the Statistics registry), test it, and use the user's numbers in every step.
-6. **Build the page.** Copy the closest existing page (`quadratic/` for fixed inputs, `function/` for typed expressions), add it to `vite.config.ts`, and turn its homepage tile from "planned" to ready.
+6. **Build the page.** Copy the closest existing page (`quadratic/` for fixed inputs, `function/` for typed expressions), add it to `vite.config.ts`, and turn its homepage tile from planned to ready: point `href` at the page, remove the `planned` class, set the badge to "Ready", and keep its `data-levels` (`grundschule`, `sek1`, `oberstufe`), which drive the level chips.
 7. **Update the README**, with a row in the helpers table and the pages table.
 8. **Open a pull request** with `Closes #7` in its description. CI runs on the PR, and when you merge, GitHub closes the issue and deploys.
 
@@ -459,7 +459,7 @@ Open the pull request on GitHub, wait for the green tick, and merge. The site up
 
 ## 8. Your turn: the exercise ladder
 
-Ordered roughly from easiest to hardest. Each lists the TypeScript ideas it will exercise.
+Ordered roughly from easiest to hardest to *build*, which isn't the same as the school level. The class 3 trainers (#14 times tables, #15 written addition and subtraction) are also good early exercises, because the logic is small and the design is all about step data. Each level lists the TypeScript ideas it will exercise.
 
 ### Level 1: #7, GCD, LCM and prime factorisation
 
@@ -485,7 +485,7 @@ export function primeFactors(n: number): Array<[prime: number, power: number]>; 
 - Factorising: divide by 2 while you can, then by 3, 5, 7…, only up to `√n`. Whatever is left above 1 is prime.
 </details>
 
-### Level 2: #11, long multiplication
+### Level 2: #11, written multiplication (schriftliche Multiplikation)
 
 *Practises: designing data types for steps, discriminated unions, `bigint` or digit arrays, rendering a grid.*
 
@@ -500,9 +500,9 @@ export type LongMultiplicationStep =
 
 Then `explainLongMultiplication` turns each step into words, and the page highlights the digits each step uses. Test the final answer against `BigInt(a) * BigInt(b)` for hundreds of random pairs.
 
-### Level 3: #12 long division, then #5 quartiles
+### Level 3: #12 written division, then #5 quartiles
 
-Long division reuses everything from #11. Quartiles reuses the Statistics registry, and adds an SVG box plot alongside the existing number line in `src/pages/stats.ts`.
+Written division reuses everything from #11. Both use the German school layout described in their issues, not the English one. Quartiles reuses the Statistics registry, and adds an SVG box plot alongside the existing number line in `src/pages/stats.ts`.
 
 ### Level 4: #9 matrices, then #10 simultaneous equations
 

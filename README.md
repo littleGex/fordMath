@@ -6,7 +6,7 @@ Live site: https://littlegex.github.io/fordMath/ (deployed by GitHub Actions on 
 
 **Want to build features yourself and learn TypeScript?** Start with the [dev guide](docs/DEV_GUIDE.md).
 
-Planned helpers are tracked as [issues](https://github.com/littleGex/fordMath/issues) and shown as "Coming soon" tiles on the homepage.
+Planned helpers are tracked as [issues](https://github.com/littleGex/fordMath/issues) and shown as faded tiles on the homepage. Each issue and tile has a school level (`level: Grundschule`, `level: Sek I`, `level: Oberstufe`), and the homepage chips filter by level.
 
 ## Helpers
 
@@ -28,7 +28,7 @@ All functions take `readonly number[]` (ints and floats), never mutate the input
 
 | Path      | What it is                                                             |
 | --------- | ---------------------------------------------------------------------- |
-| `/`       | Homepage: ready helpers, tests, and "Coming soon" tiles linking to issues |
+| `/`       | Homepage: helpers filtered by school level; planned ones link to their issue |
 | `/stats/` | Live calculator, number line with mean ± σ, and the working for each result |
 | `/quadratic/` | Solver for ax² + bx + c = 0 with a graph and the working |
 | `/function/` | Type any f(x): how it was read, its graph, and f(x) worked out step by step |

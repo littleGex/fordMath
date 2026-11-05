@@ -15,7 +15,7 @@
 <main>
   <header>
     <h1>🧮 fordMath</h1>
-    <p class="subtitle">Pick a maths helper</p>
+    <p class="subtitle">Pick your class level, then a helper</p>
   </header>
 
   <a class="tile feature c-stats" href="stats/">
@@ -26,66 +26,128 @@
     </div>
   </a>
 
-  <div class="chips" role="group" aria-label="Show helpers">
-    <button class="chip" type="button" data-filter="all" aria-pressed="true">Everything</button>
-    <button class="chip" type="button" data-filter="ready" aria-pressed="false">Ready to use</button>
-    <button class="chip" type="button" data-filter="planned" aria-pressed="false">Coming soon</button>
+  <div class="chips" role="group" aria-label="Show helpers for a school level">
+    <button class="chip" type="button" data-level="all" aria-pressed="true">Everything</button>
+    <button class="chip" type="button" data-level="grundschule" aria-pressed="false">Grundschule <span class="sub">1–4</span></button>
+    <button class="chip" type="button" data-level="sek1" aria-pressed="false">Sek I <span class="sub">5–10</span></button>
+    <button class="chip" type="button" data-level="oberstufe" aria-pressed="false">Oberstufe <span class="sub">11–13</span></button>
   </div>
+  <p class="note level-note" id="level-note"></p>
 
   <div class="grid" id="helpers">
-    <a class="tile c-stats" href="stats/" data-state="ready">
+    <a class="tile c-stats" href="stats/" data-levels="sek1 oberstufe">
       <span class="badge">Ready</span>
       <span class="emoji" aria-hidden="true">📊</span>
       <h3>Statistics</h3>
       <p class="desc">Averages and spread</p>
     </a>
-    <a class="tile c-tests" href="tests/" data-state="ready">
-      <span class="badge" id="tests-badge">Tests</span>
-      <span class="emoji" aria-hidden="true">✅</span>
-      <h3>Tests</h3>
-      <p class="desc">Every check the maths passes</p>
-    </a>
-    <a class="tile c-quadratic" href="quadratic/" data-state="ready">
-      <span class="badge">Ready</span>
-      <span class="emoji" aria-hidden="true">🎢</span>
-      <h3>Quadratics</h3>
-      <p class="desc">Solve ax² + bx + c = 0</p>
-    </a>
-    <a class="tile c-func" href="function/" data-state="ready">
+    <a class="tile c-func" href="function/" data-levels="sek1 oberstufe">
       <span class="badge">Ready</span>
       <span class="emoji" aria-hidden="true">📐</span>
       <h3>Functions</h3>
       <p class="desc">Graph any f(x)</p>
     </a>
-    <a class="tile c-integral planned" href="https://github.com/littleGex/fordMath/issues/3" data-state="planned">
-      <span class="badge">#3</span>
-      <span class="emoji" aria-hidden="true">⛰️</span>
-      <h3>Integration</h3>
-      <p class="desc">Area under a curve</p>
+    <a class="tile c-quadratic" href="quadratic/" data-levels="sek1">
+      <span class="badge">Ready</span>
+      <span class="emoji" aria-hidden="true">🎢</span>
+      <h3>Quadratics</h3>
+      <p class="desc">Solve ax² + bx + c = 0</p>
     </a>
-    <a class="tile c-derivative planned" href="https://github.com/littleGex/fordMath/issues/4" data-state="planned">
-      <span class="badge">#4</span>
-      <span class="emoji" aria-hidden="true">⛷️</span>
-      <h3>Slopes</h3>
-      <p class="desc">Differentiation</p>
+    <a class="tile c-times planned" href="https://github.com/littleGex/fordMath/issues/14" data-levels="grundschule">
+      <span class="badge">#14</span>
+      <span class="emoji" aria-hidden="true">✖️</span>
+      <h3>Times tables</h3>
+      <p class="desc">Das kleine Einmaleins</p>
     </a>
-    <a class="tile c-quartiles planned" href="https://github.com/littleGex/fordMath/issues/5" data-state="planned">
+    <a class="tile c-written planned" href="https://github.com/littleGex/fordMath/issues/15" data-levels="grundschule">
+      <span class="badge">#15</span>
+      <span class="emoji" aria-hidden="true">➕</span>
+      <h3>Plus and minus</h3>
+      <p class="desc">Written in columns</p>
+    </a>
+    <a class="tile c-written planned" href="https://github.com/littleGex/fordMath/issues/11" data-levels="grundschule sek1">
+      <span class="badge">#11</span>
+      <span class="emoji" aria-hidden="true">✏️</span>
+      <h3>Written ×</h3>
+      <p class="desc">Schriftlich multiplizieren</p>
+    </a>
+    <a class="tile c-written planned" href="https://github.com/littleGex/fordMath/issues/12" data-levels="grundschule sek1">
+      <span class="badge">#12</span>
+      <span class="emoji" aria-hidden="true">➗</span>
+      <h3>Written ÷</h3>
+      <p class="desc">Schriftlich dividieren</p>
+    </a>
+    <a class="tile c-place planned" href="https://github.com/littleGex/fordMath/issues/17" data-levels="grundschule sek1">
+      <span class="badge">#17</span>
+      <span class="emoji" aria-hidden="true">🔟</span>
+      <h3>Place value</h3>
+      <p class="desc">Stellenwerte und Runden</p>
+    </a>
+    <a class="tile c-units planned" href="https://github.com/littleGex/fordMath/issues/16" data-levels="grundschule sek1">
+      <span class="badge">#16</span>
+      <span class="emoji" aria-hidden="true">📏</span>
+      <h3>Units</h3>
+      <p class="desc">Money, length, weight, time</p>
+    </a>
+    <a class="tile c-fraction planned" href="https://github.com/littleGex/fordMath/issues/13" data-levels="grundschule sek1">
+      <span class="badge">#13</span>
+      <span class="emoji" aria-hidden="true">🍕</span>
+      <h3>Fractions</h3>
+      <p class="desc">A game for halves and quarters</p>
+    </a>
+    <a class="tile c-primes planned" href="https://github.com/littleGex/fordMath/issues/7" data-levels="sek1">
+      <span class="badge">#7</span>
+      <span class="emoji" aria-hidden="true">🔢</span>
+      <h3>Primes</h3>
+      <p class="desc">Divisors, GCD and LCM</p>
+    </a>
+    <a class="tile c-order planned" href="https://github.com/littleGex/fordMath/issues/18" data-levels="sek1">
+      <span class="badge">#18</span>
+      <span class="emoji" aria-hidden="true">🧩</span>
+      <h3>Punkt vor Strich</h3>
+      <p class="desc">Order of operations</p>
+    </a>
+    <a class="tile c-quartiles planned" href="https://github.com/littleGex/fordMath/issues/5" data-levels="sek1">
       <span class="badge">#5</span>
       <span class="emoji" aria-hidden="true">📦</span>
       <h3>Quartiles</h3>
       <p class="desc">Percentiles and box plots</p>
     </a>
-    <a class="tile c-regression planned" href="https://github.com/littleGex/fordMath/issues/6" data-state="planned">
+    <a class="tile c-simul planned" href="https://github.com/littleGex/fordMath/issues/10" data-levels="sek1">
+      <span class="badge">#10</span>
+      <span class="emoji" aria-hidden="true">⚖️</span>
+      <h3>Two equations</h3>
+      <p class="desc">Simultaneous equations</p>
+    </a>
+    <a class="tile c-regression planned" href="https://github.com/littleGex/fordMath/issues/6" data-levels="oberstufe">
       <span class="badge">#6</span>
       <span class="emoji" aria-hidden="true">📈</span>
       <h3>Best fit line</h3>
       <p class="desc">Correlation and regression</p>
     </a>
-    <a class="tile c-primes planned" href="https://github.com/littleGex/fordMath/issues/7" data-state="planned">
-      <span class="badge">#7</span>
-      <span class="emoji" aria-hidden="true">🔢</span>
-      <h3>Primes</h3>
-      <p class="desc">GCD, LCM and factors</p>
+    <a class="tile c-matrix planned" href="https://github.com/littleGex/fordMath/issues/9" data-levels="oberstufe">
+      <span class="badge">#9</span>
+      <span class="emoji" aria-hidden="true">🔲</span>
+      <h3>Matrices</h3>
+      <p class="desc">Multiply, invert, determinant</p>
+    </a>
+    <a class="tile c-integral planned" href="https://github.com/littleGex/fordMath/issues/3" data-levels="oberstufe">
+      <span class="badge">#3</span>
+      <span class="emoji" aria-hidden="true">⛰️</span>
+      <h3>Integration</h3>
+      <p class="desc">Area under a curve</p>
+    </a>
+    <a class="tile c-derivative planned" href="https://github.com/littleGex/fordMath/issues/4" data-levels="oberstufe">
+      <span class="badge">#4</span>
+      <span class="emoji" aria-hidden="true">⛷️</span>
+      <h3>Slopes</h3>
+      <p class="desc">Differentiation</p>
+    </a>
+    <a class="tile c-tests" href="tests/" data-levels="">
+      <span class="badge" id="tests-badge">Tests</span>
+      <span class="emoji" aria-hidden="true">✅</span>
+      <h3>Tests</h3>
+      <p class="desc">Every check the maths passes</p>
     </a>
   </div>
 
