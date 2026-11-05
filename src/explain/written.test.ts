@@ -1,5 +1,5 @@
-import { writtenAdd, writtenSubtract } from "../lib/written";
-import { finishText, introText, placeName, stepTexts } from "./written";
+import { writtenAdd, writtenDivide, writtenMultiply, writtenSubtract } from "../lib/written";
+import { finishText, fullText, introText, placeName, stepTexts, walkthrough } from "./written";
 
 const full = (t: { place: string; work: string; write: string }) => `${t.place}: ${t.work} ${t.write}`;
 
@@ -77,5 +77,53 @@ describe("intro and finish", () => {
 describe("placeName", () => {
   it("names the columns", () => {
     expect([0, 1, 2, 3].map((c) => placeName(c, "de"))).toEqual(["Einer", "Zehner", "Hunderter", "Tausender"]);
+  });
+});
+
+
+describe("multiplication walkthrough", () => {
+  const w = walkthrough(writtenMultiply(473, 26), "de");
+  it("works line by line, starting with the first digit of the second number", () => {
+    expect(fullText(w[0]!.text)).toBe("473 · 2: Jetzt mal 2: das Ergebnis endet genau unter der 2. 3 · 2 = 6. Schreibe 6.");
+    expect(fullText(w[4]!.text)).toBe("473 · 6: 7 · 6 = 42, plus 1 gemerkt = 43. Schreibe 3, merke 4.");
+    expect(fullText(w[6]!.text)).toBe("473 · 6: Keine Ziffer mehr übrig: die gemerkte 2 kommt vorne hin. Schreibe 2.");
+  });
+  it("then adds the lines up", () => {
+    expect(fullText(w[7]!.text)).toBe("Zusammenzählen, Einer: 8 = 8. Schreibe 8.");
+    expect(fullText(w[8]!.text)).toBe("Zusammenzählen, Zehner: 6 + 3 = 9. Schreibe 9.");
+  });
+  it("asks for one digit at every step", () => {
+    expect(w.map((x) => x.answer)).toEqual([6, 4, 9, 8, 3, 8, 2, 8, 9, 2, 2, 1]);
+  });
+  it("finishes with a division check", () => {
+    expect(finishText(writtenMultiply(473, 26), "de")).toEqual({ result: "Fertig! 473 · 26 = 12298", check: "Probe: 12298 : 26 = 473 ✓" });
+  });
+});
+
+describe("division walkthrough", () => {
+  const w = walkthrough(writtenDivide(285, 6), "de");
+  it("divides, multiplies and subtracts, brings down, and ends with the Rest", () => {
+    expect(w.map((x) => fullText(x.text))).toEqual([
+      "28 : 6: 2 ist kleiner als 6, also nimm 28. Die 6 passt 4-mal in die 28: 4 · 6 = 24 (5 · 6 = 30 wäre zu viel). Schreibe 4 ins Ergebnis.",
+      "28 : 6: 4 · 6 = 24. Schreibe 24 darunter und ziehe ab: 28 − 24 = 4.",
+      "Herunterholen: Hole die nächste Ziffer herunter: 5. Jetzt hast du 45.",
+      "45 : 6: Die 6 passt 7-mal in die 45: 7 · 6 = 42 (8 · 6 = 48 wäre zu viel). Schreibe 7 ins Ergebnis.",
+      "45 : 6: 7 · 6 = 42. Schreibe 42 darunter und ziehe ab: 45 − 42 = 3.",
+      "Rest: Es gibt keine Ziffer mehr zum Herunterholen. 3 bleibt übrig: das ist der Rest.",
+    ]);
+  });
+  it("only asks for the answer digits", () => {
+    expect(w.map((x) => x.answer)).toEqual([4, null, null, 7, null, null]);
+  });
+  it("reminds you to write a 0 in the middle", () => {
+    const z = walkthrough(writtenDivide(612, 6), "de");
+    expect(z.find((x) => x.answer === 0)!.text.write).toBe("Schreibe 0 ins Ergebnis. Die 0 nicht vergessen!");
+  });
+  it("finishes with the Rest and a check", () => {
+    expect(finishText(writtenDivide(285, 6), "de")).toEqual({ result: "Fertig! 285 : 6 = 47 Rest 3", check: "Probe: 47 · 6 + 3 = 285 ✓" });
+    expect(finishText(writtenDivide(612, 6), "en").check).toBe("Check: 102 · 6 = 612 ✓");
+  });
+  it("has English too", () => {
+    expect(walkthrough(writtenDivide(285, 6), "en")[0]!.text.ask).toBe("2 is smaller than 6, so take 28. How many times does 6 go into 28?");
   });
 });

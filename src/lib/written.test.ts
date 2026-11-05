@@ -1,8 +1,9 @@
 import { seededRandom } from "./random";
-import { digitsOf, makeProblem, needsCarry, writtenAdd, writtenSubtract, type WrittenSum } from "./written";
+import { digitsOf, makeProblem, needsCarry, writtenAdd, writtenDivide, writtenMultiply, writtenSubtract, type WrittenSum } from "./written";
 
 /** The answer as written, column by column, ignoring blank leading zeros. */
 function written(sum: WrittenSum): number {
+  if (sum.kind === "multiply" || sum.kind === "divide") throw new Error("column sums only");
   const digits = sum.steps
     .filter((s) => !("leadingZero" in s && s.leadingZero))
     .map((s) => s.write)
@@ -32,7 +33,7 @@ describe("writtenAdd", () => {
   it("handles numbers of different lengths", () => {
     const s = writtenAdd([1205, 38]);
     if (s.kind !== "add") throw new Error("expected addition");
-    expect(s.steps[2]!.digits).toEqual([2, 0]);
+    expect(s.steps[2]!.digits).toEqual([2]); // 38 has no hundreds digit
     expect(written(s)).toBe(1243);
   });
   it("adds three numbers, where a carry can be 2", () => {
@@ -61,6 +62,7 @@ describe("writtenSubtract: Ergänzungsverfahren", () => {
   });
   it("leaves zeros at the front blank", () => {
     const s = writtenSubtract(105, 98, "complement");
+    if (s.kind !== "complement") throw new Error("expected complement");
     expect(s.steps.map((x) => ("leadingZero" in x ? x.leadingZero : false))).toEqual([false, true, true]);
     expect(written(s)).toBe(7);
   });
@@ -133,6 +135,107 @@ describe("makeProblem", () => {
       if (op === "subtract") expect(b).toBeLessThanOrEqual(a);
       const sum = op === "add" ? writtenAdd([a, b]) : writtenSubtract(a, b, "complement");
       expect(needsCarry(sum)).toBe(carry);
+    }
+  });
+  it.each([
+    [100, false, 2, 1], [100, true, 2, 1], [1000, false, 3, 1], [1000, true, 3, 1], [10000, true, 3, 2], [10000, false, 3, 2],
+  ] as const)("multiply, max %i, carry=%s: %i-digit · %i-digit", (max, carry, aLen, bLen) => {
+    for (let i = 0; i < 30; i++) {
+      const [a, b] = makeProblem("multiply", { max, carry }, r);
+      expect(String(a)).toHaveLength(aLen);
+      expect(String(b)).toHaveLength(bLen);
+      expect(b).toBeGreaterThan(1);
+      expect(needsCarry(writtenMultiply(a, b))).toBe(carry);
+    }
+  });
+  it.each([
+    [100, false], [100, true], [1000, false], [1000, true], [10000, false], [10000, true],
+  ] as const)("divide, max %i, with remainder=%s", (max, rest) => {
+    for (let i = 0; i < 30; i++) {
+      const [n, d] = makeProblem("divide", { max, carry: rest }, r);
+      expect(n).toBeLessThan(max);
+      expect(d).toBeGreaterThan(1);
+      expect(n % d > 0).toBe(rest);
+    }
+  });
+});
+
+describe("writtenMultiply (German layout)", () => {
+  it("does 473 · 26 as 946 and 2838, then adds", () => {
+    const s = writtenMultiply(473, 26);
+    if (s.kind !== "multiply") throw new Error("expected multiply");
+    const lines = s.rows.map((r) => Number(r.steps.map((x) => x.write).reverse().join("")));
+    expect(lines).toEqual([946, 2838]); // the 2 first, then the 6
+    expect(s.rows.map((r) => r.shift)).toEqual([1, 0]);
+    const total = s.addition!.map((x) => x.write).reverse().join("");
+    expect(Number(total)).toBe(12298);
+  });
+  it("writes the last carry in front as its own step", () => {
+    const s = writtenMultiply(473, 6);
+    if (s.kind !== "multiply") throw new Error("expected multiply");
+    expect(s.rows[0]!.steps.map((x) => [x.kind, x.write])).toEqual([["digit", 8], ["digit", 3], ["digit", 8], ["carry", 2]]);
+    expect(s.addition).toBeNull(); // one-digit b: the line is the answer
+  });
+  it("adds the lines column by column, leaving out the blank under the shifted line", () => {
+    const s = writtenMultiply(473, 26);
+    if (s.kind !== "multiply") throw new Error("expected multiply");
+    expect(s.addition![0]!.digits).toEqual([8]); // 946 is shifted: nothing under the ones
+    expect(s.addition![1]!.digits).toEqual([6, 3]);
+  });
+  it("agrees with a · b for many random pairs", () => {
+    const r = seededRandom(11);
+    for (let i = 0; i < 400; i++) {
+      const a = Math.floor(r() * 100000);
+      const b = Math.floor(r() * 1000);
+      const s = writtenMultiply(a, b);
+      if (s.kind !== "multiply") throw new Error("expected multiply");
+      const digits = s.addition ? s.addition.map((x) => x.write) : s.rows[0]!.steps.map((x) => x.write);
+      expect(Number(digits.reverse().join(""))).toBe(a * b);
+    }
+  });
+  it("handles a 0 inside b", () => {
+    const s = writtenMultiply(473, 205);
+    if (s.kind !== "multiply") throw new Error("expected multiply");
+    expect(s.rows[1]!.value).toBe(0);
+    expect(s.result).toBe(96965);
+  });
+});
+
+describe("writtenDivide (German layout)", () => {
+  it("does 285 : 6 = 47 Rest 3", () => {
+    const s = writtenDivide(285, 6);
+    if (s.kind !== "divide") throw new Error("expected divide");
+    expect(s.steps.map((x) => [x.part, x.qDigit, x.product, x.remainder, x.bringDown])).toEqual([
+      [28, 4, 24, 4, 5], // 2 is too small, so start with 28
+      [45, 7, 42, 3, null],
+    ]);
+    expect([s.result, s.remainder]).toEqual([47, 3]);
+  });
+  it("keeps a 0 in the answer: 612 : 6 = 102", () => {
+    const s = writtenDivide(612, 6);
+    if (s.kind !== "divide") throw new Error("expected divide");
+    expect(s.steps.map((x) => x.qDigit)).toEqual([1, 0, 2]);
+    expect(s.steps[1]!.shown).toBe("01"); // 0 left over, 1 brought down
+  });
+  it("gives 0 Rest 5 when the divisor is bigger", () => {
+    const s = writtenDivide(5, 6);
+    if (s.kind !== "divide") throw new Error("expected divide");
+    expect(s.steps).toHaveLength(1);
+    expect([s.result, s.remainder]).toEqual([0, 5]);
+  });
+  it("refuses to divide by 0", () => {
+    expect(() => writtenDivide(5, 0)).toThrow("can't divide by 0");
+  });
+  it("agrees with Math.floor and % for many random pairs", () => {
+    const r = seededRandom(12);
+    for (let i = 0; i < 400; i++) {
+      const n = Math.floor(r() * 1e6);
+      const d = 1 + Math.floor(r() * 200);
+      const s = writtenDivide(n, d);
+      if (s.kind !== "divide") throw new Error("expected divide");
+      const q = Number(s.steps.map((x) => x.qDigit).join(""));
+      expect(q).toBe(Math.floor(n / d));
+      expect(s.steps.at(-1)!.remainder).toBe(n % d);
     }
   });
 });

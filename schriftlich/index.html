@@ -25,16 +25,22 @@
   </header>
 
   <section class="panel task">
+    <div class="ops" role="group" id="ops">
+      <button class="op-btn" type="button" data-op="add" aria-label="Plus">+</button>
+      <button class="op-btn" type="button" data-op="subtract" aria-label="Minus">−</button>
+      <button class="op-btn" type="button" data-op="multiply" aria-label="Mal">·</button>
+      <button class="op-btn" type="button" data-op="divide" aria-label="Geteilt">:</button>
+    </div>
     <div class="sum-inputs">
       <input id="num-a" type="text" inputmode="numeric" autocomplete="off" aria-label="Erste Zahl">
-      <button class="op-btn" type="button" id="op" aria-label="Plus oder Minus">+</button>
+      <span class="op-symbol" id="op-symbol" aria-hidden="true">+</span>
       <input id="num-b" type="text" inputmode="numeric" autocomplete="off" aria-label="Zweite Zahl">
     </div>
     <div class="chips task-chips" role="group" id="levels">
-      <button class="chip" type="button" data-max="100" data-t="upTo100"></button>
-      <button class="chip" type="button" data-max="1000" data-t="upTo1000"></button>
-      <button class="chip" type="button" data-max="10000" data-t="upTo10000"></button>
-      <button class="chip" type="button" id="carry" data-t="withCarry"></button>
+      <button class="chip" type="button" data-max="100"></button>
+      <button class="chip" type="button" data-max="1000"></button>
+      <button class="chip" type="button" data-max="10000"></button>
+      <button class="chip" type="button" id="carry"></button>
     </div>
     <button class="tile big-btn c-written new-btn" type="button" id="new"><h3 data-t="newSum"></h3></button>
     <p class="error" id="error" hidden></p>
@@ -46,7 +52,7 @@
   </div>
 
   <section class="panel board-wrap">
-    <div class="board" id="board" aria-hidden="true"></div>
+    <div class="board-scroll"><div class="board" id="board" aria-hidden="true"></div></div>
     <p class="say" id="say" aria-live="polite"></p>
   </section>
 

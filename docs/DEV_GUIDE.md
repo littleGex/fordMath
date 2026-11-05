@@ -472,7 +472,7 @@ Open the pull request on GitHub, wait for the green tick, and merge. The site up
 
 ## 8. Your turn: the exercise ladder
 
-Ordered roughly from easiest to hardest to *build*, which isn't the same as the school level. #14 (Einmaleins) and #15 (written addition and subtraction) are finished: read #14 as an example of a game, and #15 (`src/lib/written.ts`) as the model for #11 and #12, which use the same column-steps-as-data design. Each level lists the TypeScript ideas it will exercise.
+Ordered roughly from easiest to hardest to *build*, which isn't the same as the school level. #14 (Einmaleins), #15, #11 and #12 (written +, −, ·, :) are finished. Read #14 as an example of a game. In `src/lib/written.ts`, notice how adding two new members to the `WrittenSum` union made the compiler list every place that needed updating, and how `Extract<WrittenSum, { kind: "divide" }>` gives each function its own precise return type. Each level lists the TypeScript ideas it will exercise.
 
 ### Level 1: #7, GCD, LCM and prime factorisation
 
@@ -498,24 +498,15 @@ export function primeFactors(n: number): Array<[prime: number, power: number]>; 
 - Factorising: divide by 2 while you can, then by 3, 5, 7…, only up to `√n`. Whatever is left above 1 is prime.
 </details>
 
-### Level 2: #11, written multiplication (schriftliche Multiplikation)
+### Level 2: #13, the fractions game
 
-*Practises: designing data types for steps, discriminated unions, `bigint` or digit arrays, rendering a grid.*
+*Practises: a small type with rules (`Fraction` that can only be made through a function), reusing `src/lib/random.ts` and `src/lib/times-tables.ts` patterns, and GCD from #7.*
 
-The interesting part is the design. Return the layout as data, and let the page draw it. Something like:
+Start with `src/lib/fraction.ts`: `fraction(num, den)` that rejects a 0 denominator and keeps the sign on top, then `simplify`, `equals`, `compare` and `add`. Then copy the Einmaleins page's state machine (setup, play, result) for the game. A question generator should take a `Random`, exactly like `makeRound`.
 
-```ts
-export type LongMultiplicationStep =
-  | { kind: "multiply-digit"; top: number; bottom: number; product: number; write: number; carry: number }
-  | { kind: "partial-product"; row: number; value: string; shift: number }
-  | { kind: "add-column"; column: number; digits: number[]; carryIn: number; write: number; carry: number };
-```
+### Level 3: #5 quartiles, then #7 primes
 
-Then `explainLongMultiplication` turns each step into words, and the page highlights the digits each step uses. Test the final answer against `BigInt(a) * BigInt(b)` for hundreds of random pairs.
-
-### Level 3: #12 written division, then #5 quartiles
-
-Written division reuses everything from #11. Both use the German school layout described in their issues, not the English one. Quartiles reuses the Statistics registry, and adds an SVG box plot alongside the existing number line in `src/pages/stats.ts`.
+Quartiles reuses the Statistics registry, and adds an SVG box plot alongside the existing number line in `src/pages/stats.ts`. #7 is described in Level 1 above; do it before #13 if you want GCD ready for simplifying fractions.
 
 ### Level 4: #9 matrices, then #10 simultaneous equations
 

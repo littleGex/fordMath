@@ -1,46 +1,59 @@
 import "../styles/zone.css";
 import "../styles/schriftlich.css";
 import {
-  digitsOf, makeProblem, writtenAdd, writtenSubtract,
+  makeProblem, writtenAdd, writtenDivide, writtenMultiply, writtenSubtract,
   type Op, type SubtractMethod, type WrittenSum,
 } from "../lib/written";
-import { finishText, introText, stepTexts, type StepText } from "../explain/written";
+import { finishText, fullText, introText, walkthrough, type Walk } from "../explain/written";
 import type { Lang } from "../explain/lang";
 import { getLang, setLang } from "./lang";
+import { buildBoard } from "./written-board";
 
 // ---------- words on the page ----------
 const UI = {
   de: {
-    title: "Schriftlich rechnen", subtitle: "Plus und Minus untereinander, Schritt für Schritt",
-    upTo100: "bis 100", upTo1000: "bis 1 000", upTo10000: "bis 10 000", withCarry: "mit Übertrag",
+    title: "Schriftlich rechnen", subtitle: "Plus, minus, mal und geteilt, Schritt für Schritt",
     newSum: "🎲 Neue Aufgabe", modeShow: "👀 Zeig mir", modeTry: "✍️ Ich rechne",
     back: "◀ Zurück", next: "Weiter ▶", hint: "Tipp",
     settings: "⚙️ Einstellungen für Eltern", methodNote: "So wird Minus gerechnet. Nimm die Methode, die in der Schule benutzt wird.",
     complementName: "Ergänzen", complementHow: "Von unten nach oben ergänzen: 7 + ? = 14, merke 1",
     borrowName: "Abziehen mit Entbündeln", borrowHow: "Oben minus unten, notfalls 1 Zehner in 10 Einer tauschen",
-    yourTurn: (place: string, ask: string) => `${place}: ${ask} Tippe die Ziffer.`,
-    right: "Richtig! ", wrong: "Nicht ganz. Tipp: ", again: "Versuch's nochmal.",
+    right: "Richtig! ", wrong: "Nicht ganz. Tipp: ", again: "Versuch's nochmal.", tapDigit: "Tippe die Ziffer.",
     errEmpty: "Gib zwei Zahlen ein.", errWhole: "Bitte nur ganze Zahlen ohne Komma.",
     errBig: "Die zweite Zahl darf nicht größer sein als die erste.", errHuge: "Bitte Zahlen bis 9 999 999.",
-    firstNumber: "Erste Zahl", secondNumber: "Zweite Zahl", opLabel: "Plus oder Minus",
+    errHugeB: "Die zweite Zahl bitte höchstens dreistellig.", errZero: "Durch 0 kann man nicht teilen.",
+    firstNumber: "Erste Zahl", secondNumber: "Zweite Zahl",
+    carry: "mit Übertrag", rest: "mit Rest", digits: "stellig",
   },
   en: {
-    title: "Written sums", subtitle: "Plus and minus in columns, step by step",
-    upTo100: "up to 100", upTo1000: "up to 1,000", upTo10000: "up to 10,000", withCarry: "with carrying",
+    title: "Written sums", subtitle: "Plus, minus, times and divide, step by step",
     newSum: "🎲 New sum", modeShow: "👀 Show me", modeTry: "✍️ My turn",
     back: "◀ Back", next: "Next ▶", hint: "Hint",
     settings: "⚙️ Settings for parents", methodNote: "How subtraction is done. Choose the method the school uses.",
     complementName: "Adding on (Ergänzen)", complementHow: "Add on from the bottom to the top: 7 + ? = 14, carry 1",
     borrowName: "Taking away with exchanging", borrowHow: "Top minus bottom; if needed, exchange 1 ten for 10 ones",
-    yourTurn: (place: string, ask: string) => `${place}: ${ask} Tap the digit.`,
-    right: "Right! ", wrong: "Not quite. Hint: ", again: "Have another go.",
+    right: "Right! ", wrong: "Not quite. Hint: ", again: "Have another go.", tapDigit: "Tap the digit.",
     errEmpty: "Type two numbers.", errWhole: "Whole numbers only, please.",
     errBig: "The second number mustn't be bigger than the first.", errHuge: "Numbers up to 9,999,999, please.",
-    firstNumber: "First number", secondNumber: "Second number", opLabel: "Plus or minus",
+    errHugeB: "The second number can have at most three digits.", errZero: "You can't divide by 0.",
+    firstNumber: "First number", secondNumber: "Second number",
+    carry: "with carrying", rest: "with remainder", digits: "-digit",
   },
-} satisfies Record<Lang, Record<string, string | ((place: string, ask: string) => string)>>;
+} satisfies Record<Lang, Record<string, string>>;
+type TextKey = keyof (typeof UI)["de"];
 
-type TextKey = { [K in keyof (typeof UI)["de"]]: (typeof UI)["de"][K] extends string ? K : never }[keyof (typeof UI)["de"]];
+/** Chip labels for the sizes, which mean different things per operation. */
+function levelLabel(op: Op, max: number, lang: Lang): string {
+  const w = (n: number) => `${n}${UI[lang].digits}`;
+  if (op === "multiply") return max <= 100 ? `${w(2)} · 1` : max <= 1000 ? `${w(3)} · 1` : `${w(3)} · ${w(2)}`;
+  if (op === "divide") return max <= 100 ? `${w(2)} : 1` : max <= 1000 ? `${w(3)} : 1` : `${w(4)} : ${w(2)}`;
+  const n = max.toLocaleString(lang === "de" ? "de-DE" : "en-GB");
+  return lang === "de" ? `bis ${n}` : `up to ${n}`;
+}
+
+/** Each operation has its own link: schriftlich/#mal opens straight on multiplication. */
+const HASH: Record<Op, string> = { add: "plus", subtract: "minus", multiply: "mal", divide: "geteilt" };
+const SYMBOL: Record<Op, string> = { add: "+", subtract: "−", multiply: "·", divide: ":" };
 
 // ---------- settings, remembered on this device ----------
 interface Settings {
@@ -51,21 +64,23 @@ interface Settings {
   method: SubtractMethod;
 }
 const KEY = "fm.schriftlich.v1";
+const OPS = Object.keys(HASH) as Op[];
+
 function loadSettings(): Settings {
   const d: Settings = { op: "add", max: 1000, carry: true, mode: "show", method: "complement" };
   try {
     const r = JSON.parse(localStorage.getItem(KEY) ?? "null") as Partial<Settings> | null;
-    if (!r || typeof r !== "object") return d;
-    return {
-      op: r.op === "subtract" ? "subtract" : "add",
-      max: r.max === 100 || r.max === 10000 ? r.max : 1000,
-      carry: r.carry !== false,
-      mode: r.mode === "try" ? "try" : "show",
-      method: r.method === "borrow" ? "borrow" : "complement",
-    };
-  } catch {
-    return d;
-  }
+    if (r && typeof r === "object") {
+      d.op = OPS.includes(r.op as Op) ? (r.op as Op) : "add";
+      d.max = r.max === 100 || r.max === 10000 ? r.max : 1000;
+      d.carry = r.carry !== false;
+      d.mode = r.mode === "try" ? "try" : "show";
+      d.method = r.method === "borrow" ? "borrow" : "complement";
+    }
+  } catch { /* use the defaults */ }
+  const fromLink = OPS.find((op) => `#${HASH[op]}` === location.hash);
+  if (fromLink) d.op = fromLink;
+  return d;
 }
 const settings = loadSettings();
 let lang: Lang = getLang();
@@ -73,10 +88,10 @@ function saveSettings(): void {
   try { localStorage.setItem(KEY, JSON.stringify(settings)); } catch { /* not remembered */ }
 }
 
-// ---------- current sum ----------
+// ---------- the current sum ----------
 let sum: WrittenSum | null = null;
-let texts: StepText[] = [];
-let done = 0; // columns finished
+let walk: Walk[] = [];
+let done = 0; // small steps finished
 let wrongTries = 0;
 let say: { text: string; tone: "" | "good" | "oops" } = { text: "", tone: "" };
 
@@ -85,40 +100,54 @@ const inA = $<HTMLInputElement>("num-a");
 const inB = $<HTMLInputElement>("num-b");
 const t = () => UI[lang];
 
-function build(a: number, b: number): void {
-  sum = settings.op === "add" ? writtenAdd([a, b]) : writtenSubtract(a, b, settings.method);
-  texts = stepTexts(sum, lang);
-  done = 0;
-  wrongTries = 0;
-  say = { text: introText(sum, lang), tone: "" };
-  skipLeadingZeros();
-  if (settings.mode === "try") say = { text: introText(sum, lang) + "\n" + nextQuestion(), tone: "" };
+function makeSum(a: number, b: number): WrittenSum {
+  switch (settings.op) {
+    case "add": return writtenAdd([a, b]);
+    case "subtract": return writtenSubtract(a, b, settings.method);
+    case "multiply": return writtenMultiply(a, b);
+    case "divide": return writtenDivide(a, b);
+  }
 }
 
-/** The question for the column the child is on now, or "" when finished. */
-function nextQuestion(): string {
-  if (!sum || done >= sum.steps.length) return "";
-  return t().yourTurn(texts[done]!.place, texts[done]!.ask);
+/** The question for the step the child is on, or "" when finished. */
+function question(): string {
+  const w = walk[done];
+  return w ? `${w.text.place}: ${w.text.ask} ${t().tapDigit}` : "";
+}
+
+/** In "my turn" mode, steps without an answer (writing a product, bringing down, a blank 0) happen by themselves. */
+function runAutoSteps(): string[] {
+  const texts: string[] = [];
+  if (settings.mode !== "try") return texts;
+  while (done < walk.length && walk[done]!.answer === null) texts.push(fullText(walk[done++]!.text));
+  return texts;
+}
+
+function build(a: number, b: number): void {
+  sum = makeSum(a, b);
+  walk = walkthrough(sum, lang);
+  done = 0;
+  wrongTries = 0;
+  const auto = runAutoSteps();
+  say = { text: [introText(sum, lang), ...auto, settings.mode === "try" ? question() : ""].filter(Boolean).join("\n"), tone: "" };
 }
 
 /** Reads the two boxes; shows a friendly message instead of building when they don't make a sum. */
 function fromInputs(): void {
-  const raw = [inA.value.trim(), inB.value.trim()];
-  const err = $("error");
+  const clean = (v: string) => v.trim().replace(/[ .]/g, "");
+  const raw = [clean(inA.value), clean(inB.value)];
   let message = "";
   if (raw.some((v) => v === "")) message = t().errEmpty;
-  else if (raw.some((v) => !/^\d+$/.test(v.replace(/[ .]/g, "")))) message = t().errWhole;
-  const [a, b] = raw.map((v) => Number(v.replace(/[ .]/g, ""))) as [number, number];
+  else if (raw.some((v) => !/^\d+$/.test(v))) message = t().errWhole;
+  const [a, b] = raw.map(Number) as [number, number];
   if (!message && (a > 9_999_999 || b > 9_999_999)) message = t().errHuge;
   if (!message && settings.op === "subtract" && b > a) message = t().errBig;
-  err.textContent = message;
-  err.hidden = !message;
-  if (message) {
-    sum = null;
-    render();
-    return;
-  }
-  build(a, b);
+  if (!message && (settings.op === "multiply" || settings.op === "divide") && b > 999) message = t().errHugeB;
+  if (!message && settings.op === "divide" && b === 0) message = t().errZero;
+  $("error").textContent = message;
+  $("error").hidden = !message;
+  if (message) sum = null;
+  else build(a, b);
   render();
 }
 
@@ -129,116 +158,55 @@ function newProblem(): void {
   fromInputs();
 }
 
-/** In "my turn" mode a leading 0 is filled in automatically: there's nothing to type. */
-function skipLeadingZeros(): void {
-  if (!sum || settings.mode !== "try") return;
-  while (done < sum.steps.length && "leadingZero" in sum.steps[done]! && (sum.steps[done] as { leadingZero: boolean }).leadingZero) done++;
-}
-
-// ---------- drawing the board ----------
-function cell(text: string, ...classes: string[]): HTMLSpanElement {
-  const el = document.createElement("span");
-  el.className = ["cell", ...classes].join(" ");
-  el.textContent = text;
-  return el;
-}
-
+// ---------- drawing ----------
 function renderBoard(): void {
-  const board = $("board");
+  const el = $("board");
   if (!sum) {
-    board.replaceChildren();
+    el.replaceChildren();
     return;
   }
-  const s = sum;
-  const W = s.steps.length;
-  board.style.gridTemplateColumns = `repeat(${W + 1}, auto)`;
-  const current = settings.mode === "try" ? done : done - 1; // column being worked on, or just finished
-  const rows: HTMLSpanElement[] = [];
-  const nowClass = (c: number) => (c === current && done <= W ? "now" : "");
-
-  // Exchanged digits (Abziehen): what each top digit has become so far.
-  const exchanged = new Map<number, number>();
-  if (s.kind === "borrow") {
-    s.steps.forEach((step, i) => {
-      if (i >= done) return;
-      for (const e of step.exchanges) exchanged.set(e.column, e.to);
-      if (step.exchanges.length) exchanged.set(step.column, step.topAfter);
-    });
-    const row = [cell("", "exch")];
-    for (let p = 0; p < W; p++) {
-      const c = W - 1 - p;
-      row.push(cell(exchanged.has(c) ? String(exchanged.get(c)) : "", "exch", nowClass(c)));
-    }
-    rows.push(...row);
-  }
-
-  // The numbers, right-aligned; the sign goes in front of the last one.
-  s.numbers.forEach((n, i) => {
-    const d = digitsOf(n);
-    const isLast = i === s.numbers.length - 1;
-    rows.push(cell(isLast ? (s.kind === "add" ? "+" : "−") : "", "sign"));
-    for (let p = 0; p < W; p++) {
-      const c = W - 1 - p;
-      const struck = i === 0 && exchanged.has(c) ? "struck" : "";
-      rows.push(cell(d[c] !== undefined ? String(d[c]) : "", nowClass(c), struck));
-    }
-  });
-
-  // Carries (Übertrag), written small above the line.
-  if (s.kind !== "borrow") {
-    rows.push(cell("", "small"));
-    for (let p = 0; p < W; p++) {
-      const c = W - 1 - p;
-      const prev = c > 0 && c - 1 < done ? s.steps[c - 1]!.carryOut : 0;
-      rows.push(cell(prev ? String(prev) : "", "small", nowClass(c)));
-    }
-  }
-
-  // The answer row.
-  rows.push(cell("", "result"));
-  for (let p = 0; p < W; p++) {
-    const c = W - 1 - p;
-    const step = s.steps[c]!;
-    const blank = "leadingZero" in step && step.leadingZero;
-    let text = "";
-    if (c < done) text = blank ? "" : String(step.write);
-    else if (c === done && settings.mode === "try") text = "?";
-    rows.push(cell(text, "result", nowClass(c), text === "?" ? "ask" : ""));
-  }
-  board.replaceChildren(...rows);
-}
-
-// ---------- page ----------
-function renderText(): void {
-  document.documentElement.lang = lang;
-  document.querySelectorAll<HTMLElement>("[data-t]").forEach((el) => {
-    el.textContent = t()[el.dataset.t as TextKey];
-  });
-  document.querySelectorAll<HTMLButtonElement>("[data-lang]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.lang === lang)));
-  inA.setAttribute("aria-label", t().firstNumber);
-  inB.setAttribute("aria-label", t().secondNumber);
-  $("op").setAttribute("aria-label", t().opLabel);
+  const board = buildBoard(sum, done, settings.mode);
+  // Cells shrink so the whole sum fits the screen: the page gutter and panel padding take about 64px.
+  el.style.setProperty("--cw", `min(46px, calc((min(100vw, 760px) - 64px) / ${board.cols}))`);
+  el.style.gridTemplateColumns = `repeat(${board.cols}, var(--cw))`;
+  el.replaceChildren(
+    ...board.cells.map((cell) => {
+      const span = document.createElement("span");
+      span.className = ["cell", ...cell.cls].join(" ");
+      span.textContent = cell.text;
+      span.style.gridRow = String(cell.r + 1);
+      span.style.gridColumn = cell.span ? `${cell.c + 1} / span ${cell.span}` : String(cell.c + 1);
+      return span;
+    }),
+  );
 }
 
 function render(): void {
-  renderText();
-  $("op").textContent = settings.op === "add" ? "+" : "−";
-  document.querySelectorAll<HTMLButtonElement>("[data-max]").forEach((b) => b.setAttribute("aria-pressed", String(Number(b.dataset.max) === settings.max)));
+  document.documentElement.lang = lang;
+  document.querySelectorAll<HTMLElement>("[data-t]").forEach((el) => (el.textContent = t()[el.dataset.t as TextKey]));
+  document.querySelectorAll<HTMLButtonElement>("[data-lang]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.lang === lang)));
+  inA.setAttribute("aria-label", t().firstNumber);
+  inB.setAttribute("aria-label", t().secondNumber);
+
+  $("op-symbol").textContent = SYMBOL[settings.op];
+  document.querySelectorAll<HTMLButtonElement>("[data-op]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.op === settings.op)));
+  document.querySelectorAll<HTMLButtonElement>("[data-max]").forEach((b) => {
+    b.textContent = levelLabel(settings.op, Number(b.dataset.max), lang);
+    b.setAttribute("aria-pressed", String(Number(b.dataset.max) === settings.max));
+  });
+  $("carry").textContent = settings.op === "divide" ? t().rest : t().carry;
   $("carry").setAttribute("aria-pressed", String(settings.carry));
   document.querySelectorAll<HTMLButtonElement>("[data-mode]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.mode === settings.mode)));
   document.querySelectorAll<HTMLButtonElement>("[data-method]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.method === settings.method)));
 
   renderBoard();
-  const finished = sum !== null && done >= sum.steps.length;
-  const sayEl = $("say");
-  sayEl.textContent = sum ? say.text : "";
-  sayEl.className = `say ${say.tone}`;
-
+  const finished = sum !== null && done >= walk.length;
+  $("say").textContent = sum ? say.text : "";
+  $("say").className = `say ${say.tone}`;
   $("nav").hidden = !sum || settings.mode !== "show";
   $<HTMLButtonElement>("back").disabled = done === 0;
   $<HTMLButtonElement>("next").disabled = finished;
   $("keypad").hidden = !sum || settings.mode !== "try" || finished;
-
   $("finish").hidden = !finished;
   if (sum && finished) {
     const f = finishText(sum, lang);
@@ -247,32 +215,29 @@ function render(): void {
   }
 }
 
-const fullText = (i: number) => `${texts[i]!.place}: ${texts[i]!.work} ${texts[i]!.write}`;
-
+// ---------- stepping ----------
 function step(delta: 1 | -1): void {
   if (!sum) return;
-  done = Math.max(0, Math.min(sum.steps.length, done + delta));
-  say = done === 0 ? { text: introText(sum, lang), tone: "" } : { text: fullText(done - 1), tone: "" };
+  done = Math.max(0, Math.min(walk.length, done + delta));
+  say = { text: done === 0 ? introText(sum, lang) : fullText(walk[done - 1]!.text), tone: "" };
   render();
 }
 
-function typeDigit(d: number): void {
-  if (!sum || settings.mode !== "try" || done >= sum.steps.length) return;
-  const stepNow = sum.steps[done]!;
-  if (d === stepNow.write) {
-    const explained = fullText(done);
+function typeDigit(digit: number): void {
+  if (!sum || settings.mode !== "try" || done >= walk.length) return;
+  const w = walk[done]!;
+  if (digit === w.answer) {
+    const texts = [fullText(w.text)];
     done++;
     wrongTries = 0;
-    skipLeadingZeros();
-    const next = nextQuestion();
-    say = { text: t().right + explained + (next ? "\n" + next : ""), tone: "good" };
-    render();
-    return;
+    texts.push(...runAutoSteps());
+    say = { text: t().right + [...texts, question()].filter(Boolean).join("\n"), tone: "good" };
+  } else {
+    wrongTries++;
+    // First miss: the question again. Second miss: the full working.
+    const help = wrongTries >= 2 ? `${w.text.place}: ${w.text.work}` : `${w.text.place}: ${w.text.ask}`;
+    say = { text: `${t().wrong}${help} ${t().again}`, tone: "oops" };
   }
-  wrongTries++;
-  // First mistake: the question again as a hint. Second: the full working.
-  const help = wrongTries >= 2 ? `${texts[done]!.place}: ${texts[done]!.work}` : `${texts[done]!.place}: ${texts[done]!.ask}`;
-  say = { text: t().wrong + help + " " + t().again, tone: "oops" };
   render();
 }
 
@@ -282,18 +247,20 @@ document.querySelectorAll<HTMLButtonElement>("[data-lang]").forEach((b) =>
     lang = b.dataset.lang === "en" ? "en" : "de";
     setLang(lang);
     if (sum) {
-      texts = stepTexts(sum, lang);
-      if (settings.mode === "try") say = { text: nextQuestion(), tone: "" };
-      else say = done === 0 ? { text: introText(sum, lang), tone: "" } : { text: fullText(done - 1), tone: "" };
+      walk = walkthrough(sum, lang);
+      say = { text: settings.mode === "try" ? question() : done === 0 ? introText(sum, lang) : fullText(walk[done - 1]!.text), tone: "" };
     }
     render();
   }),
 );
-$("op").addEventListener("click", () => {
-  settings.op = settings.op === "add" ? "subtract" : "add";
-  saveSettings();
-  newProblem();
-});
+document.querySelectorAll<HTMLButtonElement>("[data-op]").forEach((b) =>
+  b.addEventListener("click", () => {
+    settings.op = b.dataset.op as Op;
+    saveSettings();
+    history.replaceState(null, "", `#${HASH[settings.op]}`);
+    newProblem();
+  }),
+);
 document.querySelectorAll<HTMLButtonElement>("[data-max]").forEach((b) =>
   b.addEventListener("click", () => {
     settings.max = Number(b.dataset.max);
@@ -327,12 +294,12 @@ $("next").addEventListener("click", () => step(1));
 document.querySelectorAll<HTMLButtonElement>("#keypad [data-key]").forEach((b) =>
   b.addEventListener("click", () => {
     const k = b.dataset.key!;
-    if (k === "hint") {
-      if (sum && done < sum.steps.length) {
-        say = { text: `${texts[done]!.place}: ${texts[done]!.ask}`, tone: "" };
-        render();
-      }
-    } else typeDigit(Number(k));
+    if (k !== "hint") return typeDigit(Number(k));
+    const w = walk[done];
+    if (w) {
+      say = { text: `${w.text.place}: ${w.text.ask}`, tone: "" };
+      render();
+    }
   }),
 );
 document.addEventListener("keydown", (e) => {
@@ -342,4 +309,5 @@ document.addEventListener("keydown", (e) => {
   if (settings.mode === "show" && e.key === "ArrowLeft") step(-1);
 });
 
+if (location.hash !== `#${HASH[settings.op]}`) history.replaceState(null, "", `#${HASH[settings.op]}`);
 newProblem();

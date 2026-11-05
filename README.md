@@ -21,7 +21,7 @@ Planned helpers are tracked as [issues](https://github.com/littleGex/fordMath/is
 | Quadratic equation  | `solveQuadratic(a, b, c)`             | Roots as a discriminated union (two real, repeated, complex, linear, none, every x), plus vertex; numerically stable |
 | Discriminant        | `discriminant(a, b, c)`               | b² − 4ac, snapped to 0 within floating-point noise          |
 | Times tables        | `questionsFor`, `makeRound`, `record` in `lib/times-tables` | Einmaleins facts, weighted rounds (Leitner boxes), Kernaufgaben strategies; seeded random in `lib/random` |
-| Written sums        | `writtenAdd`, `writtenSubtract(a, b, method)`, `makeProblem` in `lib/written` | Column method as data, one step per column; subtraction by Ergänzen or Abziehen mit Entbündeln |
+| Written sums        | `writtenAdd`, `writtenSubtract(a, b, method)`, `writtenMultiply`, `writtenDivide`, `makeProblem` in `lib/written` | German school layouts as data; subtraction by Ergänzen or Abziehen mit Entbündeln; multiplication line by line from the left; division with Rest |
 | Expressions         | `compile(text)` → `(x) => number`     | Safe parser for f(x): never uses eval; `parse`, `evaluate`, `formatExpr` and `ExpressionError` (with a position) also exported from `lib/expression` |
 
 All functions take `readonly number[]` (ints and floats), never mutate the input, and throw on an empty array, `NaN` or `Infinity`.
@@ -34,7 +34,7 @@ All functions take `readonly number[]` (ints and floats), never mutate the input
 | `/stats/` | Live calculator, number line with mean ± σ, and the working for each result |
 | `/quadratic/` | Solver for ax² + bx + c = 0 with a graph and the working |
 | `/einmaleins/` | Einmaleins trainer (German, with English toggle): keypad, dots picture and working after a mistake, progress board |
-| `/schriftlich/` | Written addition and subtraction (German, EN toggle): step through or do it yourself; subtraction method set once for the school |
+| `/schriftlich/` | Written +, −, · and : (German, EN toggle): step through or do it yourself; `#plus`, `#minus`, `#mal`, `#geteilt` open an operation directly |
 | `/function/` | Type any f(x): how it was read, its graph, and f(x) worked out step by step |
 | `/tests/` | Every test from the deployed build, read from `test-results.json`      |
 
