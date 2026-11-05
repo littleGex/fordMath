@@ -18,6 +18,7 @@ export default defineConfig({
         function: resolve(__dirname, "function/index.html"),
         einmaleins: resolve(__dirname, "einmaleins/index.html"),
         schriftlich: resolve(__dirname, "schriftlich/index.html"),
+        teiler: resolve(__dirname, "teiler/index.html"),
         tests: resolve(__dirname, "tests/index.html"),
       },
     },
