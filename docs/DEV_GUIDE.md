@@ -325,6 +325,20 @@ Patterns worth copying:
 - **The page as a state machine:** `type State = { screen: "setup" } | { screen: "play"; … } | { screen: "result"; … }`, a discriminated union again. Each screen's data exists only while that screen is showing.
 - **Reading `unknown` safely:** `load()` treats whatever is in `localStorage` as `unknown` and checks each field before trusting it.
 
+### Brüche (#13): a type that can only be made one way
+
+`src/lib/fraction.ts` uses a **branded type**:
+
+```ts
+declare const valid: unique symbol;
+export type Fraction = { readonly num: number; readonly den: number } & { readonly [valid]: true };
+export function fraction(num: number, den: number): Fraction { /* checks, then */ return { num, den } as Fraction; }
+```
+
+A plain object like `{ num: 1, den: 0 }` doesn't have the hidden `[valid]` property, so TypeScript won't accept it where a `Fraction` is expected. The only way to get one is `fraction()`, which rejects a 0 denominator. Every function that takes a `Fraction` can therefore trust it. The brand costs nothing at runtime: it exists only for the compiler.
+
+The question generator test is worth reading too. It generates 300 questions per level and checks that *exactly one* choice is right each time. That test found a real bug, where the compare level could show the same fraction on both sides.
+
 ## 7. Warm-up: add Range to Statistics
 
 **Goal:** a new "Range" tile on the Statistics page, showing largest − smallest, with its working. It's small, it touches every layer, and it's the first piece of #5.
@@ -472,41 +486,23 @@ Open the pull request on GitHub, wait for the green tick, and merge. The site up
 
 ## 8. Your turn: the exercise ladder
 
-Ordered roughly from easiest to hardest to *build*, which isn't the same as the school level. #14 (Einmaleins), #15, #11 and #12 (written +, −, ·, :) are finished. Read #14 as an example of a game. In `src/lib/written.ts`, notice how adding two new members to the `WrittenSum` union made the compiler list every place that needed updating, and how `Extract<WrittenSum, { kind: "divide" }>` gives each function its own precise return type. Each level lists the TypeScript ideas it will exercise.
+Ordered roughly from easiest to hardest to *build*, which isn't the same as the school level. #7 (Teiler), #13 (Brüche), #14 (Einmaleins), #15, #11 and #12 (written +, −, ·, :) are finished. Read #14 as an example of a game. In `src/lib/written.ts`, notice how adding two new members to the `WrittenSum` union made the compiler list every place that needed updating, and how `Extract<WrittenSum, { kind: "divide" }>` gives each function its own precise return type. Each level lists the TypeScript ideas it will exercise.
 
-### Level 1: #7, GCD, LCM and prime factorisation
+### Level 1: #18, Punkt vor Strich trainer
 
-*Practises: integer guards, loops, tuples, return types, `it.each`.*
+*Practises: reusing a tree (the expression parser from #1), recursion, and the game state machine from Einmaleins.*
 
-Suggested signatures, to start in `src/lib/primes.ts`:
+Add a helper in `src/lib/expression/` that finds which node of the tree should be worked out next (the deepest, leftmost one whose children are numbers), and one that replaces that node by its value. Test both on `3 + 4 · 2` and `(3 + 4) · 2`. Then copy the setup/play/result shape of `src/pages/einmaleins.ts`.
 
-```ts
-export function gcd(a: number, b: number): number;
-export function lcm(a: number, b: number): number;
-export function isPrime(n: number): boolean;
-export function primeFactors(n: number): Array<[prime: number, power: number]>;  // 360 → [[2, 3], [3, 2], [5, 1]]
-```
+### Level 2: #17, place value and rounding
 
-`[prime: number, power: number]` is a **labelled tuple**: the labels show up in your editor's hints.
+*Practises: number formatting with `toLocaleString`, string building for German number words, and tricky edge cases.*
 
-<details>
-<summary>Hints</summary>
-
-- Write an `assertWholeNumber(n, name)` guard like `assertValid`, using `Number.isSafeInteger`. Decide what you do with negatives (`gcd(-12, 18)` is normally 6) and 0 (`gcd(0, n) = n`).
-- Euclid: `gcd(a, b) = gcd(b, a % b)` until `b` is 0. For the explanation, record each line (`48 = 1 × 36 + 12`) in an array as you go. Consider returning `{ result, steps }` from an internal function so the explanation can reuse the real working.
-- `lcm(a, b) = |a × b| ÷ gcd(a, b)`, but divide first (`a / gcd(a, b) * b`) to avoid overflow.
-- Factorising: divide by 2 while you can, then by 3, 5, 7…, only up to `√n`. Whatever is left above 1 is prime.
-</details>
-
-### Level 2: #13, the fractions game
-
-*Practises: a small type with rules (`Fraction` that can only be made through a function), reusing `src/lib/random.ts` and `src/lib/times-tables.ts` patterns, and GCD from #7.*
-
-Start with `src/lib/fraction.ts`: `fraction(num, den)` that rejects a 0 denominator and keeps the sign on top, then `simplify`, `equals`, `compare` and `add`. Then copy the Einmaleins page's state machine (setup, play, result) for the game. A question generator should take a `Random`, exactly like `makeRound`.
+German number words are a good test-first exercise: write the tests for `21` ("einundzwanzig"), `101`, `1001`, `100000` and `1000000` before any code.
 
 ### Level 3: #5, quartiles
 
-Quartiles reuses the Statistics registry, and adds an SVG box plot alongside the existing number line in `src/pages/stats.ts`. (Do #7 from Level 1 before #13 if you want GCD ready for simplifying fractions.)
+Quartiles reuses the Statistics registry, and adds an SVG box plot alongside the existing number line in `src/pages/stats.ts`.
 
 ### Level 4: #9 matrices, then #10 simultaneous equations
 

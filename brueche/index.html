@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#141c2e">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="apple-mobile-web-app-title" content="fordMath">
+<title>Brüche · fordMath</title>
+</head>
+<body>
+<main class="narrow">
+  <header class="kid-head">
+    <div>
+      <a class="back" href="../">← fordMath</a>
+      <h1>🍕 <span data-t="title"></span></h1>
+      <p class="subtitle" data-t="subtitle"></p>
+    </div>
+    <div class="lang" role="group" aria-label="Sprache / Language">
+      <button class="chip" type="button" data-lang="de" aria-pressed="true">DE</button>
+      <button class="chip" type="button" data-lang="en" aria-pressed="false">EN</button>
+    </div>
+  </header>
+
+  <!-- ===== Choose a level ===== -->
+  <section id="setup">
+    <h2 class="section" data-t="pickLevel"></h2>
+    <div class="levels" id="levels"></div>
+    <details class="panel parents">
+      <summary data-t="parents"></summary>
+      <label class="unlock"><input type="checkbox" id="unlock-all"> <span data-t="unlockAll"></span></label>
+      <div class="reset">
+        <button class="link-btn" type="button" id="reset" data-t="reset"></button>
+        <span id="reset-confirm" hidden>
+          <span data-t="resetSure"></span>
+          <button class="link-btn danger" type="button" id="reset-yes" data-t="yes"></button>
+          <button class="link-btn" type="button" id="reset-no" data-t="no"></button>
+        </span>
+      </div>
+    </details>
+  </section>
+
+  <!-- ===== Play ===== -->
+  <section id="play" hidden>
+    <div class="play-top">
+      <span class="level-name" id="level-name"></span>
+      <span class="streak" id="streak"></span>
+    </div>
+    <div class="dots-progress" id="progress" aria-hidden="true"></div>
+    <div class="panel question-card">
+      <p class="prompt" id="prompt" aria-live="polite"></p>
+      <div class="show" id="show"></div>
+    </div>
+    <div class="choices" id="choices"></div>
+    <div class="feedback" id="feedback" hidden>
+      <p class="verdict" id="verdict"></p>
+      <figure class="panel bars-fig"><svg id="bars" role="img"></svg></figure>
+      <div class="explain" id="explain"></div>
+      <button class="tile big-btn c-fraction" type="button" id="next"><h3 data-t="next"></h3></button>
+    </div>
+    <button class="link-btn stop" type="button" id="stop" data-t="stop"></button>
+  </section>
+
+  <!-- ===== Result ===== -->
+  <section id="result" hidden>
+    <div class="panel result-card">
+      <p class="stars" id="stars"></p>
+      <p class="praise" id="praise"></p>
+      <p class="score" id="score"></p>
+      <p class="unlocked" id="unlocked" hidden></p>
+    </div>
+    <div class="actions">
+      <button class="tile big-btn c-fraction" type="button" id="again"><span class="emoji" aria-hidden="true">🔁</span><h3 data-t="again"></h3></button>
+      <button class="tile big-btn c-units" type="button" id="next-level"><span class="emoji" aria-hidden="true">⏭️</span><h3 data-t="nextLevel"></h3></button>
+    </div>
+    <button class="link-btn stop" type="button" id="to-levels" data-t="toLevels"></button>
+  </section>
+</main>
+<script type="module" src="/src/pages/brueche.ts"></script>
+</body>
+</html>
