@@ -1,7 +1,8 @@
 import { answerOf, strategyFor, type Question } from "../lib/times-tables";
+import type { Lang } from "./lang";
 import type { ExplainSection } from "./types";
 
-export type Lang = "de" | "en";
+export type { Lang };
 
 /**
  * All wording in one place per language. `satisfies Record<Lang, Words>` makes the

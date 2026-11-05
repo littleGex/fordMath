@@ -155,6 +155,36 @@ a.tile:active {
   .tile, a.tile:active { transition: none; }
 }
 
+
+/* ---------- Children's pages: header with language switch, big buttons, keypad ---------- */
+.kid-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.lang { display: flex; gap: 6px; margin-top: 4px; }
+.lang .chip { padding: 6px 12px; font-size: 14px; }
+.big-btn { font: inherit; border: 0; border-top: 2px solid color-mix(in srgb, var(--c) 35%, transparent); cursor: pointer; width: 100%; }
+.big-btn h3 { font-size: clamp(17px, 4.6vw, 20px); }
+.big-btn .emoji { margin-top: 2px; font-size: 34px; }
+.big-btn:disabled { opacity: 0.45; cursor: default; }
+button.tile:hover:not(:disabled) { background: var(--tile-hi); }
+button.tile:active:not(:disabled) { transform: translateY(calc(var(--shelf) - 1px)); box-shadow: 0 1px 0 0 color-mix(in srgb, var(--c) 70%, #000); }
+.link-btn { font: inherit; font-size: 14px; background: none; border: 0; color: var(--muted); text-decoration: underline; cursor: pointer; padding: 4px; }
+.link-btn.danger { color: #ff8a98; }
+.keypad { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 16px; }
+.keypad button {
+  font: 700 clamp(26px, 8vw, 32px) var(--f-body);
+  padding: 14px 0;
+  border: 0;
+  border-radius: 16px;
+  background: var(--tile);
+  color: var(--ink);
+  box-shadow: 0 5px 0 0 #0c1220;
+  margin-bottom: 5px;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.keypad button:active { transform: translateY(4px); box-shadow: 0 1px 0 0 #0c1220; }
+.keypad .ok { background: color-mix(in srgb, #4ade80 30%, var(--tile)); box-shadow: 0 5px 0 0 #1f7a43; }
+.keypad:has(button:disabled) { opacity: 0.35; }
+
 /* per-helper colours */
 .c-stats      { --c: #00d4ff; }
 .c-tests      { --c: #7cfc00; }

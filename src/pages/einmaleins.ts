@@ -6,6 +6,7 @@ import {
 } from "../lib/times-tables";
 import { explainQuestion, type Lang } from "../explain/times-tables";
 import { renderSections } from "./render";
+import { getLang, setLang } from "./lang";
 
 // ---------- words on the page (the explanations have their own, in src/explain) ----------
 const UI = {
@@ -63,10 +64,10 @@ const DEFAULTS: Saved = { lang: "de", tables: [2, 5, 10], mode: "multiply", time
 function load(): Saved {
   try {
     const raw: unknown = JSON.parse(localStorage.getItem(STORE_KEY) ?? "null");
-    if (typeof raw !== "object" || raw === null) return { ...DEFAULTS };
+    if (typeof raw !== "object" || raw === null) return { ...DEFAULTS, lang: getLang() };
     const r = raw as Partial<Saved>;
     return {
-      lang: r.lang === "en" ? "en" : "de",
+      lang: getLang(r.lang === "en" ? "en" : "de"),
       tables: Array.isArray(r.tables) && r.tables.every((t) => TABLES.includes(t as (typeof TABLES)[number])) && r.tables.length
         ? r.tables : DEFAULTS.tables,
       mode: r.mode === "divide" || r.mode === "mixed" ? r.mode : "multiply",
@@ -74,7 +75,7 @@ function load(): Saved {
       mastery: typeof r.mastery === "object" && r.mastery !== null ? r.mastery : {},
     };
   } catch {
-    return { ...DEFAULTS };
+    return { ...DEFAULTS, lang: getLang() };
   }
 }
 let saved = load();
@@ -352,6 +353,7 @@ function finish(): void {
 document.querySelectorAll<HTMLButtonElement>("[data-lang]").forEach((b) =>
   b.addEventListener("click", () => {
     saved.lang = b.dataset.lang === "en" ? "en" : "de";
+    setLang(saved.lang);
     save();
     render();
   }),

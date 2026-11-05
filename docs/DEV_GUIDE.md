@@ -472,7 +472,7 @@ Open the pull request on GitHub, wait for the green tick, and merge. The site up
 
 ## 8. Your turn: the exercise ladder
 
-Ordered roughly from easiest to hardest to *build*, which isn't the same as the school level. The class 3 trainer #15 (written addition and subtraction) is also a good early exercise, because the logic is small and the design is all about step data. #14 (Einmaleins) is finished: read it as an example of a game rather than a calculator. Each level lists the TypeScript ideas it will exercise.
+Ordered roughly from easiest to hardest to *build*, which isn't the same as the school level. #14 (Einmaleins) and #15 (written addition and subtraction) are finished: read #14 as an example of a game, and #15 (`src/lib/written.ts`) as the model for #11 and #12, which use the same column-steps-as-data design. Each level lists the TypeScript ideas it will exercise.
 
 ### Level 1: #7, GCD, LCM and prime factorisation
 

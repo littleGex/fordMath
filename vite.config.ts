@@ -17,6 +17,7 @@ export default defineConfig({
         quadratic: resolve(__dirname, "quadratic/index.html"),
         function: resolve(__dirname, "function/index.html"),
         einmaleins: resolve(__dirname, "einmaleins/index.html"),
+        schriftlich: resolve(__dirname, "schriftlich/index.html"),
         tests: resolve(__dirname, "tests/index.html"),
       },
     },
