@@ -16,6 +16,8 @@ Planned helpers are tracked as [issues](https://github.com/littleGex/fordMath/is
 | Variance            | `variance(values, kind?)`             | `kind` is `"population"` (÷ n, default) or `"sample"` (÷ n − 1) |
 | Standard deviation  | `standardDeviation(values, kind?)`    | √variance; sample needs at least 2 values                   |
 | Everything at once  | `getStats(values)`                    | Validates once and computes the mean once                   |
+| Quadratic equation  | `solveQuadratic(a, b, c)`             | Roots as a discriminated union (two real, repeated, complex, linear, none, every x), plus vertex; numerically stable |
+| Discriminant        | `discriminant(a, b, c)`               | b² − 4ac, snapped to 0 within floating-point noise          |
 
 All functions take `readonly number[]` (ints and floats), never mutate the input, and throw on an empty array, `NaN` or `Infinity`.
 
@@ -25,17 +27,18 @@ All functions take `readonly number[]` (ints and floats), never mutate the input
 | --------- | ---------------------------------------------------------------------- |
 | `/`       | Homepage: ready helpers, tests, and "Coming soon" tiles linking to issues |
 | `/stats/` | Live calculator, number line with mean ± σ, and the working for each result |
+| `/quadratic/` | Solver for ax² + bx + c = 0 with a graph and the working |
 | `/tests/` | Every test from the deployed build, read from `test-results.json`      |
 
 ## Project layout
 
 ```
-index.html  stats/index.html  tests/index.html   pages (Vite multi-page build)
+index.html  stats/  quadratic/  tests/   pages (Vite multi-page build)
 public/          favicon, Home Screen icons, manifest
 src/
   lib/           pure maths, no DOM; one module + one test file per helper
     validate.ts  shared input guard (assertValid) and sortNumeric
-    mean.ts  median.ts  mode.ts  deviation.ts  stats.ts
+    mean.ts  median.ts  mode.ts  deviation.ts  stats.ts  quadratic.ts
     index.ts     public API
   explain/       step-by-step working, using the user's numbers (+ tests)
   registry.ts    which helpers the Statistics page shows

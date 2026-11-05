@@ -1,0 +1,49 @@
+.coef-panel { display: grid; gap: 14px; }
+.equation {
+  margin: 0;
+  font: 700 clamp(22px, 7vw, 32px) var(--f-mono);
+  text-align: center;
+  color: #ffb347;
+  overflow-wrap: anywhere;
+}
+.coefs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.coef { display: grid; gap: 6px; min-width: 0; }
+.coef label { font: 700 17px var(--f-mono); color: var(--muted); text-align: center; }
+.coef .row { display: flex; gap: 6px; min-width: 0; }
+.coef input {
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+  font: 600 18px var(--f-mono);
+  padding: 10px 6px;
+  text-align: center;
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  background: var(--bg);
+  color: var(--ink);
+}
+.coef input:focus { border-color: #ffb347; }
+.flip {
+  flex: none;
+  width: 40px;
+  font: 700 19px var(--f-mono);
+  border: 0;
+  border-radius: 12px;
+  background: var(--tile-hi);
+  color: var(--ink);
+  cursor: pointer;
+}
+.flip:hover { background: var(--line); }
+.flip:active { transform: translateY(1px); }
+.chips { margin: 14px 0 16px; }
+
+.qresults { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-bottom: 16px; }
+.qresults .wide { grid-column: 1 / -1; }
+.qresults .wide .value { font-size: clamp(20px, 6.5vw, 28px); }
+
+.plot text { font-family: var(--f-mono); font-size: 23px; fill: var(--muted); }
+.plot .lbl-root { fill: var(--ink); font-weight: 700; }
+.plot .lbl-vertex { fill: #d9b3ff; font-weight: 700; }
+.k-curve { background: #ffb347; }
+.k-root { background: transparent; border: 2px solid var(--ink); width: 10px !important; height: 10px !important; border-radius: 50% !important; }
+.k-vertex { background: #b967ff; width: 10px !important; height: 10px !important; border-radius: 50% !important; }

@@ -43,7 +43,7 @@ h2.section { margin: 26px 0 10px; font-size: 15px; font-weight: 500; color: var(
   color: var(--muted); text-decoration: none; font-size: 15px; font-weight: 500;
 }
 .back:hover { color: var(--ink); }
-a:focus-visible, button:focus-visible, textarea:focus-visible, summary:focus-visible {
+a:focus-visible, button:focus-visible, textarea:focus-visible, input:focus-visible, summary:focus-visible {
   outline: 3px solid var(--ink); outline-offset: 3px;
 }
 
@@ -118,6 +118,33 @@ a.tile:active {
 .mono { font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
 .note { margin: 0; color: var(--muted); font-size: 14px; }
 .error { margin: 0; padding: 10px 14px; border-radius: 12px; background: color-mix(in srgb, var(--fail) 18%, transparent); color: #ffc2c9; font-size: 15px; }
+
+/* ---------- Result tiles (value readouts) ---------- */
+.result.tile { align-items: flex-start; text-align: left; padding: 14px 14px 12px; gap: 2px; }
+.result .sym { font: 700 15px var(--f-mono); color: color-mix(in srgb, var(--c) 85%, #fff); }
+.result h3 { font-size: 14px; font-weight: 500; color: var(--muted); }
+.result .value {
+  font: 700 clamp(20px, 6vw, 26px) var(--f-mono);
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: break-word;
+  margin-top: 2px;
+}
+.result .value.dim { font-size: 15px; font-weight: 500; color: var(--faint); }
+.result .desc { display: block; font-size: 13px; }
+
+/* ---------- Plots ---------- */
+.plot { margin: 0; padding: 12px 12px 10px; overflow-x: auto; }
+.plot svg { display: block; width: 100%; min-width: 320px; height: auto; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 13px; color: var(--muted); padding: 6px 4px 0; }
+.legend i { display: inline-block; width: 14px; height: 4px; border-radius: 2px; margin-right: 6px; vertical-align: middle; }
+
+/* ---------- Step-by-step working ---------- */
+.explain { display: grid; gap: 10px; }
+.explain details { --c: #8fa3b8; background: var(--tile); border-radius: 14px; border-left: 4px solid var(--c); }
+.explain summary { cursor: pointer; padding: 12px 14px; font-weight: 600; font-size: 16px; list-style-position: inside; }
+.explain ol { margin: 0; padding: 0 16px 14px 36px; display: grid; gap: 8px; }
+.explain li { line-height: 1.45; color: var(--ink); overflow-wrap: anywhere; }
+.explain li::marker { color: var(--muted); font-weight: 600; }
 
 .version { margin: 32px 0 0; font-size: 13px; color: var(--faint); text-align: center; }
 .version a { color: var(--muted); }

@@ -14,6 +14,7 @@ export default defineConfig({
       input: {
         home: resolve(__dirname, "index.html"),
         stats: resolve(__dirname, "stats/index.html"),
+        quadratic: resolve(__dirname, "quadratic/index.html"),
         tests: resolve(__dirname, "tests/index.html"),
       },
     },
