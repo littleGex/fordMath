@@ -24,6 +24,7 @@ Planned helpers are tracked as [issues](https://github.com/littleGex/fordMath/is
 | Written sums        | `writtenAdd`, `writtenSubtract(a, b, method)`, `writtenMultiply`, `writtenDivide`, `makeProblem` in `lib/written` | German school layouts as data; subtraction by Ergänzen or Abziehen mit Entbündeln; multiplication line by line from the left; division with Rest |
 | Number theory       | `checkRule`, `divisors`, `isPrime`, `factorLadder`, `primeFactors`, `gcd`, `lcm`, `euclid` in `lib/number-theory` | Divisibility rules with their working, divisor pairs, prime factor ladder, ggT/kgV by lists and by Euclid |
 | Fractions           | `fraction`, `simplify`, `expand`, `compare`, `add`, `makeFractionRound` in `lib/fraction` | Branded `Fraction` type (only made through `fraction()`); six levels of questions, each with exactly one right answer |
+| Place value         | `splitPlaces`, `setDigit`, `roundTo`, `makePlaceRound` in `lib/place-value`; `germanWords`, `englishWords` in `lib/number-words` | Stellenwerte up to 999 999 999 999, rounding with the deciding digit, numbers in German and English words, four quiz question types |
 | Expressions         | `compile(text)` → `(x) => number`     | Safe parser for f(x): never uses eval; `parse`, `evaluate`, `formatExpr` and `ExpressionError` (with a position) also exported from `lib/expression` |
 
 All functions take `readonly number[]` (ints and floats), never mutate the input, and throw on an empty array, `NaN` or `Infinity`.
@@ -39,13 +40,14 @@ All functions take `readonly number[]` (ints and floats), never mutate the input
 | `/schriftlich/` | Written +, −, · and : (German, EN toggle): step through or do it yourself; `#plus`, `#minus`, `#mal`, `#geteilt` open an operation directly |
 | `/teiler/` | Teiler und Primzahlen (German, EN toggle): divisibility rules, divisor pairs, prime factors, ggT and kgV |
 | `/brueche/` | Brüche game (German, EN toggle): six levels that unlock with stars, pizzas and bars, working after a mistake |
+| `/stellenwerte/` | Stellenwerte (German, EN toggle): place-value table with ▲▼, Zerlegung, words, rounding on a number line, 10-question quiz |
 | `/function/` | Type any f(x): how it was read, its graph, and f(x) worked out step by step |
 | `/tests/` | Every test from the deployed build, read from `test-results.json`      |
 
 ## Project layout
 
 ```
-index.html  stats/  quadratic/  function/  einmaleins/  schriftlich/  teiler/  brueche/  tests/   pages (Vite multi-page build)
+index.html  stats/  quadratic/  function/  einmaleins/  schriftlich/  teiler/  brueche/  stellenwerte/  tests/   pages (Vite multi-page build)
 public/          favicon, Home Screen icons, manifest
 src/
   lib/           pure maths, no DOM; one module + one test file per helper

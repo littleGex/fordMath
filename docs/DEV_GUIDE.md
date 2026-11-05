@@ -490,7 +490,7 @@ Open the pull request on GitHub, wait for the green tick, and merge. The site up
 
 ## 8. Your turn: the exercise ladder
 
-Ordered roughly from easiest to hardest to *build*, which isn't the same as the school level. #7 (Teiler), #13 (Brüche), #14 (Einmaleins), #15, #11 and #12 (written +, −, ·, :) are finished. Read #14 as an example of a game. In `src/lib/written.ts`, notice how adding two new members to the `WrittenSum` union made the compiler list every place that needed updating, and how `Extract<WrittenSum, { kind: "divide" }>` gives each function its own precise return type. Each level lists the TypeScript ideas it will exercise.
+Ordered roughly from easiest to hardest to *build*, which isn't the same as the school level. #7 (Teiler), #13 (Brüche), #17 (Stellenwerte), #14 (Einmaleins), #15, #11 and #12 (written +, −, ·, :) are finished. Read #14 as an example of a game. In `src/lib/written.ts`, notice how adding two new members to the `WrittenSum` union made the compiler list every place that needed updating, and how `Extract<WrittenSum, { kind: "divide" }>` gives each function its own precise return type. Each level lists the TypeScript ideas it will exercise.
 
 ### Level 1: #18, Punkt vor Strich trainer
 
@@ -498,11 +498,11 @@ Ordered roughly from easiest to hardest to *build*, which isn't the same as the 
 
 Add a helper in `src/lib/expression/` that finds which node of the tree should be worked out next (the deepest, leftmost one whose children are numbers), and one that replaces that node by its value. Test both on `3 + 4 · 2` and `(3 + 4) · 2`. Then copy the setup/play/result shape of `src/pages/einmaleins.ts`.
 
-### Level 2: #17, place value and rounding
+### Level 2: #16, units and measures
 
-*Practises: number formatting with `toLocaleString`, string building for German number words, and tricky edge cases.*
+*Practises: exact arithmetic with integers (store money in cents and lengths in millimetres so 0,1 + 0,2 problems can't happen), a table of units as data, and the place-value table from #17.*
 
-German number words are a good test-first exercise: write the tests for `21` ("einundzwanzig"), `101`, `1001`, `100000` and `1000000` before any code.
+Start with a `Unit` table per quantity (`{ name: "cm", factor: 10 }` in mm for length) and one `convert(value, from, to)`. `src/lib/place-value.ts` and `src/pages/stellenwerte.ts` show how to draw a place-value table, which is how class 5 converts units.
 
 ### Level 3: #5, quartiles
 

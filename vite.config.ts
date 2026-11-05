@@ -22,6 +22,7 @@ export default defineConfig({
         schriftlich: resolve(__dirname, "schriftlich/index.html"),
         teiler: resolve(__dirname, "teiler/index.html"),
         brueche: resolve(__dirname, "brueche/index.html"),
+        stellenwerte: resolve(__dirname, "stellenwerte/index.html"),
         tests: resolve(__dirname, "tests/index.html"),
       },
     },

@@ -15,6 +15,7 @@ const PAGES: Array<[path: string, drawnByScript: string]> = [
   ["schriftlich/", "#board .cell"],
   ["teiler/", "#rules .rule"],
   ["brueche/", ".level-btn"],
+  ["stellenwerte/", "#pv-table .pv-digit"],
   ["tests/", "#n-pass, #empty"],
 ];
 
