@@ -30,3 +30,8 @@
 .quiz-shape[hidden] { display: none; }
 .draw-chips .chip, .unit-chips .chip { background: var(--tile-hi); }
 .draw-chips .chip[aria-pressed="true"], .unit-chips .chip[aria-pressed="true"] { background: var(--ink); }
+/* The quiz picture uses the same drawing as the big grid. */
+.quiz-shape .paper { fill: #0f1626; }
+.quiz-shape .line { stroke: #24324d; stroke-width: 1; }
+.quiz-shape .cell { fill: color-mix(in srgb, #34d399 55%, #141c2e); }
+.quiz-shape .edge { stroke: #34d399; stroke-width: 4; stroke-linecap: round; }

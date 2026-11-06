@@ -428,6 +428,12 @@ All the geometry is in `mirrorCell(row, col, axis)`: one line per kind of mirror
 
 The Geodreieck on the page is an SVG group moved with `translate()` and turned with `rotate()`. The interesting decisions are pure functions in `src/lib/angles.ts`, so they can be tested without a screen. `snapPose()` decides when the zero point clicks onto the vertex, and when the long edge clicks onto an arm, either way round. `readScales()` says what the outer and inner scales show in a given direction. The tests check, for example, that a Geodreieck laid on the first arm shows the angle on the outer scale and `180° − angle` on the inner one. That's exactly the mistake the explanation warns about. The page's pointer handlers only convert screen coordinates to SVG coordinates (`getScreenCTM().inverse()`) and call those functions.
 
+### Quader (#26): folding by rolling a die, and a test that counts to 11
+
+To decide whether six squares fold into a cube, `fold()` in `src/lib/cuboid.ts` imagines a die lying on the first square and rolls it over the edges onto each next square. Rolling right puts the die's east face on the paper, and so on, in four lines of `roll()`. Each square remembers which face landed on it. It's a net exactly when all six faces were used. Then `hexominoes()` grows every shape of 6 joined squares (35 of them, each counted once up to turning and flipping), and the test checks that exactly **11** fold into a cube. That's the known answer, so the folding is checked against something nobody had to type in.
+
+Two bugs from this page are worth remembering. `scramble()` decided "flip or not" separately for each square instead of once for the shape, which tore nets apart; a test that checked every quiz net was really a net caught it. And `svg.hidden = false` does nothing, because SVG elements have no `hidden` property, only the attribute. The cast `as SVGSVGElement & HTMLElement` had told TypeScript it was fine. Without the `& HTMLElement`, the compiler would have refused, so the cast is gone and the code uses `toggleAttribute("hidden", …)`.
+
 ## 7. Warm-up: add Range to Statistics
 
 **Goal:** a new "Range" tile on the Statistics page, showing largest − smallest, with its working. It's small and it touches every layer. #5 (quartiles) left Range out on purpose so it's yours; `boxPlot()` in `src/lib/quartiles.ts` already finds min and max, if you want to peek.
@@ -575,7 +581,7 @@ Open the pull request on GitHub, wait for the green tick, and merge. The site up
 
 ## 8. Your turn: the exercise ladder
 
-Ordered roughly from easiest to hardest to *build*, which isn't the same as the school level. #18 (Punkt vor Strich), #5 (Quartile), #10 (Gleichungssysteme), #19 (Kopfrechnen), #20 (Umfang und Fläche), #21 (Dezimalzahlen), #22 (Negative Zahlen), #23 (Sachaufgaben), #24 (Symmetrie), #25 (Winkel), #7 (Teiler), #13 (Brüche), #16 (Größen), #17 (Stellenwerte), #14 (Einmaleins), #15, #11 and #12 (written +, −, ·, :) are finished. Read #14 as an example of a game. In `src/lib/written.ts`, notice how adding two new members to the `WrittenSum` union made the compiler list every place that needed updating, and how `Extract<WrittenSum, { kind: "divide" }>` gives each function its own precise return type. Each level lists the TypeScript ideas it will exercise.
+Ordered roughly from easiest to hardest to *build*, which isn't the same as the school level. #18 (Punkt vor Strich), #5 (Quartile), #10 (Gleichungssysteme), #19 (Kopfrechnen), #20 (Umfang und Fläche), #21 (Dezimalzahlen), #22 (Negative Zahlen), #23 (Sachaufgaben), #24 (Symmetrie), #25 (Winkel), #26 (Quader), #7 (Teiler), #13 (Brüche), #16 (Größen), #17 (Stellenwerte), #14 (Einmaleins), #15, #11 and #12 (written +, −, ·, :) are finished. Read #14 as an example of a game. In `src/lib/written.ts`, notice how adding two new members to the `WrittenSum` union made the compiler list every place that needed updating, and how `Extract<WrittenSum, { kind: "divide" }>` gives each function its own precise return type. Each level lists the TypeScript ideas it will exercise.
 
 ### Level 1: #9, matrices (and 3×3 systems)
 

@@ -236,9 +236,9 @@ function renderQuiz(): void {
     }),
   );
   $("quiz-streak").textContent = quiz.streak >= 3 ? `🔥 ${quiz.streak}` : "";
-  const shapeSvg = $("quiz-shape") as unknown as SVGSVGElement & HTMLElement;
+  const shapeSvg = $("quiz-shape") as unknown as SVGSVGElement;
   const hasShape = q.kind === "countArea" || q.kind === "countPerimeter";
-  shapeSvg.hidden = !hasShape;
+  shapeSvg.toggleAttribute("hidden", !hasShape); // an SVG element has no .hidden property: set the attribute
   if (hasShape) drawShape(shapeSvg, q.shape, 6, 6, 30);
   $("quiz-q").textContent = quizPrompt(q, lang);
   const picked = quiz.picked;

@@ -33,6 +33,7 @@ export default defineConfig({
     sachaufgaben: resolve(__dirname, "sachaufgaben/index.html"),
     symmetrie: resolve(__dirname, "symmetrie/index.html"),
     winkel: resolve(__dirname, "winkel/index.html"),
+    quader: resolve(__dirname, "quader/index.html"),
     tests: resolve(__dirname, "tests/index.html"),
       },
     },

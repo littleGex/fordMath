@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#141c2e">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="apple-mobile-web-app-title" content="fordMath">
+<title>Quader und Würfelnetze · fordMath</title>
+</head>
+<body>
+<main class="narrow">
+  <header class="kid-head">
+    <div>
+      <a class="back" href="../">← fordMath</a>
+      <h1>🧊 <span data-t="title"></span></h1>
+      <p class="subtitle" data-t="subtitle"></p>
+    </div>
+    <div class="lang" role="group" aria-label="Sprache / Language">
+      <button class="chip" type="button" data-lang="de" aria-pressed="true">DE</button>
+      <button class="chip" type="button" data-lang="en" aria-pressed="false">EN</button>
+    </div>
+  </header>
+
+  <section class="panel cuboid-panel">
+    <div class="steppers" id="steppers"></div>
+    <svg id="cuboid" class="cuboid" viewBox="0 0 320 240" role="img"></svg>
+    <div class="readout">
+      <div class="tile result c-cuboid"><span class="sym">V</span><h3 data-t="volume"></h3><span class="value" id="v"></span></div>
+      <div class="tile result c-cuboid"><span class="sym">O</span><h3 data-t="surface"></h3><span class="value" id="o"></span></div>
+    </div>
+    <ol class="steps" id="v-steps"></ol>
+    <ol class="steps" id="o-steps"></ol>
+  </section>
+
+  <h2 class="section" data-t="unitsTitle"></h2>
+  <div class="panel units" id="units"></div>
+
+  <h2 class="section" data-t="netTitle"></h2>
+  <section class="panel net-panel">
+    <p class="note" data-t="netHint"></p>
+    <svg id="net" class="net" role="img"></svg>
+    <p class="net-status" id="net-status"></p>
+    <div class="chips net-chips">
+      <button class="chip" type="button" id="net-cross" data-t="netCross"></button>
+      <button class="chip" type="button" id="net-clear" data-t="clear"></button>
+      <button class="chip" type="button" id="net-all" data-t="netAll"></button>
+    </div>
+    <div class="gallery" id="gallery" hidden></div>
+  </section>
+
+  <h2 class="section" data-t="quizTitle"></h2>
+  <section class="panel quiz-panel" id="quiz">
+    <div id="quiz-start">
+      <p class="note" data-t="quizIntro"></p>
+      <button class="tile big-btn c-cuboid" type="button" id="quiz-go"><span class="emoji" aria-hidden="true">🎯</span><h3 data-t="quizGo"></h3></button>
+    </div>
+    <div id="quiz-play" hidden>
+      <div class="quiz-top"><span class="dots-progress" id="quiz-progress"></span><span class="streak" id="quiz-streak"></span></div>
+      <svg class="quiz-pic" id="quiz-pic" role="img" hidden></svg>
+      <p class="quiz-q" id="quiz-q" aria-live="polite"></p>
+      <div class="quiz-choices" id="quiz-choices"></div>
+      <div id="quiz-feedback" hidden>
+        <p class="verdict" id="quiz-verdict"></p>
+        <ol class="steps" id="quiz-steps"></ol>
+        <button class="tile big-btn c-cuboid" type="button" id="quiz-next"><h3 data-t="next"></h3></button>
+      </div>
+    </div>
+    <div id="quiz-done" hidden>
+      <p class="stars" id="quiz-stars"></p>
+      <p class="score" id="quiz-score"></p>
+      <button class="tile big-btn c-cuboid" type="button" id="quiz-again"><span class="emoji" aria-hidden="true">🔁</span><h3 data-t="again"></h3></button>
+    </div>
+  </section>
+
+  <p class="version"><a href="../tests/">Tests</a> · <a href="https://github.com/littleGex/fordMath/blob/main/src/lib/cuboid.ts">Source</a></p>
+</main>
+<script type="module" src="/src/pages/quader.ts"></script>
+</body>
+</html>

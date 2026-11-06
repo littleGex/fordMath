@@ -26,6 +26,7 @@ const PAGES: Array<[path: string, drawnByScript: string]> = [
   ["sachaufgaben/", "#story .sentence"],
   ["symmetrie/", "#mirror-grid .given"],
   ["winkel/", "#board .vertex"],
+  ["quader/", "#cuboid .top"],
   ["tests/", "#n-pass, #empty"],
 ];
 
