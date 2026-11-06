@@ -18,6 +18,7 @@ const PAGES: Array<[path: string, drawnByScript: string]> = [
   ["stellenwerte/", "#pv-table .pv-digit"],
   ["groessen/", "#unit-list .unit-row"],
   ["punkt-vor-strich/", "#working .op"],
+  ["gleichungssysteme/", "#graph circle"],
   ["tests/", "#n-pass, #empty"],
 ];
 

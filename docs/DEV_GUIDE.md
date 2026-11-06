@@ -382,6 +382,14 @@ The tests take their expected numbers from NumPy rather than from working them o
 
 `quartilePositions(n, method)` says *where* in the sorted list each quartile sits (1.5 means halfway between the 2nd and 3rd value). The page uses it to mark the list, and a test checks that reading the list at those positions gives exactly the quartiles, for every n from 1 to 15. A test like that, which checks two functions against each other over many inputs, catches mistakes neither would on its own.
 
+### Gleichungssysteme (#10): exact numbers, and text you can test
+
+Two equations like `3x + 4y = 10` and `5x − 6y = 4` need fractions on the way (`y = −3/4·x + 5/2`), and floats would print `0.30000000000000004`. So `src/lib/rational.ts` keeps every number as a whole-number fraction in lowest terms, and `solveSystem` never rounds. `SystemSolution` is a discriminated union again: `unique`, `none` (with *why*: parallel lines or an equation like `0 = 5`), `infinite` and `all`.
+
+The workings in `src/explain/linear-system.ts` are lists of `{ tag, math, op }` lines, such as `{ tag: "(I)", math: "2x + 3y = 13", op: "| − 2x" }`, so the page can lay them out in columns like the exercise book. The tests compare whole workings as arrays of strings, which reads almost like the book page. A second test runs every method on 200 random systems and checks two things: the answer appears, and the text never contains `+ −`, `1x` or `undefined`. That test caught "1y und −1y" in a sentence, which no hand-picked example had.
+
+One more lesson came from the phone screenshot: "Gleichungssysteme" is a single long word, and it squeezed the DE/EN buttons until EN went off the edge. `flex: none` on `.lang` fixed it on every page at once.
+
 ## 7. Warm-up: add Range to Statistics
 
 **Goal:** a new "Range" tile on the Statistics page, showing largest − smallest, with its working. It's small and it touches every layer. #5 (quartiles) left Range out on purpose so it's yours; `boxPlot()` in `src/lib/quartiles.ts` already finds min and max, if you want to peek.
@@ -529,19 +537,15 @@ Open the pull request on GitHub, wait for the green tick, and merge. The site up
 
 ## 8. Your turn: the exercise ladder
 
-Ordered roughly from easiest to hardest to *build*, which isn't the same as the school level. #18 (Punkt vor Strich), #5 (Quartile), #7 (Teiler), #13 (Brüche), #16 (Größen), #17 (Stellenwerte), #14 (Einmaleins), #15, #11 and #12 (written +, −, ·, :) are finished. Read #14 as an example of a game. In `src/lib/written.ts`, notice how adding two new members to the `WrittenSum` union made the compiler list every place that needed updating, and how `Extract<WrittenSum, { kind: "divide" }>` gives each function its own precise return type. Each level lists the TypeScript ideas it will exercise. The new Grundschule and class 5 topics (#19 Kopfrechnen, #20 Umfang und Fläche, #21 Dezimalzahlen, #22 Negative Zahlen) are open too, and #21 is a good next step after Größen.
+Ordered roughly from easiest to hardest to *build*, which isn't the same as the school level. #18 (Punkt vor Strich), #5 (Quartile), #10 (Gleichungssysteme), #7 (Teiler), #13 (Brüche), #16 (Größen), #17 (Stellenwerte), #14 (Einmaleins), #15, #11 and #12 (written +, −, ·, :) are finished. Read #14 as an example of a game. In `src/lib/written.ts`, notice how adding two new members to the `WrittenSum` union made the compiler list every place that needed updating, and how `Extract<WrittenSum, { kind: "divide" }>` gives each function its own precise return type. Each level lists the TypeScript ideas it will exercise. The new Grundschule and class 5 topics (#19 Kopfrechnen, #20 Umfang und Fläche, #21 Dezimalzahlen, #22 Negative Zahlen) are open too, and #21 is a good next step after Größen.
 
-### Level 1: #10, two equations with two unknowns
-
-Class 8 solves these with the Einsetzungs-, Gleichsetzungs- and Additionsverfahren. Model the answer as a discriminated union, exactly like `QuadraticRoots`: one solution, none (parallel lines) or infinitely many (the same line).
-
-### Level 2: #9, matrices (and 3×3 systems)
+### Level 1: #9, matrices (and 3×3 systems)
 
 *Practises: type-heavy code, `readonly` nested arrays, careful floating-point work.*
 
-Start with the `Matrix` type and an `assertMatrix` guard. Write `multiply` with a test-first loop. Then extend #10's solver to 3 unknowns with Gaussian elimination, returning the same `unique` / `none` / `infinite` union.
+Start with the `Matrix` type and an `assertMatrix` guard. Write `multiply` with a test-first loop. Then add 3 unknowns with Gaussian elimination, returning a union shaped like `SystemSolution` in `src/lib/linear-system.ts` (#10), and check it against `solveSystem` on 2×2 systems.
 
-### Level 3: #3 integration and #4 differentiation
+### Level 2: #3 integration and #4 differentiation
 
 *Practises: functions as values. `compile()` returns `(x: number) => number`, so your integrator takes `f: (x: number) => number`.*
 

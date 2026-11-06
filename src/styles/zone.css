@@ -159,7 +159,7 @@ a.tile:active {
 
 /* ---------- Children's pages: header with language switch, big buttons, keypad ---------- */
 .kid-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
-.lang { display: flex; gap: 6px; margin-top: 4px; }
+.lang { display: flex; flex: none; gap: 6px; margin-top: 4px; }
 .lang .chip { padding: 6px 12px; font-size: 14px; }
 .big-btn { font: inherit; border: 0; border-top: 2px solid color-mix(in srgb, var(--c) 35%, transparent); cursor: pointer; width: 100%; }
 .big-btn h3 { font-size: clamp(17px, 4.6vw, 20px); }
