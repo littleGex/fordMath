@@ -28,6 +28,7 @@ const PAGES: Array<[path: string, drawnByScript: string]> = [
   ["winkel/", "#board .vertex"],
   ["quader/", "#cuboid .top"],
   ["heute/", "#topics .topic-row"],
+  ["halbschriftlich/", "#working input"],
   ["tests/", "#n-pass, #empty"],
 ];
 

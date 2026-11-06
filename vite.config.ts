@@ -35,6 +35,7 @@ export default defineConfig({
     winkel: resolve(__dirname, "winkel/index.html"),
     quader: resolve(__dirname, "quader/index.html"),
     heute: resolve(__dirname, "heute/index.html"),
+    halbschriftlich: resolve(__dirname, "halbschriftlich/index.html"),
     tests: resolve(__dirname, "tests/index.html"),
       },
     },
