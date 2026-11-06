@@ -27,6 +27,7 @@ export default defineConfig({
         "punkt-vor-strich": resolve(__dirname, "punkt-vor-strich/index.html"),
     gleichungssysteme: resolve(__dirname, "gleichungssysteme/index.html"),
     kopfrechnen: resolve(__dirname, "kopfrechnen/index.html"),
+    "umfang-flaeche": resolve(__dirname, "umfang-flaeche/index.html"),
     tests: resolve(__dirname, "tests/index.html"),
       },
     },

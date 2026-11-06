@@ -20,6 +20,7 @@ const PAGES: Array<[path: string, drawnByScript: string]> = [
   ["punkt-vor-strich/", "#working .op"],
   ["gleichungssysteme/", "#graph circle"],
   ["kopfrechnen/", "#levels .level-pick"],
+  ["umfang-flaeche/", "#grid .edge"],
   ["tests/", "#n-pass, #empty"],
 ];
 

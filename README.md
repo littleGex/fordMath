@@ -28,6 +28,7 @@ Planned helpers are tracked as [issues](https://github.com/littleGex/fordMath/is
 | Place value         | `splitPlaces`, `setDigit`, `roundTo`, `makePlaceRound` in `lib/place-value`; `germanWords`, `englishWords` in `lib/number-words` | Stellenwerte up to 999 999 999 999, rounding with the deciding digit, numbers in German and English words, four quiz question types |
 | Units               | `parseAmount`, `formatIn`, `formatMixed`, `unitTable`, `timeSpan`, `changeFor` in `lib/units`; quiz in `lib/units-quiz` | Money, length, mass and time stored as whole numbers of the smallest unit (exact); unit place-value table; time spans in jumps; change counted up with coins |
 | Mental arithmetic   | `makeQuestion(level, random)`, `planOf`, `makeRound`, `recordAnswer` in `lib/mental` | Kopfrechnen up to 1 000 in five kinds; each answer's school strategy as jumps on a number line; missed questions come back |
+| Perimeter and area  | `area`, `perimeter`, `outline`, `asRectangle`, `perimeterRange`, `rectanglesWithArea`, `makeAreaQuestion` in `lib/area` | Shapes of grid squares: count squares and edges (the outline as walks, so it can be counted side by side), rectangle formulas, smallest and largest perimeter for n squares, area units |
 | Two equations       | `solveSystem(e1, e2)`, `makeSystem` in `lib/linear-system`; `rat`, `parseRational` in `lib/rational` | Exact fractions throughout; the answer as a union (one point, none, the same line, every pair); practice tasks with whole-number answers |
 | Expressions         | `compile(text)` → `(x) => number`     | Safe parser for f(x): never uses eval; `parse`, `evaluate`, `formatExpr` and `ExpressionError` (with a position) also exported from `lib/expression` |
 | Order of operations | `allowedPaths`, `whyNot`, `collapse`, `workedLines`, `makeOrderTask`, `makeBracketTask` in `lib/expression/steps` | Which operation the school rules allow next (Klammern, Punkt vor Strich, links nach rechts) and which rule a wrong choice breaks; tasks that stay whole and positive for class 5 |
@@ -49,6 +50,7 @@ All functions take `readonly number[]` (ints and floats), never mutate the input
 | `/groessen/` | Größen (German, EN toggle): convert with every unit at once and a unit place-value table, time spans, shopping change, 10-question quiz |
 | `/punkt-vor-strich/` | Punkt vor Strich (German, EN toggle): tap the operation that comes first and work the sum out line by line, four levels; or pick where the brackets go to make a target |
 | `/kopfrechnen/` | Kopfrechnen (German, EN toggle): five kinds of question up to 1 000, rounds of 10 on the keypad, number-line jumps and the strategy after a mistake, mistakes practised again |
+| `/umfang-flaeche/` | Umfang und Fläche (German, EN toggle): draw on squared paper, area and perimeter live, the edge counted side by side, same area with different perimeter, area units, 10-question quiz |
 | `/gleichungssysteme/` | Gleichungssysteme (German, EN toggle): two equations in boxes, the solution set, both lines drawn, and the Gleichsetzungs-, Einsetzungs- and Additionsverfahren worked line by line, with the Probe; 🎲 tasks hide the answer until asked |
 | `/function/` | Type any f(x): how it was read, its graph, and f(x) worked out step by step |
 | `/tests/` | Every test from the deployed build, read from `test-results.json`      |
@@ -56,7 +58,7 @@ All functions take `readonly number[]` (ints and floats), never mutate the input
 ## Project layout
 
 ```
-index.html  stats/  quadratic/  function/  einmaleins/  schriftlich/  teiler/  brueche/  stellenwerte/  groessen/  punkt-vor-strich/  gleichungssysteme/  kopfrechnen/  tests/   pages (Vite multi-page build)
+index.html  stats/  quadratic/  function/  einmaleins/  schriftlich/  teiler/  brueche/  stellenwerte/  groessen/  punkt-vor-strich/  gleichungssysteme/  kopfrechnen/  umfang-flaeche/  tests/   pages (Vite multi-page build)
 public/          favicon, Home Screen icons, manifest
 src/
   lib/           pure maths, no DOM; one module + one test file per helper

@@ -396,6 +396,12 @@ One more lesson came from the phone screenshot: "Gleichungssysteme" is a single 
 
 The page's shared game styles moved to `src/styles/game.css`, ready for the next game.
 
+### Umfang und Fläche (#20): template literal keys and a walk round the edge
+
+A square on the paper is a `CellKey`, a **template literal type**: `` `${number},${number}` ``. So `"2,5"` is a valid key and `"two"` is a compile error. A shape is a `ReadonlySet<CellKey>`. Sets compare keys by value, and a string key like "2,5" makes "is this square in the shape?" a single `has()`.
+
+The perimeter is easy to count (every side of a square with no neighbour), but the page counts the edge *in order*, like a finger running round it. `outline()` makes each boundary side an arrow with the shape on its right, then follows the arrows from the top-left corner until it's back where it started. A shape with a hole gets a second walk. One test checks, on 200 random shapes, that the walks add up to the perimeter, and another that each side starts where the last one ended.
+
 ## 7. Warm-up: add Range to Statistics
 
 **Goal:** a new "Range" tile on the Statistics page, showing largest − smallest, with its working. It's small and it touches every layer. #5 (quartiles) left Range out on purpose so it's yours; `boxPlot()` in `src/lib/quartiles.ts` already finds min and max, if you want to peek.
@@ -543,7 +549,7 @@ Open the pull request on GitHub, wait for the green tick, and merge. The site up
 
 ## 8. Your turn: the exercise ladder
 
-Ordered roughly from easiest to hardest to *build*, which isn't the same as the school level. #18 (Punkt vor Strich), #5 (Quartile), #10 (Gleichungssysteme), #19 (Kopfrechnen), #7 (Teiler), #13 (Brüche), #16 (Größen), #17 (Stellenwerte), #14 (Einmaleins), #15, #11 and #12 (written +, −, ·, :) are finished. Read #14 as an example of a game. In `src/lib/written.ts`, notice how adding two new members to the `WrittenSum` union made the compiler list every place that needed updating, and how `Extract<WrittenSum, { kind: "divide" }>` gives each function its own precise return type. Each level lists the TypeScript ideas it will exercise. The new Grundschule and class 5 topics (#19 Kopfrechnen, #20 Umfang und Fläche, #21 Dezimalzahlen, #22 Negative Zahlen) are open too, and #21 is a good next step after Größen.
+Ordered roughly from easiest to hardest to *build*, which isn't the same as the school level. #18 (Punkt vor Strich), #5 (Quartile), #10 (Gleichungssysteme), #19 (Kopfrechnen), #20 (Umfang und Fläche), #7 (Teiler), #13 (Brüche), #16 (Größen), #17 (Stellenwerte), #14 (Einmaleins), #15, #11 and #12 (written +, −, ·, :) are finished. Read #14 as an example of a game. In `src/lib/written.ts`, notice how adding two new members to the `WrittenSum` union made the compiler list every place that needed updating, and how `Extract<WrittenSum, { kind: "divide" }>` gives each function its own precise return type. Each level lists the TypeScript ideas it will exercise. The new Grundschule and class 5 topics (#19 Kopfrechnen, #20 Umfang und Fläche, #21 Dezimalzahlen, #22 Negative Zahlen) are open too, and #21 is a good next step after Größen.
 
 ### Level 1: #9, matrices (and 3×3 systems)
 
