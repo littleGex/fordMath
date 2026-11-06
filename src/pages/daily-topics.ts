@@ -9,6 +9,8 @@ import { makePlaceQuestion, type PlaceLevel } from "../lib/place-value";
 import { randomInt, type Random } from "../lib/random";
 import { TABLES, answerOf as tableAnswer, questionsFor } from "../lib/times-tables";
 import { makeUnitsQuestion } from "../lib/units-quiz";
+import { makePercentQuestion } from "../lib/percent";
+import { makeProportionQuestion } from "../lib/proportion";
 import * as area from "../explain/area";
 import * as cuboid from "../explain/cuboid";
 import * as decimal from "../explain/decimal";
@@ -18,6 +20,8 @@ import { explainMental, questionText as mentalText } from "../explain/mental";
 import * as place from "../explain/place-value";
 import { explainQuestion as explainTable } from "../explain/times-tables";
 import * as units from "../explain/units";
+import * as percent from "../explain/percent";
+import * as proportion from "../explain/proportion";
 import type { Lang } from "../explain/lang";
 
 /**
@@ -45,6 +49,8 @@ export const TOPICS = {
   dezimal: { de: "Dezimalzahlen", en: "Decimals", emoji: "🔸", href: "dezimalzahlen/", levels: ["sek1"] },
   negativ: { de: "Negative Zahlen", en: "Negative numbers", emoji: "🌡️", href: "negative-zahlen/", levels: ["sek1"] },
   quader: { de: "Quader", en: "Cuboids", emoji: "🧊", href: "quader/", levels: ["sek1"] },
+  prozent: { de: "Prozente", en: "Percentages", emoji: "💯", href: "prozent/", levels: ["sek1"] },
+  dreisatz: { de: "Dreisatz", en: "Rule of three", emoji: "🛒", href: "dreisatz/", levels: ["sek1"] },
 } as const satisfies Record<string, { de: string; en: string; emoji: string; href: string; levels: readonly DailyLevel[] }>;
 export type TopicId = keyof typeof TOPICS;
 
@@ -143,6 +149,15 @@ const ADAPTERS: Record<TopicId, (level: DailyLevel, random: Random) => MixedQues
   quader(_level, r) {
     const q = until(() => makeCuboidQuestion(r), (x) => x.kind === "volume" || x.kind === "surface" || x.kind === "convert");
     return { topic: "quader", prompt: (l) => cuboid.quizPrompt(q, l), choices: (l) => q.choices.map((c) => cuboid.choiceText(q, c, l)), answer: q.answer, steps: (l) => cuboid.quizSteps(q, l) };
+  },
+  prozent(_level, r) {
+    const q = makePercentQuestion(r);
+    return { topic: "prozent", prompt: (l) => percent.quizPrompt(q, l), choices: (l) => q.choices.map((c) => `${percent.choiceText(c, l)}${percent.quizUnit(q)}`), answer: q.answer, steps: (l) => percent.quizSteps(q, l) };
+  },
+  dreisatz(_level, r) {
+    // Only the stories: the table questions need the table drawn.
+    const q = makeProportionQuestion(r, "story");
+    return { topic: "dreisatz", prompt: (l) => proportion.quizPrompt(q, l), choices: (l) => q.choices.map((c) => proportion.quizChoice(q, c, l)), answer: q.answer, steps: (l) => proportion.quizSteps(q, l) };
   },
 };
 

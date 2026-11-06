@@ -8,6 +8,16 @@ Live site: https://littlegex.github.io/fordMath/ (deployed by GitHub Actions on 
 
 Planned helpers are tracked as [issues](https://github.com/littleGex/fordMath/issues) and shown as faded tiles on the homepage. Each issue and tile has a school level (`level: Grundschule`, `level: Sek I`, `level: Oberstufe`), and the homepage chips filter by level.
 
+## What's in 1.0
+
+**Grundschule (class 3–4):** Einmaleins, Kopfrechnen, Halbschriftlich, Schriftlich rechnen, Stellenwerte, Größen, Umfang und Fläche, Symmetrie, Sachaufgaben, and Brüche to start with.
+
+**Sek I (Klasse 5–8):** Punkt vor Strich, Teiler und Primzahlen, Brüche, Dezimalzahlen, Negative Zahlen, Winkel, Quader und Würfelnetze, Prozentrechnung, Dreisatz, Gleichungssysteme and Statistik.
+
+**Every day:** "Heute üben" mixes 10 questions from the child's level, keeps a streak and shows progress per topic.
+
+**Planned next:** Koordinatensystem (#30), lineare Gleichungen (#34) and Bruchrechnen (#35) for Sek I; for the Oberstufe, integration (#3), differentiation (#4), correlation and regression (#6) and matrices with 3×3 systems (#9). See [CHANGELOG.md](CHANGELOG.md) for the full list.
+
 ## Helpers
 
 | Helper              | Function                              | Notes                                                       |
@@ -68,7 +78,7 @@ All functions take `readonly number[]` (ints and floats), never mutate the input
 | `/symmetrie/` | Symmetrie (German, EN toggle): mirror half a figure and check it, a "Zaubertafel" that mirrors as you draw (one, two or a diagonal line), and "how many lines of symmetry?" with the lines drawn |
 | `/winkel/` | Winkel (German, EN toggle): rounds of 8 (kind, estimate, measure with a draggable, turnable Geodreieck that clicks into place, draw by dragging an arm), and a card of the angle kinds |
 | `/quader/` | Quader und Würfelnetze (German, EN toggle): a 3D cuboid you size with + and −, V and O worked out, volume units, tap 6 squares to test a net (opposite faces coloured), all 11 nets, 10-question quiz |
-| `/heute/` | Heute üben (German, EN toggle): 10 mixed questions from the child's level (Grundschule or Klasse 5–7) drawn from ten topics, a day streak 🔥, and progress per topic; featured at the top of the homepage |
+| `/heute/` | Heute üben (German, EN toggle): 10 mixed questions from the child's level (Grundschule or Klasse 5–7) drawn from the topic pages, a day streak 🔥, and progress per topic; featured at the top of the homepage |
 | `/halbschriftlich/` | Halbschriftlich (German, EN toggle): three levels, fill in each part's result and the total, a picture of the split, the "digit then add the zeros" trick explained |
 | `/prozent/` | Prozentrechnung (German, EN toggle): type two of G, W and p and the third is worked out with a Prozentstreifen, the Dreisatz and the formula; everyday examples, percent fractions, a quiz |
 | `/dreisatz/` | Dreisatz (German, EN toggle): the three lines with arrows on both sides ("the right side does the opposite" when antiproportional), a table checker with y : x and x · y and the graph (line through 0 or hyperbola), a quiz |
