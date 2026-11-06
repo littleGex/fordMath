@@ -16,7 +16,7 @@ const OPERATORS: Readonly<Record<string, Operator>> = {
   "+": "+",
   "-": "-", "−": "-", "–": "-",
   "*": "*", "×": "*", "·": "*",
-  "/": "/", "÷": "/",
+  "/": "/", "÷": "/", ":": "/", // ":" is how German schools write division
   "^": "^",
 };
 

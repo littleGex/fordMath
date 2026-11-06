@@ -122,7 +122,7 @@ class Parser {
     if (close.kind !== ")") {
       throw new ExpressionError(`The "(" at position ${openPos + 1} is never closed`, openPos);
     }
-    return inner;
+    return inner.type === "binary" ? { ...inner, paren: true } : inner;
   }
 
   /** After a full expression there must be nothing left. */

@@ -359,6 +359,21 @@ export type UnitSymbol<Q extends Quantity = Quantity> = (typeof UNITS)[Q][number
 
 One more lesson from this page: a drawn banknote was given the class name `note`, which is also the site-wide class for small grey text, and the quiz intro shrank to the size of a banknote. Class names share one global space, so specific names (`banknote`) are safer.
 
+### Punkt vor Strich (#18): one tree, three rules
+
+The trainer reuses the parser from the Functions page. `parse("3 + 4 · 2")` already builds the tree the way the rules say: `·` sits deeper than `+`, so it gets worked out first. Two small parser changes made it fit school: `:` means divide, and a binary node remembers `paren: true` when the child wrote brackets around it, so they can be drawn again.
+
+`src/lib/expression/steps.ts` addresses a node by its **path** from the root, a string of `"L"` and `"R"`. With that:
+
+- `readyPaths(e)` lists operations whose two sides are already numbers,
+- `allowedPaths(e)` keeps those inside the most brackets, then those with `·` or `:`,
+- `whyNot(e, path)` returns which rule a tap breaks, as the union `"brackets" | "punkt-vor-strich" | "left-to-right"` (or `null` if it's fine),
+- `collapse(e, path)` returns a **new** tree with that operation replaced by its value. The original isn't changed, which a test checks.
+
+"Left to right" needed no code at all: in `10 − 3 − 2` the parser puts `10 − 3` deeper, so it's the only ready one.
+
+The page keeps messages as functions of the language (`text: (lang) => string`), so pressing EN rewrites a message that's already on screen. The bracket puzzle tries every way to bracket the numbers (a recursive function that builds every tree) and, as with Brüche, a test runs it hundreds of times. That test found two things: a `3 · (2 − 2)` that came out as `-0` (which `toEqual` treats as different from `0`), and puzzles whose working went below zero, which class 5 hasn't met yet.
+
 ## 7. Warm-up: add Range to Statistics
 
 **Goal:** a new "Range" tile on the Statistics page, showing largest − smallest, with its working. It's small, it touches every layer, and it's the first piece of #5.
@@ -506,29 +521,23 @@ Open the pull request on GitHub, wait for the green tick, and merge. The site up
 
 ## 8. Your turn: the exercise ladder
 
-Ordered roughly from easiest to hardest to *build*, which isn't the same as the school level. #7 (Teiler), #13 (Brüche), #16 (Größen), #17 (Stellenwerte), #14 (Einmaleins), #15, #11 and #12 (written +, −, ·, :) are finished. Read #14 as an example of a game. In `src/lib/written.ts`, notice how adding two new members to the `WrittenSum` union made the compiler list every place that needed updating, and how `Extract<WrittenSum, { kind: "divide" }>` gives each function its own precise return type. Each level lists the TypeScript ideas it will exercise.
+Ordered roughly from easiest to hardest to *build*, which isn't the same as the school level. #18 (Punkt vor Strich), #7 (Teiler), #13 (Brüche), #16 (Größen), #17 (Stellenwerte), #14 (Einmaleins), #15, #11 and #12 (written +, −, ·, :) are finished. Read #14 as an example of a game. In `src/lib/written.ts`, notice how adding two new members to the `WrittenSum` union made the compiler list every place that needed updating, and how `Extract<WrittenSum, { kind: "divide" }>` gives each function its own precise return type. Each level lists the TypeScript ideas it will exercise. The new Grundschule and class 5 topics (#19 Kopfrechnen, #20 Umfang und Fläche, #21 Dezimalzahlen, #22 Negative Zahlen) are open too, and #21 is a good next step after Größen.
 
-### Level 1: #18, Punkt vor Strich trainer
-
-*Practises: reusing a tree (the expression parser from #1), recursion, and the game state machine from Einmaleins.*
-
-Add a helper in `src/lib/expression/` that finds which node of the tree should be worked out next (the deepest, leftmost one whose children are numbers), and one that replaces that node by its value. Test both on `3 + 4 · 2` and `(3 + 4) · 2`. Then copy the setup/play/result shape of `src/pages/einmaleins.ts`.
-
-### Level 2: #5, quartiles
+### Level 1: #5, quartiles
 
 Quartiles reuses the Statistics registry, and adds an SVG box plot alongside the existing number line in `src/pages/stats.ts`. The percentile method needs a decision first (see the issue), which makes it a good test-first exercise.
 
-### Level 3: #10, two equations with two unknowns
+### Level 2: #10, two equations with two unknowns
 
 Class 8 solves these with the Einsetzungs-, Gleichsetzungs- and Additionsverfahren. Model the answer as a discriminated union, exactly like `QuadraticRoots`: one solution, none (parallel lines) or infinitely many (the same line).
 
-### Level 4: #9, matrices (and 3×3 systems)
+### Level 3: #9, matrices (and 3×3 systems)
 
 *Practises: type-heavy code, `readonly` nested arrays, careful floating-point work.*
 
 Start with the `Matrix` type and an `assertMatrix` guard. Write `multiply` with a test-first loop. Then extend #10's solver to 3 unknowns with Gaussian elimination, returning the same `unique` / `none` / `infinite` union.
 
-### Level 5: #3 integration and #4 differentiation
+### Level 4: #3 integration and #4 differentiation
 
 *Practises: functions as values. `compile()` returns `(x: number) => number`, so your integrator takes `f: (x: number) => number`.*
 

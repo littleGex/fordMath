@@ -23,6 +23,9 @@ describe("tokenize", () => {
   it("accepts operator look-alikes", () => {
     expect(kinds("a × b ÷ c · d − e ** f")).toEqual(["a", "*", "b", "/", "c", "*", "d", "-", "e", "^", "f", "end"]);
   });
+  it("reads : as division, as in German schools", () => {
+    expect(kinds("12 : 3")).toEqual([12, "/", 3, "end"]);
+  });
   it("reads x² and x³ as powers", () => {
     expect(kinds("x²+x³")).toEqual(["x", "^", 2, "+", "x", "^", 3, "end"]);
   });

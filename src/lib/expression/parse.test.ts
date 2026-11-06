@@ -34,6 +34,18 @@ describe("parse: precedence", () => {
   });
 });
 
+describe("parse: brackets are remembered", () => {
+  it("marks an operation written in brackets", () => {
+    const tree = parse("(3 + 4) · 2");
+    if (tree.type !== "binary" || tree.left.type !== "binary") throw new Error("expected binary");
+    expect(tree.left.paren).toBe(true);
+    expect(tree.paren).toBeUndefined();
+  });
+  it("doesn't change any value", () => {
+    expect(at("(3 + 4) : 7")).toBe(1);
+  });
+});
+
 describe("parse: associativity", () => {
   it("groups − and ÷ from the left", () => {
     expect(at("10 - 3 - 2")).toBe(5);

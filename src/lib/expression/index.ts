@@ -5,3 +5,7 @@ export { tokenize, type Token, type Operator } from "./tokenize";
 export { parse } from "./parse";
 export { evaluate, compile } from "./evaluate";
 export { formatExpr } from "./format";
+export {
+  allowedPaths, collapse, getAt, makeBracketTask, makeOrderTask, opClass, readyPaths, schoolText, toTokens, whyNot, workedLines,
+  type BracketTask, type OrderLevel, type Rule, type SchoolToken,
+} from "./steps";

@@ -202,6 +202,10 @@ button.tile:active:not(:disabled) { transform: translateY(calc(var(--shelf) - 1p
 .c-units      { --c: #7cfc00; }
 .c-fraction   { --c: #ff9ad5; }
 .c-order      { --c: #b967ff; }
+.c-mental     { --c: #ff9ad5; }
+.c-area       { --c: #34d399; }
+.c-decimal    { --c: #ffb347; }
+.c-negative   { --c: #4fc3f7; }
 .c-simul      { --c: #34d399; }
 .c-matrix     { --c: #9fb0c8; }
 .c-median     { --c: #ffb347; }

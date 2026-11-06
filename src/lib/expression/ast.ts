@@ -19,4 +19,6 @@ export type Expr =
   | { type: "const"; name: ConstantName }
   | { type: "neg"; arg: Expr }
   | { type: "call"; fn: FunctionName; arg: Expr }
-  | { type: "binary"; op: Operator; left: Expr; right: Expr; implicit?: boolean };
+  | { type: "binary"; op: Operator; left: Expr; right: Expr; implicit?: boolean; paren?: boolean };
+// `paren` marks an operation the user wrapped in brackets, e.g. (3 + 4) · 2. The value doesn't need it
+// (the tree already says what goes first), but "Klammern zuerst" in the Punkt vor Strich trainer does.

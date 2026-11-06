@@ -27,6 +27,7 @@ Planned helpers are tracked as [issues](https://github.com/littleGex/fordMath/is
 | Place value         | `splitPlaces`, `setDigit`, `roundTo`, `makePlaceRound` in `lib/place-value`; `germanWords`, `englishWords` in `lib/number-words` | Stellenwerte up to 999 999 999 999, rounding with the deciding digit, numbers in German and English words, four quiz question types |
 | Units               | `parseAmount`, `formatIn`, `formatMixed`, `unitTable`, `timeSpan`, `changeFor` in `lib/units`; quiz in `lib/units-quiz` | Money, length, mass and time stored as whole numbers of the smallest unit (exact); unit place-value table; time spans in jumps; change counted up with coins |
 | Expressions         | `compile(text)` → `(x) => number`     | Safe parser for f(x): never uses eval; `parse`, `evaluate`, `formatExpr` and `ExpressionError` (with a position) also exported from `lib/expression` |
+| Order of operations | `allowedPaths`, `whyNot`, `collapse`, `workedLines`, `makeOrderTask`, `makeBracketTask` in `lib/expression/steps` | Which operation the school rules allow next (Klammern, Punkt vor Strich, links nach rechts) and which rule a wrong choice breaks; tasks that stay whole and positive for class 5 |
 
 All functions take `readonly number[]` (ints and floats), never mutate the input, and throw on an empty array, `NaN` or `Infinity`.
 
@@ -43,13 +44,14 @@ All functions take `readonly number[]` (ints and floats), never mutate the input
 | `/brueche/` | Brüche game (German, EN toggle): six levels that unlock with stars, pizzas and bars, working after a mistake |
 | `/stellenwerte/` | Stellenwerte (German, EN toggle): place-value table with ▲▼, Zerlegung, words, rounding on a number line, 10-question quiz |
 | `/groessen/` | Größen (German, EN toggle): convert with every unit at once and a unit place-value table, time spans, shopping change, 10-question quiz |
+| `/punkt-vor-strich/` | Punkt vor Strich (German, EN toggle): tap the operation that comes first and work the sum out line by line, four levels; or pick where the brackets go to make a target |
 | `/function/` | Type any f(x): how it was read, its graph, and f(x) worked out step by step |
 | `/tests/` | Every test from the deployed build, read from `test-results.json`      |
 
 ## Project layout
 
 ```
-index.html  stats/  quadratic/  function/  einmaleins/  schriftlich/  teiler/  brueche/  stellenwerte/  groessen/  tests/   pages (Vite multi-page build)
+index.html  stats/  quadratic/  function/  einmaleins/  schriftlich/  teiler/  brueche/  stellenwerte/  groessen/  punkt-vor-strich/  tests/   pages (Vite multi-page build)
 public/          favicon, Home Screen icons, manifest
 src/
   lib/           pure maths, no DOM; one module + one test file per helper
