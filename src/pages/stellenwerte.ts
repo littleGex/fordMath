@@ -2,11 +2,11 @@ import "./sw-register";
 import "../styles/zone.css";
 import "../styles/stellenwerte.css";
 import "../styles/quiz.css";
+import { mountQuiz } from "./quiz";
 import {
   MAX_PLACE_NUMBER, digitAt, makePlaceRound, roundTo, setDigit, type PlaceLevel, type PlaceQuestion, type Rounding,
 } from "../lib/place-value";
 import { randomInt } from "../lib/random";
-import { starsFor } from "../lib/times-tables";
 import { PLACE_LONG, PLACE_SHORT, questionSteps, questionText, roundSteps, show, splitText, words } from "../explain/place-value";
 import type { Lang } from "../explain/lang";
 import { getLang, setLang } from "./lang";
@@ -56,11 +56,6 @@ let lang: Lang = getLang();
 let n = 0;
 let roundPlace = 1;
 
-type Quiz =
-  | { stage: "start" }
-  | { stage: "play"; round: PlaceQuestion[]; index: number; correct: number; streak: number; results: boolean[]; chose: number | null }
-  | { stage: "done"; correct: number; total: number };
-let quiz: Quiz = { stage: "start" };
 
 const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
 const t = () => UI[lang];
@@ -162,9 +157,12 @@ function renderRounding(): void {
 }
 
 // ---------- quiz ----------
-function drawQuizLine(q: Extract<PlaceQuestion, { kind: "number-line" }>): void {
-  const line = $("quiz-line") as unknown as SVGSVGElement;
-  line.replaceChildren();
+/** The number line for "which number is the arrow pointing at?". */
+function quizLine(q: Extract<PlaceQuestion, { kind: "number-line" }>): Node {
+  const fig = Object.assign(document.createElement("figure"), { className: "nl" });
+  const line = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  line.setAttribute("viewBox", "0 0 600 110");
+  line.setAttribute("role", "img");
   const L = 40, R = 560, Y = 66;
   svg(line, "line", { x1: L, x2: R, y1: Y, y2: Y, stroke: "#9fb0c8", "stroke-width": 3 });
   for (let i = 0; i <= 10; i++) {
@@ -176,75 +174,21 @@ function drawQuizLine(q: Extract<PlaceQuestion, { kind: "number-line" }>): void 
   const x = L + ((q.n - q.lower) / (10 * q.step)) * (R - L);
   svg(line, "path", { d: `M${x} ${Y - 14} l-11 -20 h22 z`, fill: "#ffd84d" });
   line.setAttribute("aria-label", `${show(q.lower, lang)} – ${show(q.lower + 10 * q.step, lang)}`);
+  fig.append(line);
+  return fig;
 }
 
-function renderQuiz(): void {
-  $("quiz-start").hidden = quiz.stage !== "start";
-  $("quiz-play").hidden = quiz.stage !== "play";
-  $("quiz-done").hidden = quiz.stage !== "done";
-  if (quiz.stage === "done") {
-    const stars = starsFor(quiz.correct, quiz.total);
-    $("quiz-stars").textContent = "⭐".repeat(stars) + "☆".repeat(3 - stars);
-    $("quiz-score").textContent = t().score(quiz.correct, quiz.total);
-    return;
-  }
-  if (quiz.stage !== "play") return;
-  const s = quiz;
-  const q = s.round[s.index]!;
-  $("quiz-progress").replaceChildren(
-    ...s.round.map((_, i) => el("i", "", i < s.results.length ? (s.results[i] ? "ok" : "no") : i === s.index ? "now" : "")),
-  );
-  $("quiz-streak").textContent = s.streak >= 3 ? `🔥 ${s.streak}` : "";
-  $("quiz-q").textContent = questionText(q, lang);
-  $("quiz-line-fig").hidden = q.kind !== "number-line";
-  if (q.kind === "number-line") drawQuizLine(q);
-  $("quiz-choices").replaceChildren(
-    ...q.choices.map((c, i) => {
-      const b = el("button", show(c, lang)) as HTMLButtonElement;
-      b.type = "button";
-      if (s.chose !== null) {
-        b.disabled = true;
-        if (i === q.answer) b.classList.add("right");
-        else if (i === s.chose) b.classList.add("wrong");
-      }
-      b.addEventListener("click", () => choose(i));
-      return b;
-    }),
-  );
-  $("quiz-feedback").hidden = s.chose === null;
-  if (s.chose !== null) {
-    const ok = s.chose === q.answer;
-    $("quiz-verdict").textContent = ok ? t().right : t().wrong;
-    $("quiz-verdict").className = `verdict ${ok ? "ok" : "no"}`;
-    $("quiz-steps").replaceChildren(...questionSteps(q, lang).map((x) => el("li", x)));
-  }
-}
-
-function choose(i: number): void {
-  if (quiz.stage !== "play" || quiz.chose !== null) return;
-  const ok = i === quiz.round[quiz.index]!.answer;
-  quiz.chose = i;
-  quiz.results.push(ok);
-  quiz.correct += ok ? 1 : 0;
-  quiz.streak = ok ? quiz.streak + 1 : 0;
-  renderQuiz();
-}
-
-function nextQuestion(): void {
-  if (quiz.stage !== "play") return;
-  if (quiz.index + 1 >= quiz.round.length) quiz = { stage: "done", correct: quiz.correct, total: quiz.results.length };
-  else {
-    quiz.index++;
-    quiz.chose = null;
-  }
-  renderQuiz();
-  $("quiz").scrollIntoView({ block: "start", behavior: "smooth" });
-}
-
-function startQuiz(): void {
-  quiz = { stage: "play", round: makePlaceRound(settings.level, Math.random), index: 0, correct: 0, streak: 0, results: [], chose: null };
-  renderQuiz();
-}
+const quiz = mountQuiz<PlaceQuestion>({
+  host: $("quiz"),
+  colour: "c-place",
+  makeRound: () => makePlaceRound(settings.level, Math.random),
+  prompt: (q, l) => questionText(q, l),
+  choices: (q, l) => q.choices.map((c) => show(c, l)),
+  answer: (q) => q.answer,
+  steps: (q, l) => questionSteps(q, l),
+  picture: (q) => (q.kind === "number-line" ? quizLine(q) : null),
+  words: (l) => ({ intro: UI[l].quizIntro, go: UI[l].quizGo, next: UI[l].next, again: UI[l].again, right: UI[l].right, wrong: () => UI[l].wrong, score: UI[l].score }),
+});
 
 // ---------- page ----------
 function renderNumber(): void {
@@ -262,7 +206,7 @@ function render(): void {
     b.setAttribute("aria-pressed", String(level === settings.level));
   });
   renderNumber();
-  renderQuiz();
+  quiz.render(lang);
 }
 
 function readInput(): void {
@@ -297,16 +241,13 @@ document.querySelectorAll<HTMLButtonElement>("[data-level]").forEach((b) =>
   b.addEventListener("click", () => {
     settings.level = Number(b.dataset.level) as PlaceLevel;
     saveSettings();
-    quiz = { stage: "start" };
+    quiz.reset();
     randomNumber();
     render();
   }),
 );
 input.addEventListener("input", readInput);
 $("random").addEventListener("click", randomNumber);
-$("quiz-go").addEventListener("click", startQuiz);
-$("quiz-again").addEventListener("click", startQuiz);
-$("quiz-next").addEventListener("click", nextQuestion);
 
 n = settings.level === 1_000 ? 572 : settings.level === 1_000_000 ? 304_572 : 3_405_210;
 input.value = show(n, lang);

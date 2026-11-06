@@ -1,10 +1,10 @@
 import "./sw-register";
 import "../styles/zone.css";
 import "../styles/quiz.css";
+import { mountQuiz } from "./quiz";
 import "../styles/quader.css";
 import { cellKey, parseCell, shapeOf, type CellKey, type Shape } from "../lib/area";
 import { cubeNets, fold, makeCuboidRound, surface, volume, type CuboidQuestion } from "../lib/cuboid";
-import { starsFor } from "../lib/times-tables";
 import { choiceText, quizPrompt, quizSteps, surfaceSteps, volumeSteps } from "../explain/cuboid";
 import type { Lang } from "../explain/lang";
 import { getLang, setLang } from "./lang";
@@ -208,12 +208,10 @@ $("net-all").addEventListener("click", () => {
 
 // ---------- quiz ----------
 
-type Quiz = { round: CuboidQuestion[]; index: number; picked: number | null; right: number; streak: number; results: boolean[] };
-let quiz: Quiz | null = null;
-
-function shapeSvg(s: Shape, cls: (k: CellKey) => string = () => "", labels: Map<CellKey, string> = new Map()): SVGSVGElement {
+/** A net drawn small, for a choice or the question picture. */
+function shapeSvg(s: Shape, cls: (k: CellKey) => string = () => "", labels: Map<CellKey, string> = new Map(), extraClass = "net"): SVGSVGElement {
   const svg = svgEl("svg", { role: "img" }) as SVGSVGElement;
-  svg.classList.add("net");
+  svg.setAttribute("class", extraClass);
   const cells = [...s].map(parseCell);
   const rows = Math.max(...cells.map(([r]) => r)) + 1;
   const cols = Math.max(...cells.map(([, c]) => c)) + 1;
@@ -222,82 +220,30 @@ function shapeSvg(s: Shape, cls: (k: CellKey) => string = () => "", labels: Map<
   return svg;
 }
 
-function renderQuiz(): void {
-  $("quiz-start").hidden = quiz !== null;
-  $("quiz-play").hidden = quiz === null || quiz.index >= 10;
-  $("quiz-done").hidden = quiz === null || quiz.index < 10;
-  if (!quiz) return;
-  if (quiz.index >= 10) {
-    const stars = starsFor(quiz.right, 10);
-    $("quiz-stars").textContent = "⭐".repeat(stars) + "☆".repeat(3 - stars);
-    $("quiz-score").textContent = t().score(quiz.right);
-    return;
-  }
-  const qz = quiz;
-  const q = qz.round[qz.index]!;
-  $("quiz-progress").replaceChildren(...qz.round.map((_, i) => {
-    const dot = document.createElement("i");
-    if (i < qz.results.length) dot.className = qz.results[i] ? "ok" : "no";
-    else if (i === qz.index) dot.className = "now";
-    return dot;
-  }));
-  $("quiz-streak").textContent = qz.streak >= 3 ? `🔥 ${qz.streak}` : "";
-  const pic = $("quiz-pic") as unknown as SVGSVGElement;
-  pic.toggleAttribute("hidden", !(q.kind === "count" || q.kind === "opposite")); // an SVG element has no .hidden property
-  if (q.kind === "count") {
-    pic.setAttribute("viewBox", "0 0 320 240");
-    drawCuboid(pic, q.a, q.b, q.c, false);
-  } else if (q.kind === "opposite") {
-    const labels = new Map<CellKey, string>([[q.marked, "●"]]);
-    q.options.forEach((k, i) => labels.set(k, "ABCDE"[i]!));
-    const right = q.options[q.answer]!;
-    const sv = shapeSvg(q.net, (k) => (qz.picked !== null && (k === right || k === q.marked) ? "p0" : ""), labels);
-    pic.setAttribute("viewBox", sv.getAttribute("viewBox")!);
-    pic.replaceChildren(...[...sv.childNodes]);
-  }
-  $("quiz-q").textContent = quizPrompt(q, lang);
-  $("quiz-choices").replaceChildren(...q.choices.map((c, i) => {
-    const b = el("button", q.kind === "net" ? "" : choiceText(q, c, lang)) as HTMLButtonElement;
-    b.type = "button";
-    if (q.kind === "net") {
-      b.classList.add("shape-choice");
-      b.append(shapeSvg(q.shapes[i]!));
+const quiz = mountQuiz<CuboidQuestion>({
+  host: $("quiz"),
+  colour: "c-cuboid",
+  makeRound: () => makeCuboidRound(Math.random),
+  prompt: (q, l) => quizPrompt(q, l),
+  choices: (q, l) => (q.kind === "net" ? q.shapes.map((s) => shapeSvg(s)) : q.choices.map((c) => choiceText(q, c, l))),
+  answer: (q) => q.answer,
+  steps: (q, l) => quizSteps(q, l),
+  picture: (q, _l, answered) => {
+    if (q.kind === "count") {
+      const svg = svgEl("svg", { viewBox: "0 0 320 240", role: "img" }) as SVGSVGElement;
+      svg.setAttribute("class", "quiz-pic");
+      drawCuboid(svg, q.a, q.b, q.c, false);
+      return svg;
     }
-    b.disabled = qz.picked !== null;
-    if (qz.picked !== null && i === q.answer) b.classList.add("right");
-    if (qz.picked === i && i !== q.answer) b.classList.add("wrong");
-    b.addEventListener("click", () => {
-      if (qz.picked !== null) return;
-      qz.picked = i;
-      const ok = i === q.answer;
-      qz.results.push(ok);
-      qz.right += ok ? 1 : 0;
-      qz.streak = ok ? qz.streak + 1 : 0;
-      renderQuiz();
-    });
-    return b;
-  }));
-  $("quiz-feedback").hidden = qz.picked === null;
-  if (qz.picked !== null) {
-    const ok = qz.picked === q.answer;
-    const rightText = choiceText(q, q.choices[q.answer]!, lang);
-    $("quiz-verdict").textContent = ok ? t().right : q.kind === "net" ? t().netWrong : t().wrong(rightText);
-    $("quiz-verdict").className = `verdict ${ok ? "ok" : "no"}`;
-    $("quiz-steps").replaceChildren(...quizSteps(q, lang).map((s) => el("li", s)));
-  }
-}
-
-const startQuiz = () => {
-  quiz = { round: makeCuboidRound(Math.random), index: 0, picked: null, right: 0, streak: 0, results: [] };
-  renderQuiz();
-};
-$("quiz-go").addEventListener("click", startQuiz);
-$("quiz-again").addEventListener("click", startQuiz);
-$("quiz-next").addEventListener("click", () => {
-  if (!quiz) return;
-  quiz.index++;
-  quiz.picked = null;
-  renderQuiz();
+    if (q.kind === "opposite") {
+      const labels = new Map<CellKey, string>([[q.marked, "●"]]);
+      q.options.forEach((k, i) => labels.set(k, "ABCDE"[i]!));
+      const right = q.options[q.answer]!;
+      return shapeSvg(q.net, (k) => (answered && (k === right || k === q.marked) ? "p0" : ""), labels, "quiz-pic");
+    }
+    return null;
+  },
+  words: (l) => ({ intro: UI[l].quizIntro, go: UI[l].quizGo, next: UI[l].next, again: UI[l].again, right: UI[l].right, wrong: (r) => (r ? UI[l].wrong(r) : UI[l].netWrong), score: (c) => UI[l].score(c) }),
 });
 
 // ---------- wiring ----------
@@ -309,7 +255,7 @@ function render(): void {
   renderCuboid();
   renderUnits();
   renderNet();
-  renderQuiz();
+  quiz.render(lang);
 }
 document.querySelectorAll<HTMLButtonElement>("[data-lang]").forEach((b) =>
   b.addEventListener("click", () => {

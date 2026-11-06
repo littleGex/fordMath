@@ -1,13 +1,13 @@
 import "./sw-register";
 import "../styles/zone.css";
 import "../styles/quiz.css";
+import { mountQuiz } from "./quiz";
 import "../styles/umfang-flaeche.css";
 import {
   AREA_UNITS, area, cellKey, makeAreaRound, outline, parseCell, perimeter, randomShape, rectangle, shapeOf,
   type AreaQuestion, type AreaUnit, type CellKey, type Shape,
 } from "../lib/area";
 import { mul, parseRational, rat } from "../lib/rational";
-import { starsFor } from "../lib/times-tables";
 import { choiceText, explainRange, explainShape, inUnit, quizPrompt, quizSteps } from "../explain/area";
 import type { Lang } from "../explain/lang";
 import { getLang, setLang } from "./lang";
@@ -212,78 +212,23 @@ $("amount").addEventListener("input", renderUnits);
 
 // ---------- quiz ----------
 
-type Quiz = { round: AreaQuestion[]; index: number; picked: number | null; right: number; streak: number; results: boolean[] };
-let quiz: Quiz | null = null;
-
-function renderQuiz(): void {
-  $("quiz-start").hidden = quiz !== null;
-  $("quiz-play").hidden = quiz === null || quiz.index >= 10;
-  $("quiz-done").hidden = quiz === null || quiz.index < 10;
-  if (!quiz) return;
-  if (quiz.index >= 10) {
-    const stars = starsFor(quiz.right, 10);
-    $("quiz-stars").textContent = "⭐".repeat(stars) + "☆".repeat(3 - stars);
-    $("quiz-score").textContent = t().score(quiz.right);
-    return;
-  }
-  const q = quiz.round[quiz.index]!;
-  $("quiz-progress").replaceChildren(
-    ...quiz.round.map((_, i) => {
-      const dot = document.createElement("i");
-      if (i < quiz!.results.length) dot.className = quiz!.results[i] ? "ok" : "no";
-      else if (i === quiz!.index) dot.className = "now";
-      return dot;
-    }),
-  );
-  $("quiz-streak").textContent = quiz.streak >= 3 ? `🔥 ${quiz.streak}` : "";
-  const shapeSvg = $("quiz-shape") as unknown as SVGSVGElement;
-  const hasShape = q.kind === "countArea" || q.kind === "countPerimeter";
-  shapeSvg.toggleAttribute("hidden", !hasShape); // an SVG element has no .hidden property: set the attribute
-  if (hasShape) drawShape(shapeSvg, q.shape, 6, 6, 30);
-  $("quiz-q").textContent = quizPrompt(q, lang);
-  const picked = quiz.picked;
-  $("quiz-choices").replaceChildren(
-    ...q.choices.map((c, i) => {
-      const b = el("button", choiceText(q, c, lang)) as HTMLButtonElement;
-      b.type = "button";
-      b.disabled = picked !== null;
-      if (picked !== null && i === q.answer) b.classList.add("right");
-      if (picked === i && i !== q.answer) b.classList.add("wrong");
-      b.addEventListener("click", () => pick(i));
-      return b;
-    }),
-  );
-  $("quiz-feedback").hidden = picked === null;
-  if (picked !== null) {
-    const ok = picked === q.answer;
-    $("quiz-verdict").textContent = ok ? t().right : t().wrong(choiceText(q, q.choices[q.answer]!, lang));
-    $("quiz-verdict").className = `verdict ${ok ? "ok" : "no"}`;
-    $("quiz-steps").replaceChildren(...quizSteps(q, lang).map((s) => el("li", s)));
-  }
-}
-
-function pick(i: number): void {
-  if (!quiz || quiz.picked !== null) return;
-  const q = quiz.round[quiz.index]!;
-  quiz.picked = i;
-  const ok = i === q.answer;
-  quiz.results.push(ok);
-  quiz.right += ok ? 1 : 0;
-  quiz.streak = ok ? quiz.streak + 1 : 0;
-  renderQuiz();
-}
-
-const startQuiz = () => {
-  quiz = { round: makeAreaRound(Math.random), index: 0, picked: null, right: 0, streak: 0, results: [] };
-  renderQuiz();
-};
-$("quiz-go").addEventListener("click", startQuiz);
-$("quiz-again").addEventListener("click", startQuiz);
-$("quiz-next").addEventListener("click", () => {
-  if (!quiz) return;
-  quiz.index++;
-  quiz.picked = null;
-  renderQuiz();
+const quiz = mountQuiz<AreaQuestion>({
+  host: $("quiz"),
+  colour: "c-area",
+  makeRound: () => makeAreaRound(Math.random),
+  prompt: (q, l) => quizPrompt(q, l),
+  choices: (q, l) => q.choices.map((c) => choiceText(q, c, l)),
+  answer: (q) => q.answer,
+  steps: (q, l) => quizSteps(q, l),
+  picture: (q) => {
+    if (q.kind !== "countArea" && q.kind !== "countPerimeter") return null;
+    const svg = document.createElementNS(NS, "svg");
+    svg.setAttribute("class", "quiz-shape");
+    svg.setAttribute("role", "img");
+    drawShape(svg, q.shape, 6, 6, 30);
+    return svg;
+  },
+  words: (l) => ({ intro: UI[l].quizIntro, go: UI[l].quizGo, next: UI[l].next, again: UI[l].again, right: UI[l].right, wrong: (r) => UI[l].wrong(r), score: (c) => UI[l].score(c) }),
 });
 
 // ---------- language ----------
@@ -294,7 +239,7 @@ function render(): void {
   document.querySelectorAll<HTMLButtonElement>("[data-lang]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.lang === lang)));
   renderShape();
   renderUnits();
-  renderQuiz();
+  quiz.render(lang);
 }
 document.querySelectorAll<HTMLButtonElement>("[data-lang]").forEach((b) =>
   b.addEventListener("click", () => {

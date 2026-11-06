@@ -1,12 +1,12 @@
 import "./sw-register";
 import "../styles/zone.css";
 import "../styles/quiz.css";
+import { mountQuiz } from "./quiz";
 import "../styles/symmetrie.css";
 import { cellKey, parseCell, type CellKey, type Shape } from "../lib/area";
 import {
   axesOf, checkMirror, makeAxesRound, makeMirrorTask, mirrorCell, type AxesQuestion, type Axis, type MirrorTask, type SymmetryLevel,
 } from "../lib/symmetry";
-import { starsFor } from "../lib/times-tables";
 import { axesPrompt, axesSteps, mirrorSteps } from "../explain/symmetry";
 import type { Lang } from "../explain/lang";
 import { getLang, setLang } from "./lang";
@@ -230,71 +230,33 @@ $("magic-clear").addEventListener("click", () => { magic = new Set(); renderMagi
 
 // ---------- Achsen finden ----------
 
-type Quiz = { round: AxesQuestion[]; index: number; picked: number | null; right: number; streak: number; results: boolean[] };
-let quiz: Quiz = { round: makeAxesRound(Math.random), index: 0, picked: null, right: 0, streak: 0, results: [] };
-
-function drawPicture(shape: Shape, showAxes: boolean): void {
+/** The picture on squared paper, centred in a square so diagonal lines run corner to corner. */
+function picture(shape: Shape, showAxes: boolean, label: string): SVGSVGElement {
   const cells = [...shape].map(parseCell);
   const rows = Math.max(...cells.map(([r]) => r)) + 1;
   const cols = Math.max(...cells.map(([, c]) => c)) + 1;
   const n = Math.max(rows, cols);
-  // Centre the picture in a square so diagonal lines run corner to corner.
   const [dr, dc] = [Math.floor((n - rows) / 2), Math.floor((n - cols) / 2)];
   const moved = new Set([...shape].map((k) => { const [r, c] = parseCell(k); return cellKey(r + dr + 1, c + dc + 1); }));
-  const axes = showAxes ? axesOf(moved) : [];
-  drawGrid($("pic") as unknown as SVGSVGElement, n + 2, n + 2, 30, [["given", moved]], axes);
+  const svg = document.createElementNS(NS, "svg");
+  svg.setAttribute("class", "pic");
+  svg.setAttribute("role", "img");
+  svg.setAttribute("aria-label", label);
+  drawGrid(svg, n + 2, n + 2, 30, [["given", moved]], showAxes ? axesOf(moved) : []);
+  return svg;
 }
 
-function renderQuiz(): void {
-  const done = quiz.index >= quiz.round.length;
-  $("quiz-play").hidden = done;
-  $("quiz-done").hidden = !done;
-  if (done) {
-    const stars = starsFor(quiz.right, quiz.round.length);
-    $("quiz-stars").textContent = "⭐".repeat(stars) + "☆".repeat(3 - stars);
-    $("quiz-score").textContent = t().score(quiz.right, quiz.round.length);
-    return;
-  }
-  const q = quiz.round[quiz.index]!;
-  $("quiz-progress").replaceChildren(...quiz.round.map((_, i) => {
-    const dot = document.createElement("i");
-    if (i < quiz.results.length) dot.className = quiz.results[i] ? "ok" : "no";
-    else if (i === quiz.index) dot.className = "now";
-    return dot;
-  }));
-  $("quiz-streak").textContent = quiz.streak >= 3 ? `🔥 ${quiz.streak}` : "";
-  drawPicture(q.shape, quiz.picked !== null);
-  $("pic").setAttribute("aria-label", axesPrompt(q, lang));
-  $("quiz-q").textContent = axesPrompt(q, lang);
-  $("quiz-choices").replaceChildren(...q.choices.map((c, i) => {
-    const b = el("button", String(c)) as HTMLButtonElement;
-    b.type = "button";
-    b.disabled = quiz.picked !== null;
-    if (quiz.picked !== null && i === q.answer) b.classList.add("right");
-    if (quiz.picked === i && i !== q.answer) b.classList.add("wrong");
-    b.addEventListener("click", () => {
-      if (quiz.picked !== null) return;
-      quiz.picked = i;
-      const ok = i === q.answer;
-      quiz.results.push(ok);
-      quiz.right += ok ? 1 : 0;
-      quiz.streak = ok ? quiz.streak + 1 : 0;
-      renderQuiz();
-    });
-    return b;
-  }));
-  $("quiz-feedback").hidden = quiz.picked === null;
-  if (quiz.picked !== null) {
-    const ok = quiz.picked === q.answer;
-    $("quiz-verdict").textContent = ok ? t().right : t().wrong(q.count);
-    $("quiz-verdict").className = `verdict ${ok ? "ok" : "no"}`;
-    $("quiz-steps").replaceChildren(...axesSteps(q, lang).map((s) => el("li", s)));
-  }
-}
-$("quiz-next").addEventListener("click", () => { quiz.index++; quiz.picked = null; renderQuiz(); });
-$("quiz-again").addEventListener("click", () => {
-  quiz = { round: makeAxesRound(Math.random), index: 0, picked: null, right: 0, streak: 0, results: [] };
-  renderQuiz();
+const quiz = mountQuiz<AxesQuestion>({
+  host: $("axes-mode"),
+  colour: "c-symmetry",
+  skipStart: true,
+  makeRound: () => makeAxesRound(Math.random),
+  prompt: (q, l) => axesPrompt(q, l),
+  choices: (q) => q.choices.map(String),
+  answer: (q) => q.answer,
+  steps: (q, l) => axesSteps(q, l),
+  picture: (q, l, answered) => picture(q.shape, answered, axesPrompt(q, l)),
+  words: (l) => ({ intro: "", go: "", next: UI[l].next, again: UI[l].again, right: UI[l].right, wrong: (r) => UI[l].wrong(Number(r)), score: UI[l].score }),
 });
 
 // ---------- wiring ----------
@@ -309,7 +271,7 @@ function render(): void {
   $("axes-mode").hidden = mode !== "axes";
   renderMirror();
   renderMagic();
-  renderQuiz();
+  quiz.render(lang);
 }
 document.querySelectorAll<HTMLButtonElement>("[data-mode]").forEach((b) =>
   b.addEventListener("click", () => {

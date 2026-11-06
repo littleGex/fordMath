@@ -3,8 +3,10 @@
 .steps li::marker { color: var(--muted); font-weight: 600; }
 
 .quiz-panel { display: grid; gap: 12px; }
-#quiz-start, #quiz-play, #quiz-done { display: grid; gap: 12px; }
-#quiz-start .note { margin: 0; }
+#quiz-start, #quiz-play, #quiz-done, .quiz-start, .quiz-play, .quiz-done { display: grid; gap: 12px; }
+#quiz-start .note, .quiz-start .note { margin: 0; }
+.quiz-picture { display: grid; justify-items: center; }
+.quiz-picture > * { max-width: 100%; }
 .quiz-top { display: flex; justify-content: space-between; align-items: center; }
 .dots-progress { display: flex; gap: 6px; flex-wrap: wrap; }
 .dots-progress i { width: 13px; height: 13px; border-radius: 50%; background: var(--tile-hi); }
@@ -34,6 +36,6 @@
 .verdict { margin: 0; text-align: center; font: 700 20px var(--f-body); }
 .verdict.ok { color: #7cfc00; }
 .verdict.no { color: #ffb3bd; }
-#quiz-feedback { display: grid; gap: 10px; }
+#quiz-feedback, .quiz-feedback { display: grid; gap: 10px; }
 .stars { margin: 0; text-align: center; font-size: 48px; letter-spacing: 6px; }
 .score { margin: 0; text-align: center; font: 600 18px var(--f-body); color: var(--muted); }

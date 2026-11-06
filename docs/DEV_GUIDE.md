@@ -434,6 +434,12 @@ To decide whether six squares fold into a cube, `fold()` in `src/lib/cuboid.ts` 
 
 Two bugs from this page are worth remembering. `scramble()` decided "flip or not" separately for each square instead of once for the shape, which tore nets apart; a test that checked every quiz net was really a net caught it. And `svg.hidden = false` does nothing, because SVG elements have no `hidden` property, only the attribute. The cast `as SVGSVGElement & HTMLElement` had told TypeScript it was fine. Without the `& HTMLElement`, the compiler would have refused, so the cast is gone and the code uses `toggleAttribute("hidden", …)`.
 
+### The shared quiz (#27): one generic component instead of seven copies
+
+Seven pages had the same quiz loop copied in: dots, streak, choices, feedback, stars. Now they call `mountQuiz<Q>(spec)` from `src/pages/quiz.ts`. `Q` is a **type parameter**: on the Größen page it's `UnitsQuestion`, on Quader it's `CuboidQuestion`. TypeScript works it out from `makeRound`, then checks that `prompt`, `choices`, `answer`, `steps` and `picture` all accept that same `Q`. Inside the component, nothing knows what a question looks like. It only calls the page's functions.
+
+The rules of a quiz (you can't pick twice, "next" only after a pick, the last question leads to the result) live in `src/lib/quiz-state.ts` as small pure functions that return a new state: `begin`, `pick`, `next`. They're generic too, and tested without a browser. The browser part has its own test, `e2e/quiz.spec.ts`, which plays a whole round on every page that uses the component.
+
 ## 7. Warm-up: add Range to Statistics
 
 **Goal:** a new "Range" tile on the Statistics page, showing largest − smallest, with its working. It's small and it touches every layer. #5 (quartiles) left Range out on purpose so it's yours; `boxPlot()` in `src/lib/quartiles.ts` already finds min and max, if you want to peek.
@@ -581,7 +587,7 @@ Open the pull request on GitHub, wait for the green tick, and merge. The site up
 
 ## 8. Your turn: the exercise ladder
 
-Ordered roughly from easiest to hardest to *build*, which isn't the same as the school level. #18 (Punkt vor Strich), #5 (Quartile), #10 (Gleichungssysteme), #19 (Kopfrechnen), #20 (Umfang und Fläche), #21 (Dezimalzahlen), #22 (Negative Zahlen), #23 (Sachaufgaben), #24 (Symmetrie), #25 (Winkel), #26 (Quader), #7 (Teiler), #13 (Brüche), #16 (Größen), #17 (Stellenwerte), #14 (Einmaleins), #15, #11 and #12 (written +, −, ·, :) are finished. Read #14 as an example of a game. In `src/lib/written.ts`, notice how adding two new members to the `WrittenSum` union made the compiler list every place that needed updating, and how `Extract<WrittenSum, { kind: "divide" }>` gives each function its own precise return type. Each level lists the TypeScript ideas it will exercise.
+Ordered roughly from easiest to hardest to *build*, which isn't the same as the school level. #18 (Punkt vor Strich), #5 (Quartile), #10 (Gleichungssysteme), #19 (Kopfrechnen), #20 (Umfang und Fläche), #21 (Dezimalzahlen), #22 (Negative Zahlen), #23 (Sachaufgaben), #24 (Symmetrie), #25 (Winkel), #26 (Quader), #27 (shared quiz), #7 (Teiler), #13 (Brüche), #16 (Größen), #17 (Stellenwerte), #14 (Einmaleins), #15, #11 and #12 (written +, −, ·, :) are finished. Read #14 as an example of a game. In `src/lib/written.ts`, notice how adding two new members to the `WrittenSum` union made the compiler list every place that needed updating, and how `Extract<WrittenSum, { kind: "divide" }>` gives each function its own precise return type. Each level lists the TypeScript ideas it will exercise.
 
 ### Level 1: #9, matrices (and 3×3 systems)
 

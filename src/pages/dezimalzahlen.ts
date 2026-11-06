@@ -1,12 +1,12 @@
 import "./sw-register";
 import "../styles/zone.css";
 import "../styles/quiz.css";
+import { mountQuiz } from "./quiz";
 import "../styles/dezimalzahlen.css";
 import {
   compare, dec, formatDecimal, makeDecimalRound, parseDecimal, placeDigits, roundDecimal, subtract, widen, wholePart,
   writtenDecimalAdd, type Decimal, type DecimalQuestion,
 } from "../lib/decimal";
-import { starsFor } from "../lib/times-tables";
 import {
   PLACE_NAMES, PLACE_SHORT, choiceLabel, compareSteps, placeText, quizPrompt, quizSteps, roundSteps, sumSteps,
 } from "../explain/decimal";
@@ -220,71 +220,15 @@ function renderSum(): void {
 
 // ---------- quiz ----------
 
-type Quiz = { round: DecimalQuestion[]; index: number; picked: number | null; right: number; streak: number; results: boolean[] };
-let quiz: Quiz | null = null;
-
-function renderQuiz(): void {
-  $("quiz-start").hidden = quiz !== null;
-  $("quiz-play").hidden = quiz === null || quiz.index >= 10;
-  $("quiz-done").hidden = quiz === null || quiz.index < 10;
-  if (!quiz) return;
-  if (quiz.index >= 10) {
-    const stars = starsFor(quiz.right, 10);
-    $("quiz-stars").textContent = "⭐".repeat(stars) + "☆".repeat(3 - stars);
-    $("quiz-score").textContent = t().score(quiz.right);
-    return;
-  }
-  const qz = quiz;
-  const q = qz.round[qz.index]!;
-  $("quiz-progress").replaceChildren(
-    ...qz.round.map((_, i) => {
-      const dot = document.createElement("i");
-      if (i < qz.results.length) dot.className = qz.results[i] ? "ok" : "no";
-      else if (i === qz.index) dot.className = "now";
-      return dot;
-    }),
-  );
-  $("quiz-streak").textContent = qz.streak >= 3 ? `🔥 ${qz.streak}` : "";
-  $("quiz-q").textContent = quizPrompt(q, lang);
-  $("quiz-choices").replaceChildren(
-    ...q.choices.map((c, i) => {
-      const b = el("button", choiceLabel(c, lang)) as HTMLButtonElement;
-      b.type = "button";
-      b.disabled = qz.picked !== null;
-      if (qz.picked !== null && i === q.answer) b.classList.add("right");
-      if (qz.picked === i && i !== q.answer) b.classList.add("wrong");
-      b.addEventListener("click", () => {
-        if (qz.picked !== null) return;
-        qz.picked = i;
-        const ok = i === q.answer;
-        qz.results.push(ok);
-        qz.right += ok ? 1 : 0;
-        qz.streak = ok ? qz.streak + 1 : 0;
-        renderQuiz();
-      });
-      return b;
-    }),
-  );
-  $("quiz-feedback").hidden = qz.picked === null;
-  if (qz.picked !== null) {
-    const ok = qz.picked === q.answer;
-    $("quiz-verdict").textContent = ok ? t().right : t().wrong(choiceLabel(q.choices[q.answer]!, lang));
-    $("quiz-verdict").className = `verdict ${ok ? "ok" : "no"}`;
-    $("quiz-steps").replaceChildren(...quizSteps(q, lang).map((s) => el("li", s)));
-  }
-}
-
-const startQuiz = () => {
-  quiz = { round: makeDecimalRound(Math.random), index: 0, picked: null, right: 0, streak: 0, results: [] };
-  renderQuiz();
-};
-$("quiz-go").addEventListener("click", startQuiz);
-$("quiz-again").addEventListener("click", startQuiz);
-$("quiz-next").addEventListener("click", () => {
-  if (!quiz) return;
-  quiz.index++;
-  quiz.picked = null;
-  renderQuiz();
+const quiz = mountQuiz<DecimalQuestion>({
+  host: $("quiz"),
+  colour: "c-decimal",
+  makeRound: () => makeDecimalRound(Math.random),
+  prompt: (q, l) => quizPrompt(q, l),
+  choices: (q, l) => q.choices.map((c) => choiceLabel(c, l)),
+  answer: (q) => q.answer,
+  steps: (q, l) => quizSteps(q, l),
+  words: (l) => ({ intro: UI[l].quizIntro, go: UI[l].quizGo, next: UI[l].next, again: UI[l].again, right: UI[l].right, wrong: (r) => UI[l].wrong(r), score: (c) => UI[l].score(c) }),
 });
 
 // ---------- wiring ----------
@@ -318,7 +262,7 @@ function render(): void {
   renderNumber(false);
   renderCompare();
   renderSum();
-  renderQuiz();
+  quiz.render(lang);
 }
 
 $("num").addEventListener("input", () => renderNumber(true));

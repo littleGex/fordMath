@@ -2,12 +2,12 @@ import "./sw-register";
 import "../styles/zone.css";
 import "../styles/groessen.css";
 import "../styles/quiz.css";
+import { mountQuiz } from "./quiz";
 import {
   QUANTITIES, UNITS, UnitError, changeFor, clockText, formatMixed, isDecimal, parseAmount, parseClock, timeSpan, unitTable,
   type Quantity, type Unit, type UnitErrorCode,
 } from "../lib/units";
 import { makeUnitsRound, type UnitsLevel, type UnitsQuestion } from "../lib/units-quiz";
-import { starsFor } from "../lib/times-tables";
 import {
   QUANTITY_NAMES, amount, changeSteps, choiceText, convertSteps, euro, minutesText, piece, questionSteps, questionText, spanSteps,
 } from "../explain/units";
@@ -58,11 +58,6 @@ let target = START.length.target;
 let paid = 500;
 let level: UnitsLevel = "grundschule";
 
-type Quiz =
-  | { stage: "start" }
-  | { stage: "play"; round: UnitsQuestion[]; index: number; correct: number; streak: number; results: boolean[]; chose: number | null }
-  | { stage: "done"; correct: number; total: number };
-let quiz: Quiz = { stage: "start" };
 
 const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
 const t = () => UI[lang];
@@ -245,71 +240,34 @@ function renderShop(): void {
 }
 
 // ---------- quiz ----------
-function renderQuiz(): void {
-  document.querySelectorAll<HTMLButtonElement>("[data-qlevel]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.qlevel === level)));
-  $("quiz-start").hidden = quiz.stage !== "start";
-  $("quiz-play").hidden = quiz.stage !== "play";
-  $("quiz-done").hidden = quiz.stage !== "done";
-  if (quiz.stage === "done") {
-    const stars = starsFor(quiz.correct, quiz.total);
-    $("quiz-stars").textContent = "⭐".repeat(stars) + "☆".repeat(3 - stars);
-    $("quiz-score").textContent = t().score(quiz.correct, quiz.total);
-    return;
+function levelChips(): Node {
+  const box = Object.assign(document.createElement("div"), { className: "chips" });
+  box.setAttribute("role", "group");
+  for (const [lv, key] of [["grundschule", "gs"], ["sek1", "k5"]] as const) {
+    const b = el("button", t()[key], "chip") as HTMLButtonElement;
+    b.type = "button";
+    b.setAttribute("aria-pressed", String(level === lv));
+    b.addEventListener("click", () => {
+      level = lv;
+      quiz.reset();
+    });
+    box.append(b);
   }
-  if (quiz.stage !== "play") return;
-  const s = quiz;
-  const q = s.round[s.index]!;
-  $("quiz-progress").replaceChildren(...s.round.map((_, i) => el("i", "", i < s.results.length ? (s.results[i] ? "ok" : "no") : i === s.index ? "now" : "")));
-  $("quiz-streak").textContent = s.streak >= 3 ? `🔥 ${s.streak}` : "";
-  $("quiz-q").textContent = questionText(q, lang);
-  $("quiz-choices").replaceChildren(
-    ...q.choices.map((c, i) => {
-      const b = el("button", choiceText(q, c, lang)) as HTMLButtonElement;
-      b.type = "button";
-      if (s.chose !== null) {
-        b.disabled = true;
-        if (i === q.answer) b.classList.add("right");
-        else if (i === s.chose) b.classList.add("wrong");
-      }
-      b.addEventListener("click", () => choose(i));
-      return b;
-    }),
-  );
-  $("quiz-choices").style.gridTemplateColumns = q.kind === "compare" ? "repeat(3, minmax(0, 1fr))" : "";
-  $("quiz-feedback").hidden = s.chose === null;
-  if (s.chose !== null) {
-    const ok = s.chose === q.answer;
-    $("quiz-verdict").textContent = ok ? t().right : t().wrong;
-    $("quiz-verdict").className = `verdict ${ok ? "ok" : "no"}`;
-    list($("quiz-steps"), questionSteps(q, lang));
-  }
+  return box;
 }
 
-function choose(i: number): void {
-  if (quiz.stage !== "play" || quiz.chose !== null) return;
-  const ok = i === quiz.round[quiz.index]!.answer;
-  quiz.chose = i;
-  quiz.results.push(ok);
-  quiz.correct += ok ? 1 : 0;
-  quiz.streak = ok ? quiz.streak + 1 : 0;
-  renderQuiz();
-}
-
-function nextQuestion(): void {
-  if (quiz.stage !== "play") return;
-  if (quiz.index + 1 >= quiz.round.length) quiz = { stage: "done", correct: quiz.correct, total: quiz.results.length };
-  else {
-    quiz.index++;
-    quiz.chose = null;
-  }
-  renderQuiz();
-  $("quiz").scrollIntoView({ block: "start", behavior: "smooth" });
-}
-
-function startQuiz(): void {
-  quiz = { stage: "play", round: makeUnitsRound(level, Math.random), index: 0, correct: 0, streak: 0, results: [], chose: null };
-  renderQuiz();
-}
+const quiz = mountQuiz<UnitsQuestion>({
+  host: $("quiz"),
+  colour: "c-units",
+  makeRound: () => makeUnitsRound(level, Math.random),
+  prompt: (q, l) => questionText(q, l),
+  choices: (q, l) => q.choices.map((c) => choiceText(q, c, l)),
+  answer: (q) => q.answer,
+  steps: (q, l) => questionSteps(q, l),
+  columns: (q) => (q.kind === "compare" ? 3 : undefined),
+  startExtra: () => levelChips(),
+  words: (l) => ({ intro: UI[l].quizIntro, go: UI[l].quizGo, next: UI[l].next, again: UI[l].again, right: UI[l].right, wrong: () => UI[l].wrong, score: UI[l].score }),
+});
 
 // ---------- page ----------
 function render(): void {
@@ -319,7 +277,7 @@ function render(): void {
   renderConvert();
   renderSpan();
   renderShop();
-  renderQuiz();
+  quiz.render(lang);
 }
 
 document.querySelectorAll<HTMLButtonElement>("[data-lang]").forEach((b) =>
@@ -338,15 +296,6 @@ document.querySelectorAll<HTMLButtonElement>("[data-paid]").forEach((b) =>
     renderShop();
   }),
 );
-document.querySelectorAll<HTMLButtonElement>("[data-qlevel]").forEach((b) =>
-  b.addEventListener("click", () => {
-    level = b.dataset.qlevel === "sek1" ? "sek1" : "grundschule";
-    renderQuiz();
-  }),
-);
-$("quiz-go").addEventListener("click", startQuiz);
-$("quiz-again").addEventListener("click", startQuiz);
-$("quiz-next").addEventListener("click", nextQuestion);
 
 $<HTMLInputElement>("amount").value = lang === "de" ? START.length.text : START.length.text.replace(",", ".");
 if (lang === "en") $<HTMLInputElement>("price").value = "3.65";
