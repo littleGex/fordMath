@@ -414,6 +414,12 @@ The quiz's wrong answers are real mistakes: 0,037 for 37/100 (digits in the wron
 
 A small JavaScript surprise: `2 − 2` can come out as `−0` in some calculations (`-(2) + 2` is fine, but `0 * -1` is `-0`), and `Object.is(-0, 0)` is false. `opposite()` and `move()` add `+ 0`, which turns `−0` into `0`, and a test checks that no answer is ever `−0`.
 
+### Sachaufgaben (#23): data in lib, words in explain, and a check that throws dice
+
+Each kind of story is one maker function in `src/lib/word-problems.ts` that picks numbers and returns the right calculation, some tempting wrong ones, and which numbers are needed. The sentences live in `src/explain/word-problems.ts` as arrays of pieces, where a piece is either text or `{ key: "a" }` for a number. The page can make exactly those pieces tappable, and both languages are guaranteed to use the same numbers.
+
+Random numbers sometimes make a wrong calculation come out the same as the right one: with 20 € paid and 5 € + 5 € spent, `20 − (5 + 5)` and `5 + 5` are both 10. Instead of making every maker careful, `makeProblem` runs one check, `isClear()`, and simply tries new numbers if two choices would have the same value. The tests then run 300 stories per kind and evaluate every calculation string with the expression parser from #1, so the text a child reads is checked, not just the numbers behind it.
+
 ## 7. Warm-up: add Range to Statistics
 
 **Goal:** a new "Range" tile on the Statistics page, showing largest − smallest, with its working. It's small and it touches every layer. #5 (quartiles) left Range out on purpose so it's yours; `boxPlot()` in `src/lib/quartiles.ts` already finds min and max, if you want to peek.
@@ -561,7 +567,7 @@ Open the pull request on GitHub, wait for the green tick, and merge. The site up
 
 ## 8. Your turn: the exercise ladder
 
-Ordered roughly from easiest to hardest to *build*, which isn't the same as the school level. #18 (Punkt vor Strich), #5 (Quartile), #10 (Gleichungssysteme), #19 (Kopfrechnen), #20 (Umfang und Fläche), #21 (Dezimalzahlen), #22 (Negative Zahlen), #7 (Teiler), #13 (Brüche), #16 (Größen), #17 (Stellenwerte), #14 (Einmaleins), #15, #11 and #12 (written +, −, ·, :) are finished. Read #14 as an example of a game. In `src/lib/written.ts`, notice how adding two new members to the `WrittenSum` union made the compiler list every place that needed updating, and how `Extract<WrittenSum, { kind: "divide" }>` gives each function its own precise return type. Each level lists the TypeScript ideas it will exercise.
+Ordered roughly from easiest to hardest to *build*, which isn't the same as the school level. #18 (Punkt vor Strich), #5 (Quartile), #10 (Gleichungssysteme), #19 (Kopfrechnen), #20 (Umfang und Fläche), #21 (Dezimalzahlen), #22 (Negative Zahlen), #23 (Sachaufgaben), #7 (Teiler), #13 (Brüche), #16 (Größen), #17 (Stellenwerte), #14 (Einmaleins), #15, #11 and #12 (written +, −, ·, :) are finished. Read #14 as an example of a game. In `src/lib/written.ts`, notice how adding two new members to the `WrittenSum` union made the compiler list every place that needed updating, and how `Extract<WrittenSum, { kind: "divide" }>` gives each function its own precise return type. Each level lists the TypeScript ideas it will exercise.
 
 ### Level 1: #9, matrices (and 3×3 systems)
 

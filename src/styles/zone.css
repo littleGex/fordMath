@@ -208,6 +208,14 @@ button.tile:active:not(:disabled) { transform: translateY(calc(var(--shelf) - 1p
 .c-area       { --c: #34d399; }
 .c-decimal    { --c: #ffb347; }
 .c-negative   { --c: #4fc3f7; }
+.c-word       { --c: #ff7043; }
+.c-symmetry   { --c: #b967ff; }
+.c-angle      { --c: #ffd84d; }
+.c-cuboid     { --c: #00d4ff; }
+.c-coords     { --c: #7cfc00; }
+.c-halb       { --c: #ff9f43; }
+.c-percent    { --c: #ff4da6; }
+.c-dreisatz   { --c: #34d399; }
 .c-simul      { --c: #34d399; }
 .c-matrix     { --c: #9fb0c8; }
 .c-median     { --c: #ffb347; }
