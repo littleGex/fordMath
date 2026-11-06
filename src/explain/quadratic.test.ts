@@ -79,3 +79,29 @@ describe("explainQuadratic", () => {
     expect(graph!.steps[0]).toContain("slope 2");
   });
 });
+
+describe("auf Deutsch", () => {
+  const de = (a: number, b: number, c: number) => explainQuadratic(a, b, c, "de").flatMap((s) => s.steps);
+  it("Mitternachtsformel and p-q-Formel", () => {
+    const steps = de(1, -5, 6);
+    expect(steps).toContain("Berechne die Diskriminante: D = b² − 4ac = (−5)² − 4 · 1 · 6 = 25 − 24 = 1");
+    expect(steps).toContain("Setze in die Mitternachtsformel (abc-Formel) ein: x = (−b ± √D) : 2a = (5 ± 1) : 2");
+    expect(steps).toContain("Weil a = 1 ist, geht auch die p-q-Formel mit p = −5 und q = 6: x = −p/2 ± √((p/2)² − q) = 2,5 ± √((−2,5)² − 6) = 2,5 ± 0,5");
+  });
+  it("no p-q-Formel when a isn't 1", () => {
+    expect(de(2, -4, -6).join("\n")).not.toContain("p-q-Formel");
+  });
+  it("decimal commas, the vertex as S( | ) and the vertex form", () => {
+    const text = de(-2, 4, 6).join("\n");
+    expect(text).toContain("Scheitelpunkt S(1 | 8)");
+    expect(text).toContain("Scheitelpunktform: y = −2(x − 1)² + 8");
+    expect(formatRoots(solveQuadratic(2, -1, 0).roots, "de")).toBe("x = 0 oder x = 0,5");
+  });
+  it("no real solution: L = { }", () => {
+    expect(de(1, 2, 5).join("\n")).toContain("L = { }");
+  });
+});
+
+it("Scheitelpunktform leaves out a = 1", () => {
+  expect(explainQuadratic(1, -5, 6, "de")[1]!.steps).toContain("Scheitelpunktform: y = (x − 2,5)² − 0,25");
+});

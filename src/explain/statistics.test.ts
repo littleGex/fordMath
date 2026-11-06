@@ -52,3 +52,19 @@ describe("explainStdDev", () => {
     expect(explainStdDev([5])[4]).toContain("at least 2 values");
   });
 });
+
+describe("auf Deutsch", () => {
+  it("Mittelwert with a decimal comma", () => {
+    expect(explainMean([1, 2, 3, 4], "de")).toEqual(["Addiere alle 4 Werte: 1 + 2 + 3 + 4 = 10", "Teile durch die Anzahl: 10 : 4 = 2,5"]);
+  });
+  it("Median: German ordinals, lists with semicolons", () => {
+    const steps = explainMedian([3, 1.5, 4, 2], "de");
+    expect(steps[0]).toBe("Sortiere die Werte der Größe nach: 1,5; 2; 3; 4");
+    expect(steps[1]).toContain("den 2. (2) und den 3. (3)");
+    expect(steps[2]).toBe("Der Median liegt genau dazwischen: (2 + 3) : 2 = 2,5");
+  });
+  it("Modalwert and Standardabweichung", () => {
+    expect(explainMode([1, 1, 2, 2], "de")[1]).toContain("1 und 2 kommen gleich oft");
+    expect(explainStdDev([5], "de")[4]).toContain("mindestens 2 Werte");
+  });
+});

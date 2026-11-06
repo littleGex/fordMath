@@ -458,6 +458,16 @@ The stories in `src/lib/proportion.ts` are written as `{ apples: "proportional",
 
 The Dreisatz itself is one function for both kinds. Only the right-hand side changes: proportional does the same as the left (: 3, then · 5), antiproportional does the opposite (· 4, then : 3). `dreisatzLines()` builds both the arrows and the lines from the same `Dreisatz` object, and the tests check the arrows, not just the answer. Telling the kinds apart is exact too: `classify()` compares the fractions y : x and x · y with `equals`, so 4,5 : 3 and 7,5 : 5 really are the same.
 
+### Two languages for the older pages (#36): `Record<Lang, …>`, and errors as data
+
+Statistics, Quadratics and Functions were written in English before the toggle existed. Three patterns brought them over without breaking a single existing test:
+
+- **A default parameter.** Every explain function got `lang: Lang = "en"` as its last parameter. Old calls (and their tests) still mean English; the pages pass the chosen language.
+- **`Record<Lang, string>` for words that belong to data.** The Statistics registry's `label`, `description` and `explainTitle` are now `{ de, en }` objects (the type `Words`). Forget the German for a new entry and the compiler tells you.
+- **Errors as data.** The expression parser used to throw only an English sentence. Now `ExpressionError` also carries a `problem`, a discriminated union like `{ kind: "neverClosed"; at: 4 }`. The page turns it into German with `problemText()`, a `switch` over `problem.kind`. Because the switch must cover every kind, adding a new kind of mistake makes the compiler point at the missing German sentence.
+
+One trap: `values.map(formatNumber)` passes *two* arguments (the value and its index), so a formatter that takes `(n, lang)` would get the index as the language. That's why the language-aware formatters are made by `formatFor(lang)`, which returns a one-argument function.
+
 ## 7. Warm-up: add Range to Statistics
 
 **Goal:** a new "Range" tile on the Statistics page, showing largest − smallest, with its working. It's small and it touches every layer. #5 (quartiles) left Range out on purpose so it's yours; `boxPlot()` in `src/lib/quartiles.ts` already finds min and max, if you want to peek.
@@ -555,16 +565,22 @@ export { range, type Range } from "./range";
 
 ### Step 6: the explanation
 
-In `src/explain/statistics.ts`, add `range` to the existing `../lib` import, import `prettyNumber` from `../parse`, and add:
+In `src/explain/statistics.ts`, add `range` to the existing `../lib` import, add `prettyFor` to the `../parse` import, and add:
 
 ```ts
-export function explainRange(values: readonly number[]): string[] {
+export function explainRange(values: readonly number[], lang: Lang = "en"): string[] {
   const { min, max, range: r } = range(values); // "range: r" renames, so it doesn't clash with the function
-  const p = (x: number) => (x < 0 ? `(${prettyNumber(x)})` : prettyNumber(x));
-  return [
-    `Find the smallest value (${prettyNumber(min)}) and the largest (${prettyNumber(max)}).`,
-    `Range = largest − smallest = ${prettyNumber(max)} − ${p(min)} = ${prettyNumber(r)}`,
-  ];
+  const n = prettyFor(lang); // 2,5 in German, 2.5 in English
+  const p = (x: number) => (x < 0 ? `(${n(x)})` : n(x));
+  return lang === "de"
+    ? [
+        `Suche den kleinsten Wert (${n(min)}) und den größten (${n(max)}).`,
+        `Spannweite = größter − kleinster = ${n(max)} − ${p(min)} = ${n(r)}`,
+      ]
+    : [
+        `Find the smallest value (${n(min)}) and the largest (${n(max)}).`,
+        `Range = largest − smallest = ${n(max)} − ${p(min)} = ${n(r)}`,
+      ];
 }
 ```
 
@@ -574,6 +590,7 @@ And a test in `src/explain/statistics.test.ts`:
 describe("explainRange", () => {
   it("brackets a negative smallest value", () => {
     expect(explainRange([3, -1, 4.5])[1]).toBe("Range = largest − smallest = 4.5 − (−1) = 5.5");
+    expect(explainRange([3, -1, 4.5], "de")[1]).toBe("Spannweite = größter − kleinster = 4,5 − (−1) = 5,5");
   });
 });
 ```
@@ -584,8 +601,8 @@ In `src/registry.ts`, import `range` and `explainRange`, and add an entry before
 
 ```ts
 {
-  id: "range", label: "Range", symbol: "R", colour: "c-quartiles",
-  description: "Gap between the smallest and largest.",
+  id: "range", label: { de: "Spannweite", en: "Range" }, symbol: "R", colour: "c-quartiles",
+  description: { de: "Abstand vom kleinsten zum größten Wert.", en: "Gap between the smallest and largest." },
   compute: (v) => range(v).range, explain: explainRange,
 },
 ```
@@ -605,7 +622,7 @@ Open the pull request on GitHub, wait for the green tick, and merge. The site up
 
 ## 8. Your turn: the exercise ladder
 
-Ordered roughly from easiest to hardest to *build*, which isn't the same as the school level. #18 (Punkt vor Strich), #5 (Quartile), #10 (Gleichungssysteme), #19 (Kopfrechnen), #20 (Umfang und Fläche), #21 (Dezimalzahlen), #22 (Negative Zahlen), #23 (Sachaufgaben), #24 (Symmetrie), #25 (Winkel), #26 (Quader), #27 (shared quiz), #28 (Heute üben), #31 (Halbschriftlich), #32 (Prozentrechnung), #33 (Dreisatz), #7 (Teiler), #13 (Brüche), #16 (Größen), #17 (Stellenwerte), #14 (Einmaleins), #15, #11 and #12 (written +, −, ·, :) are finished. Read #14 as an example of a game. In `src/lib/written.ts`, notice how adding two new members to the `WrittenSum` union made the compiler list every place that needed updating, and how `Extract<WrittenSum, { kind: "divide" }>` gives each function its own precise return type. Each level lists the TypeScript ideas it will exercise.
+Ordered roughly from easiest to hardest to *build*, which isn't the same as the school level. #18 (Punkt vor Strich), #5 (Quartile), #10 (Gleichungssysteme), #19 (Kopfrechnen), #20 (Umfang und Fläche), #21 (Dezimalzahlen), #22 (Negative Zahlen), #23 (Sachaufgaben), #24 (Symmetrie), #25 (Winkel), #26 (Quader), #27 (shared quiz), #28 (Heute üben), #31 (Halbschriftlich), #32 (Prozentrechnung), #33 (Dreisatz), #36 (DE/EN for the older pages), #7 (Teiler), #13 (Brüche), #16 (Größen), #17 (Stellenwerte), #14 (Einmaleins), #15, #11 and #12 (written +, −, ·, :) are finished. Read #14 as an example of a game. In `src/lib/written.ts`, notice how adding two new members to the `WrittenSum` union made the compiler list every place that needed updating, and how `Extract<WrittenSum, { kind: "divide" }>` gives each function its own precise return type. Each level lists the TypeScript ideas it will exercise.
 
 ### Level 1: #9, matrices (and 3×3 systems)
 

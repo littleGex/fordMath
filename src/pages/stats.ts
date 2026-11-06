@@ -2,9 +2,51 @@ import "./sw-register";
 import "../styles/zone.css";
 import "../styles/stats.css";
 import { methods } from "../registry";
-import { formatNumber as f, parseValues } from "../parse";
+import { formatFor, listSep, parseValues } from "../parse";
 import { boxPlot, getStats, quartilePositions, type QuartileMethod, type Stats } from "../lib";
 import { METHOD_NOTE, explainOutliers, explainQuartiles } from "../explain/quartiles";
+import type { Lang } from "../explain/lang";
+import { getLang, setLang } from "./lang";
+
+const UI = {
+  de: {
+    title: "Statistik", subtitle: "Zahlen eintippen, alles rechnet sofort mit",
+    numbers: "Zahlen", inputNote: "Trenne mit Semikolon oder Leerzeichen, dann gilt das Komma als Dezimalkomma (2,5; 3; 4). Mit Kommas getrennt: Dezimalpunkt (2.5, 3, 4).",
+    plotLabel: "Die Zahlen auf einem Zahlenstrahl, mit Mittelwert, Median und einer Standardabweichung um den Mittelwert",
+    kMean: "Mittelwert", kMedian: "Median", kBand: "Mittelwert ± σ", kMode: "volle Punkte sind der Modalwert",
+    quartilesTitle: "Quartile und Boxplot", mHalves: "Schule: Median der Hälften", mLinear: "Linear (NumPy, Excel)",
+    stripNote: "Sortiert, mit Q1, dem Median (M) und Q3",
+    boxLabel: "Boxplot: Die Box geht von Q1 bis Q3 mit einem Strich beim Median, die Antennen reichen bis zu den äußersten Werten, die keine Ausreißer sind, und Ausreißer sind eigene Punkte",
+    kBox: "mittlere Hälfte (Q1 bis Q3)", kOut: "Ausreißer", howTitle: "So wird gerechnet",
+    none: "keiner", empty: "Gib mindestens eine Zahl ein.",
+    meta: (n: number, lo: string, hi: string) => `${n} ${n === 1 ? "Wert" : "Werte"}, von ${lo} bis ${hi}`,
+    plotMean: "Mittelwert", plotMedian: "Median",
+    qTiles: [["Unteres Quartil", "Ein Viertel der Werte liegt darunter."], ["Oberes Quartil", "Drei Viertel liegen darunter."], ["Quartilsabstand", "Q3 − Q1: so breit ist die mittlere Hälfte."], ["Ausreißer", "Außerhalb der 1,5 · IQR-Grenzen."]],
+    qSections: ["Quartile (Q1, Q3, IQR)", "Ausreißer und Antennen (1,5 · IQR)"],
+    examples: [["Schulbuch", "2; 4; 4; 4; 5; 5; 7; 9"], ["Zwei Modalwerte", "3; 1,5; 4; 1,5; 2; 4"], ["Ungerade Anzahl", "7; 2; 9; 4; 4"], ["Kein Modalwert", "0,25; 1,75; 3,5; −2"], ["Ausreißer", "2; 3; 3; 4; 5; 40"], ["Boxplot", "6; 7; 15; 36; 39; 40; 41; 42; 43; 47; 49"]],
+  },
+  en: {
+    title: "Statistics", subtitle: "Type numbers and everything updates as you go",
+    numbers: "Numbers", inputNote: "Separate with commas, spaces or semicolons. Use a dot for decimals (2.5, not 2,5).",
+    plotLabel: "The numbers on a number line, with the mean, median and one standard deviation either side of the mean marked",
+    kMean: "mean", kMedian: "median", kBand: "mean ± σ", kMode: "filled dots are the mode",
+    quartilesTitle: "Quartiles and box plot", mHalves: "School: median of halves", mLinear: "Linear (NumPy, Excel)",
+    stripNote: "Sorted, with where Q1, the median (M) and Q3 sit",
+    boxLabel: "Box plot: the box runs from Q1 to Q3 with a line at the median, whiskers reach the furthest values that aren't outliers, and outliers are separate dots",
+    kBox: "middle half (Q1 to Q3)", kOut: "outlier", howTitle: "How it's worked out",
+    none: "none", empty: "Type at least one number.",
+    meta: (n: number, lo: string, hi: string) => `${n} value${n === 1 ? "" : "s"}, from ${lo} to ${hi}`,
+    plotMean: "mean", plotMedian: "median",
+    qTiles: [["Lower quartile", "A quarter of the values are below it."], ["Upper quartile", "Three quarters are below it."], ["Interquartile range", "Q3 − Q1: how wide the middle half is."], ["Outliers", "Outside the 1.5 × IQR fences."]],
+    qSections: ["Quartiles (Q1, Q3, IQR)", "Outliers and whiskers (1.5 × IQR)"],
+    examples: [["Textbook", "2, 4, 4, 4, 5, 5, 7, 9"], ["Two modes", "3, 1.5, 4, 1.5, 2, 4"], ["Odd count", "7, 2, 9, 4, 4"], ["No mode", "0.25, 1.75, 3.5, -2"], ["Outlier", "2, 3, 3, 4, 5, 40"], ["Box plot", "6, 7, 15, 36, 39, 40, 41, 42, 43, 47, 49"]],
+  },
+};
+type TextKey = { [K in keyof (typeof UI)["de"]]: (typeof UI)["de"][K] extends string ? K : never }[keyof (typeof UI)["de"]];
+let lang: Lang = getLang();
+const t = () => UI[lang];
+/** Numbers in the page's language: 2,5 or 2.5. */
+let f = formatFor(lang);
 
 const input = document.querySelector<HTMLTextAreaElement>("#values")!;
 const errorBox = document.getElementById("error")!;
@@ -20,14 +62,15 @@ let quartileMethod: QuartileMethod = "halves";
 // ---- build one result tile and (optionally) one explanation per registered method ----
 const valueEls = new Map<string, HTMLElement>();
 const stepLists = new Map<string, HTMLOListElement>();
+/** Text that changes with the language: [element, words in each language]. */
+const wordEls: Array<[HTMLElement, { de: string; en: string }]> = [];
 
 for (const m of methods) {
   const tile = document.createElement("div");
   tile.className = `tile result ${m.colour}`;
   tile.innerHTML = `<span class="sym"></span><h3></h3><span class="value">–</span><p class="desc"></p>`;
   tile.querySelector(".sym")!.textContent = m.symbol;
-  tile.querySelector("h3")!.textContent = m.label;
-  tile.querySelector(".desc")!.textContent = m.description;
+  wordEls.push([tile.querySelector("h3")!, m.label], [tile.querySelector(".desc")!, m.description]);
   valueEls.set(m.id, tile.querySelector(".value")!);
   results.appendChild(tile);
 
@@ -36,7 +79,7 @@ for (const m of methods) {
     d.className = m.colour;
     d.id = `explain-${m.id}`;
     const s = document.createElement("summary");
-    s.textContent = m.explainTitle ?? m.label;
+    wordEls.push([s, m.explainTitle ?? m.label]);
     const ol = document.createElement("ol");
     d.append(s, ol);
     explainBox.appendChild(d);
@@ -46,7 +89,7 @@ for (const m of methods) {
 explainBox.querySelector("details")?.setAttribute("open", "");
 
 const show = (r: number | number[]): string =>
-  Array.isArray(r) ? (r.length ? r.map(f).join(", ") : "none") : f(r);
+  Array.isArray(r) ? (r.length ? r.map(f).join(listSep(lang)) : t().none) : f(r);
 
 // ---- number line ----
 const NS = "http://www.w3.org/2000/svg";
@@ -83,8 +126,8 @@ function drawPlot(values: readonly number[], s: Stats): void {
   el("line", { x1: x(s.mean), x2: x(s.mean), y1: 30, y2: axisY + 6, stroke: "#00d4ff", "stroke-width": 2.5, "stroke-dasharray": "5 4" });
   el("line", { x1: x(s.median), x2: x(s.median), y1: 58, y2: axisY + 6, stroke: "#ffb347", "stroke-width": 2.5 });
   const anchor = (px: number) => (px < 150 ? "start" : px > 450 ? "end" : "middle");
-  el("text", { x: x(s.mean), y: 22, "text-anchor": anchor(x(s.mean)), class: "lbl-mean" }, `mean ${f(s.mean)}`);
-  el("text", { x: x(s.median), y: 50, "text-anchor": anchor(x(s.median)), class: "lbl-median" }, `median ${f(s.median)}`);
+  el("text", { x: x(s.mean), y: 22, "text-anchor": anchor(x(s.mean)), class: "lbl-mean" }, `${t().plotMean} ${f(s.mean)}`);
+  el("text", { x: x(s.median), y: 50, "text-anchor": anchor(x(s.median)), class: "lbl-median" }, `${t().plotMedian} ${f(s.median)}`);
 
   const stacked = new Map<number, number>();
   const modes = new Set(s.mode);
@@ -100,27 +143,29 @@ function drawPlot(values: readonly number[], s: Stats): void {
 
 // ---- quartiles: tiles, the marked sorted list, the box plot ----
 const qTiles = ([
-  ["q1", "Q1", "Lower quartile", "A quarter of the values are below it."],
-  ["q3", "Q3", "Upper quartile", "Three quarters are below it."],
-  ["iqr", "IQR", "Interquartile range", "Q3 − Q1: how wide the middle half is."],
-  ["out", "⚬", "Outliers", "Outside the 1.5 × IQR fences."],
-] as const).map(([id, sym, label, desc]) => {
+  ["q1", "Q1"],
+  ["q3", "Q3"],
+  ["iqr", "IQR"],
+  ["out", "⚬"],
+] as const).map(([id, sym], i) => {
   const tile = document.createElement("div");
   tile.className = "tile result c-quartiles";
   tile.innerHTML = `<span class="sym"></span><h3></h3><span class="value">–</span><p class="desc"></p>`;
   tile.querySelector(".sym")!.textContent = sym;
-  tile.querySelector("h3")!.textContent = label;
-  tile.querySelector(".desc")!.textContent = desc;
+  wordEls.push(
+    [tile.querySelector("h3")!, { de: UI.de.qTiles[i]![0]!, en: UI.en.qTiles[i]![0]! }],
+    [tile.querySelector(".desc")!, { de: UI.de.qTiles[i]![1]!, en: UI.en.qTiles[i]![1]! }],
+  );
   qResults.appendChild(tile);
   return [id, tile.querySelector<HTMLElement>(".value")!] as const;
 });
 const qValue = new Map(qTiles);
 
-const quartileSections = (["Quartiles (Q1, Q3, IQR)", "Outliers and whiskers (1.5 × IQR)"] as const).map((title) => {
+const quartileSections = [0, 1].map((i) => {
   const d = document.createElement("details");
   d.className = "c-quartiles";
   const sum = document.createElement("summary");
-  sum.textContent = title;
+  wordEls.push([sum, { de: UI.de.qSections[i]!, en: UI.en.qSections[i]! }]);
   const ol = document.createElement("ol");
   d.append(sum, ol);
   explainBox.appendChild(d);
@@ -191,8 +236,8 @@ function updateQuartiles(values: readonly number[], s: Stats): void {
   qValue.get("q1")!.textContent = f(b.q1);
   qValue.get("q3")!.textContent = f(b.q3);
   qValue.get("iqr")!.textContent = f(b.iqr);
-  qValue.get("out")!.textContent = b.outliers.length ? b.outliers.map(f).join(", ") : "none";
-  document.getElementById("method-note")!.textContent = METHOD_NOTE[quartileMethod];
+  qValue.get("out")!.textContent = b.outliers.length ? b.outliers.map(f).join(listSep(lang)) : t().none;
+  document.getElementById("method-note")!.textContent = METHOD_NOTE[lang][quartileMethod];
   document.querySelectorAll<HTMLButtonElement>("[data-method]").forEach((btn) =>
     btn.setAttribute("aria-pressed", String(btn.dataset.method === quartileMethod)),
   );
@@ -200,8 +245,8 @@ function updateQuartiles(values: readonly number[], s: Stats): void {
   drawBoxPlot(values, s);
   const fill = (ol: HTMLOListElement, steps: string[]) =>
     ol.replaceChildren(...steps.map((t) => Object.assign(document.createElement("li"), { textContent: t })));
-  fill(quartileSections[0]!, explainQuartiles(values, quartileMethod));
-  fill(quartileSections[1]!, explainOutliers(values, quartileMethod));
+  fill(quartileSections[0]!, explainQuartiles(values, quartileMethod, lang));
+  fill(quartileSections[1]!, explainOutliers(values, quartileMethod, lang));
 }
 
 function clearQuartiles(): void {
@@ -214,21 +259,21 @@ function clearQuartiles(): void {
 // ---- update everything from the text box ----
 function update(): void {
   try {
-    const values = parseValues(input.value);
-    if (values.length === 0) throw new Error("Type at least one number.");
+    const values = parseValues(input.value, lang);
+    if (values.length === 0) throw new Error(t().empty);
     const s = getStats(values); // validates once; also feeds the plot
     for (const m of methods) {
       const out = valueEls.get(m.id)!;
       const r = m.compute(values);
-      out.textContent = r === null ? (m.whenNull ?? "–") : show(r);
+      out.textContent = r === null ? (m.whenNull?.[lang] ?? "–") : show(r);
       out.classList.toggle("dim", r === null);
     }
     for (const m of methods) {
       const ol = stepLists.get(m.id);
       if (!ol || !m.explain) continue;
-      ol.replaceChildren(...m.explain(values).map((t) => Object.assign(document.createElement("li"), { textContent: t })));
+      ol.replaceChildren(...m.explain(values, lang).map((t) => Object.assign(document.createElement("li"), { textContent: t })));
     }
-    meta.textContent = `${values.length} value${values.length === 1 ? "" : "s"}, from ${f(Math.min(...values))} to ${f(Math.max(...values))}`;
+    meta.textContent = t().meta(values.length, f(Math.min(...values)), f(Math.max(...values)));
     drawPlot(values, s);
     updateQuartiles(values, s);
     errorBox.hidden = true;
@@ -244,16 +289,80 @@ function update(): void {
 }
 
 input.addEventListener("input", update);
-document.querySelectorAll<HTMLButtonElement>("[data-example]").forEach((b) =>
-  b.addEventListener("click", () => {
-    input.value = b.dataset.example ?? "";
-    update();
-  }),
-);
 document.querySelectorAll<HTMLButtonElement>("[data-method]").forEach((b) =>
   b.addEventListener("click", () => {
     quartileMethod = b.dataset.method === "linear" ? "linear" : "halves";
-    update();
+    // ---- language ----
+function render(): void {
+  f = formatFor(lang);
+  document.documentElement.lang = lang;
+  document.querySelectorAll<HTMLElement>("[data-t]").forEach((e) => (e.textContent = t()[e.dataset.t as TextKey]));
+  document.querySelectorAll<Element>("[data-t-label]").forEach((e) => e.setAttribute("aria-label", t()[e.getAttribute("data-t-label") as TextKey]));
+  document.querySelectorAll<HTMLButtonElement>("[data-lang]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.lang === lang)));
+  for (const [e, w] of wordEls) e.textContent = w[lang];
+  document.getElementById("examples")!.replaceChildren(...t().examples.map(([label, values]) => {
+    const b = Object.assign(document.createElement("button"), { type: "button", className: "chip", textContent: label });
+    b.addEventListener("click", () => {
+      input.value = values!;
+      update();
+    });
+    return b;
+  }));
+  update();
+}
+document.querySelectorAll<HTMLButtonElement>("[data-lang]").forEach((b) =>
+  b.addEventListener("click", () => {
+    const before = lang;
+    lang = b.dataset.lang === "en" ? "en" : "de";
+    setLang(lang);
+    // Rewrite what's in the box in the new style when it was a list we can read: 2,5; 3 ⇄ 2.5, 3.
+    try {
+      const values = parseValues(input.value, before);
+      if (before !== lang && values.length) input.value = values.map(formatFor(lang)).join(listSep(lang));
+    } catch {
+      /* leave a half-typed box alone */
+    }
+    render();
   }),
 );
-update();
+
+input.value = UI[lang].examples[0]![1]!;
+render();
+  }),
+);
+// ---- language ----
+function render(): void {
+  f = formatFor(lang);
+  document.documentElement.lang = lang;
+  document.querySelectorAll<HTMLElement>("[data-t]").forEach((e) => (e.textContent = t()[e.dataset.t as TextKey]));
+  document.querySelectorAll<Element>("[data-t-label]").forEach((e) => e.setAttribute("aria-label", t()[e.getAttribute("data-t-label") as TextKey]));
+  document.querySelectorAll<HTMLButtonElement>("[data-lang]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.lang === lang)));
+  for (const [e, w] of wordEls) e.textContent = w[lang];
+  document.getElementById("examples")!.replaceChildren(...t().examples.map(([label, values]) => {
+    const b = Object.assign(document.createElement("button"), { type: "button", className: "chip", textContent: label });
+    b.addEventListener("click", () => {
+      input.value = values!;
+      update();
+    });
+    return b;
+  }));
+  update();
+}
+document.querySelectorAll<HTMLButtonElement>("[data-lang]").forEach((b) =>
+  b.addEventListener("click", () => {
+    const before = lang;
+    lang = b.dataset.lang === "en" ? "en" : "de";
+    setLang(lang);
+    // Rewrite what's in the box in the new style when it was a list we can read: 2,5; 3 ⇄ 2.5, 3.
+    try {
+      const values = parseValues(input.value, before);
+      if (before !== lang && values.length) input.value = values.map(formatFor(lang)).join(listSep(lang));
+    } catch {
+      /* leave a half-typed box alone */
+    }
+    render();
+  }),
+);
+
+input.value = UI[lang].examples[0]![1]!;
+render();

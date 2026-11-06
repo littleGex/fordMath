@@ -2,6 +2,14 @@
 
 All notable changes to fordMath. Every page is in German with an English toggle, works offline after the first visit, and shows its working step by step.
 
+## 1.1.0 (2026-11-06)
+
+- **Statistik, Quadratische Gleichungen and Funktionen in German** (#36): the DE/EN toggle on the last three English-only pages, sharing the language setting with every other page.
+  - Statistics: German words (Mittelwert, Modalwert, Standardabweichung, Quartilsabstand, Ausreißer), decimal commas, and numbers typed as 2,5; 3; 4,5. Switching language rewrites the numbers in the box.
+  - Quadratics: the Mitternachtsformel, the p-q-Formel when a = 1, the Scheitelpunkt as S(h | k) with the Scheitelpunktform, the Satz von Vieta as the check, and L = { } when there's no real solution.
+  - Functions: the working with · and :, and every typing mistake explained in German, still with the ^ under the problem.
+  - The Range warm-up in the DEV_GUIDE now shows both languages.
+
 ## 1.0.0 (2026-11-06)
 
 The first complete release: everything a child needs from Grundschule class 3 up to Klasse 7/8, plus a few Oberstufe tools.

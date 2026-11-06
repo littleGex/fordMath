@@ -1,14 +1,29 @@
+import type { Lang } from "./explain/lang";
+
 const NUMBER = /^[+-]?(\d+\.?\d*|\.\d+)(e[+-]?\d+)?$/i;
 
 /** Turns typographic minus and en dash into "-". */
 const asciiMinus = (s: string): string => s.replace(/[−–]/g, "-");
 
-/** Parses "3, 1.5; -2 4e2" into numbers. Dots are decimals; commas separate values. */
-export function parseValues(text: string): number[] {
-  const tokens = asciiMinus(text).split(/[\s,;]+/).filter(Boolean);
-  const bad = tokens.find((t) => !NUMBER.test(t));
+/**
+ * Parses "3, 1.5; -2 4e2" into numbers. Dots are decimals; commas separate values.
+ * In German, when the values are separated by semicolons (or only spaces), a comma is the decimal
+ * mark instead: "2,5; 3; 4,5" is [2.5, 3, 4.5]. With no semicolon, commas still separate, as before.
+ */
+export function parseValues(text: string, lang: Lang = "en"): number[] {
+  const t = asciiMinus(text);
+  // German: "2,5; 3" or "2,5 3,75" use decimal commas. A word with two commas ("2,4,4") or a
+  // comma next to a space ("2, 4") means the commas separate values.
+  const words = t.trim().split(/\s+/).filter(Boolean);
+  const commaIsDecimal = lang === "de" && (t.includes(";") || words.every((w) => /^[^,]*(\d,\d[^,]*)?$/.test(w)));
+  const tokens = (commaIsDecimal ? t.split(/[\s;]+/).map((x) => x.replace(",", ".")) : t.split(/[\s,;]+/)).filter(Boolean);
+  const bad = tokens.find((x) => !NUMBER.test(x));
   if (bad !== undefined) {
-    throw new Error(`"${bad}" isn't a number. Use digits, an optional minus sign and a dot for decimals.`);
+    throw new Error(
+      lang === "de"
+        ? `„${bad}“ ist keine Zahl. Erlaubt sind Ziffern, ein Minus und ein Dezimalkomma (dann mit ; trennen).`
+        : `"${bad}" isn't a number. Use digits, an optional minus sign and a dot for decimals.`,
+    );
   }
   return tokens.map(Number);
 }
@@ -17,10 +32,11 @@ export function parseValues(text: string): number[] {
  * Parses one number from its own input box, e.g. the "b" in ax² + bx + c.
  * A comma is accepted as the decimal point here (2,5), since there's nothing to separate.
  */
-export function parseCoefficient(text: string, name: string): number {
+export function parseCoefficient(text: string, name: string, lang: Lang = "en"): number {
   const t = asciiMinus(text.trim()).replace(",", ".");
-  if (t === "") throw new Error(`Enter a value for ${name} (use 0 if that term is missing).`);
-  if (!NUMBER.test(t)) throw new Error(`${name} = "${text.trim()}" isn't a number.`);
+  const de = lang === "de";
+  if (t === "") throw new Error(de ? `Gib einen Wert für ${name} ein (0, wenn der Teil fehlt).` : `Enter a value for ${name} (use 0 if that term is missing).`);
+  if (!NUMBER.test(t)) throw new Error(de ? `${name} = „${text.trim()}“ ist keine Zahl.` : `${name} = "${text.trim()}" isn't a number.`);
   return Number(t);
 }
 
@@ -46,3 +62,10 @@ export function prettyNumber(n: number): string {
     .replace(/e\+?(-?\d+)$/, (_, exp: string) => " × 10" + [...exp].map((ch) => SUPERSCRIPT[ch]).join(""))
     .replace(/^-/, "−");
 }
+
+/** formatNumber in the language's style: 2,5 in German, 2.5 in English. */
+export const formatFor = (lang: Lang) => (n: number): string => (lang === "de" ? formatNumber(n).replace(".", ",") : formatNumber(n));
+/** prettyNumber in the language's style. */
+export const prettyFor = (lang: Lang) => (n: number): string => (lang === "de" ? prettyNumber(n).replace(".", ",") : prettyNumber(n));
+/** How lists are joined: "; " in German, where the comma is the decimal mark. */
+export const listSep = (lang: Lang): string => (lang === "de" ? "; " : ", ");

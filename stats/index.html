@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="de">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -12,65 +12,65 @@
 </head>
 <body>
 <main class="narrow">
-  <header>
-    <a class="back" href="../">← fordMath</a>
-    <h1>📊 Statistics</h1>
-    <p class="subtitle">Type numbers and everything updates as you go</p>
+  <header class="kid-head">
+    <div>
+      <a class="back" href="../">← fordMath</a>
+      <h1>📊 <span data-t="title"></span></h1>
+      <p class="subtitle" data-t="subtitle"></p>
+    </div>
+    <div class="lang" role="group" aria-label="Sprache / Language">
+      <button class="chip" type="button" data-lang="de" aria-pressed="true">DE</button>
+      <button class="chip" type="button" data-lang="en" aria-pressed="false">EN</button>
+    </div>
   </header>
 
   <section class="panel input">
-    <label for="values">Numbers</label>
+    <label for="values" data-t="numbers"></label>
     <textarea id="values" rows="2" spellcheck="false">2, 4, 4, 4, 5, 5, 7, 9</textarea>
-    <p class="note">Separate with commas, spaces or semicolons. Use a dot for decimals (2.5, not 2,5).</p>
+    <p class="note" data-t="inputNote"></p>
     <p class="error" id="error" hidden></p>
   </section>
 
-  <div class="chips" role="group" aria-label="Example numbers">
-    <button class="chip" type="button" data-example="2, 4, 4, 4, 5, 5, 7, 9">Textbook</button>
-    <button class="chip" type="button" data-example="3, 1.5, 4, 1.5, 2, 4">Two modes</button>
-    <button class="chip" type="button" data-example="7, 2, 9, 4, 4">Odd count</button>
-    <button class="chip" type="button" data-example="0.25, 1.75, 3.5, -2">No mode</button>
-    <button class="chip" type="button" data-example="2, 3, 3, 4, 5, 40">Outlier</button>
-    <button class="chip" type="button" data-example="6, 7, 15, 36, 39, 40, 41, 42, 43, 47, 49">Box plot</button>
+  <div class="chips" role="group" id="examples">
   </div>
 
   <div class="results" id="results"></div>
   <p class="note" id="meta"></p>
 
   <figure class="panel plot">
-    <svg id="plot" viewBox="0 0 600 200" role="img" aria-label="The numbers on a number line, with the mean, median and one standard deviation either side of the mean marked"></svg>
+    <svg id="plot" viewBox="0 0 600 200" role="img" data-t-label="plotLabel"></svg>
     <figcaption class="legend">
-      <span><i class="k-mean"></i>mean</span>
-      <span><i class="k-median"></i>median</span>
-      <span><i class="k-band"></i>mean ± σ</span>
-      <span><i class="k-mode"></i>filled dots are the mode</span>
+      <span><i class="k-mean"></i><span data-t="kMean"></span></span>
+      <span><i class="k-median"></i><span data-t="kMedian"></span></span>
+      <span><i class="k-band"></i><span data-t="kBand"></span></span>
+      <span><i class="k-mode"></i><span data-t="kMode"></span></span>
     </figcaption>
   </figure>
 
-  <h2 class="section" id="quartiles">Quartiles and box plot</h2>
-  <div class="chips q-methods" role="group" aria-label="Quartile method">
-    <button class="chip" type="button" data-method="halves" aria-pressed="true">School: median of halves</button>
-    <button class="chip" type="button" data-method="linear" aria-pressed="false">Linear (NumPy, Excel)</button>
+  <h2 class="section" id="quartiles" data-t="quartilesTitle"></h2>
+  <div class="chips q-methods" role="group">
+    <button class="chip" type="button" data-method="halves" aria-pressed="true" data-t="mHalves"></button>
+    <button class="chip" type="button" data-method="linear" aria-pressed="false" data-t="mLinear"></button>
   </div>
   <p class="note method-note" id="method-note"></p>
   <div class="results" id="q-results"></div>
   <div class="panel strip-panel">
-    <p class="note">Sorted, with where Q1, the median (M) and Q3 sit</p>
+    <p class="note" data-t="stripNote"></p>
     <div class="strip" id="strip"></div>
   </div>
   <figure class="panel plot">
-    <svg id="boxplot" viewBox="0 0 600 150" role="img" aria-label="Box plot: the box runs from Q1 to Q3 with a line at the median, whiskers reach the furthest values that aren't outliers, and outliers are separate dots"></svg>
+    <svg id="boxplot" viewBox="0 0 600 150" role="img" data-t-label="boxLabel"></svg>
     <figcaption class="legend">
-      <span><i class="k-box"></i>middle half (Q1 to Q3)</span>
-      <span><i class="k-median"></i>median</span>
-      <span><i class="k-out"></i>outlier</span>
+      <span><i class="k-box"></i><span data-t="kBox"></span></span>
+      <span><i class="k-median"></i><span data-t="kMedian"></span></span>
+      <span><i class="k-out"></i><span data-t="kOut"></span></span>
     </figcaption>
   </figure>
 
-  <h2 class="section">How it's worked out</h2>
+  <h2 class="section" data-t="howTitle"></h2>
   <div id="explain" class="explain"></div>
 
-  <p class="version"><a href="../tests/">See the tests</a> · <a href="https://github.com/littleGex/fordMath/tree/main/src/lib">Source</a></p>
+  <p class="version"><a href="https://github.com/littleGex/fordMath/tree/main/src/lib">Source</a></p>
 </main>
 <script type="module" src="/src/pages/stats.ts"></script>
 </body>

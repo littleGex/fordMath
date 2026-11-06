@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="de">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -12,10 +12,16 @@
 </head>
 <body>
 <main class="narrow">
-  <header>
-    <a class="back" href="../">← fordMath</a>
-    <h1>📐 Functions</h1>
-    <p class="subtitle">Type any f(x), see its graph and work out its value</p>
+  <header class="kid-head">
+    <div>
+      <a class="back" href="../">← fordMath</a>
+      <h1>📐 <span data-t="title"></span></h1>
+      <p class="subtitle" data-t="subtitle"></p>
+    </div>
+    <div class="lang" role="group" aria-label="Sprache / Language">
+      <button class="chip" type="button" data-lang="de" aria-pressed="true">DE</button>
+      <button class="chip" type="button" data-lang="en" aria-pressed="false">EN</button>
+    </div>
   </header>
 
   <section class="panel fn-panel">
@@ -29,7 +35,7 @@
     </div>
   </section>
 
-  <div class="chips" role="group" aria-label="Example functions">
+  <div class="chips" role="group">
     <button class="chip" type="button" data-expr="x^2 + 3sin(x)">x² + 3sin(x)</button>
     <button class="chip" type="button" data-expr="(x + 1)(x - 2)">(x+1)(x−2)</button>
     <button class="chip" type="button" data-expr="e^(-x^2)">e^(−x²)</button>
@@ -43,44 +49,44 @@
   <section class="panel xs">
     <div class="field">
       <label for="x-at">x =</label>
-      <div class="row"><input id="x-at" type="text" inputmode="decimal" autocomplete="off" value="2"><button class="flip" type="button" data-flip="x-at" aria-label="Flip the sign of x">±</button></div>
+      <div class="row"><input id="x-at" type="text" inputmode="decimal" autocomplete="off" value="2"><button class="flip" type="button" data-flip="x-at" data-t-label="flip">±</button></div>
     </div>
     <div class="field">
-      <label for="x-from">graph from</label>
-      <div class="row"><input id="x-from" type="text" inputmode="decimal" autocomplete="off" value="-5"><button class="flip" type="button" data-flip="x-from" aria-label="Flip the sign">±</button></div>
+      <label for="x-from" data-t="from"></label>
+      <div class="row"><input id="x-from" type="text" inputmode="decimal" autocomplete="off" value="-5"><button class="flip" type="button" data-flip="x-from" data-t-label="flip">±</button></div>
     </div>
     <div class="field">
-      <label for="x-to">to</label>
-      <div class="row"><input id="x-to" type="text" inputmode="decimal" autocomplete="off" value="5"><button class="flip" type="button" data-flip="x-to" aria-label="Flip the sign">±</button></div>
+      <label for="x-to" data-t="to"></label>
+      <div class="row"><input id="x-to" type="text" inputmode="decimal" autocomplete="off" value="5"><button class="flip" type="button" data-flip="x-to" data-t-label="flip">±</button></div>
     </div>
   </section>
 
-  <div class="tile result c-func fx-value"><span class="sym" id="fx-label">f(2)</span><h3>Value</h3><span class="value" id="fx-value">–</span></div>
+  <div class="tile result c-func fx-value"><span class="sym" id="fx-label">f(2)</span><h3 data-t="value"></h3><span class="value" id="fx-value">–</span></div>
 
   <figure class="panel plot">
-    <svg id="plot" viewBox="0 0 600 380" role="img" aria-label="Graph of f(x)"></svg>
+    <svg id="plot" viewBox="0 0 600 380" role="img" data-t-label="plotLabel"></svg>
     <figcaption class="legend">
       <span><i class="k-curve"></i>y = f(x)</span>
-      <span><i class="k-point"></i>the point (x, f(x))</span>
+      <span><i class="k-point"></i><span data-t="kPoint"></span></span>
     </figcaption>
   </figure>
 
-  <h2 class="section">How it's worked out</h2>
+  <h2 class="section" data-t="howTitle"></h2>
   <div id="explain" class="explain"></div>
 
   <details class="panel help">
-    <summary>What can I type?</summary>
+    <summary data-t="helpTitle"></summary>
     <ul>
-      <li><b>Numbers</b>: 3, 2.5, .5, 1e3</li>
-      <li><b>The variable</b>: x</li>
-      <li><b>Operators</b>: + − × ÷ ^ (also * / and **), and brackets</li>
-      <li><b>Constants</b>: pi (or π) and e</li>
-      <li><b>Functions</b>: <span id="fn-list"></span></li>
-      <li><b>Shortcuts</b>: 2x means 2 × x, 3(x + 1) and 2sin(x) work too, and x² means x^2</li>
+      <li><b data-t="hNumbers"></b>: <span data-t="hNumbersText"></span></li>
+      <li><b data-t="hVar"></b>: x</li>
+      <li><b data-t="hOps"></b>: <span data-t="hOpsText"></span></li>
+      <li><b data-t="hConst"></b>: <span data-t="hConstText"></span></li>
+      <li><b data-t="hFns"></b>: <span id="fn-list"></span></li>
+      <li><b data-t="hShort"></b>: <span data-t="hShortText"></span></li>
     </ul>
   </details>
 
-  <p class="version"><a href="../tests/">See the tests</a> · <a href="https://github.com/littleGex/fordMath/tree/main/src/lib/expression">Source</a></p>
+  <p class="version"><a href="https://github.com/littleGex/fordMath/tree/main/src/lib/expression">Source</a></p>
 </main>
 <script type="module" src="/src/pages/function.ts"></script>
 </body>

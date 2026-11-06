@@ -1,4 +1,5 @@
-import { explainExpression } from "./expression";
+import { ExpressionError, parse } from "../lib/expression";
+import { explainExpression, problemText } from "./expression";
 
 const section = (text: string, x: number, i: number) => explainExpression(text, x)[i]!.steps;
 
@@ -34,5 +35,28 @@ describe("explainExpression", () => {
     const steps = section(long, 1, 1);
     expect(steps.some((s) => s.includes("more steps"))).toBe(true);
     expect(steps.at(-1)).toBe("So f(1) = 20");
+  });
+});
+
+describe("auf Deutsch", () => {
+  it("works out f(x) with German signs and a decimal comma", () => {
+    const [read, working] = explainExpression("x/4 - 1", 2, "de");
+    expect(read!.steps[0]).toBe("Gelesen als: f(x) = x / 4 − 1");
+    expect(working!.steps).toContain("x / 4 = 2 : 4 = 0,5");
+    expect(working!.steps.at(-1)).toBe("Also ist f(2) = −0,5");
+  });
+  it("says every parse problem in German", () => {
+    for (const text of ["", "x $", "2 3", "sin x", "y + 1", ")", "x + *", "x +", "()", "(x", "x)", "x 2"]) {
+      try {
+        parse(text);
+        throw new Error(`"${text}" should not parse`);
+      } catch (e) {
+        if (!(e instanceof ExpressionError)) throw e;
+        const de = problemText(e.problem, "de", e.message);
+        expect(de).not.toBe(e.message);
+        expect(de).not.toMatch(/undefined/);
+        expect(problemText(e.problem, "en", e.message)).toBe(e.message);
+      }
+    }
   });
 });

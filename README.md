@@ -61,8 +61,8 @@ All functions take `readonly number[]` (ints and floats), never mutate the input
 | Path      | What it is                                                             |
 | --------- | ---------------------------------------------------------------------- |
 | `/`       | Homepage: helpers filtered by school level; planned ones link to their issue; a "Für Eltern" footer with the test count, source and plans |
-| `/stats/` | Live calculator, number line with mean ± σ, quartiles with a box plot (`#quartiles`, two methods), and the working for each result |
-| `/quadratic/` | Solver for ax² + bx + c = 0 with a graph and the working |
+| `/stats/` | Statistik (German, EN toggle): live calculator, number line with mean ± σ, quartiles with a box plot (`#quartiles`, two methods), and the working for each result |
+| `/quadratic/` | Quadratische Gleichungen (German, EN toggle): solver for ax² + bx + c = 0 with a graph and the working; in German the Mitternachtsformel, the p-q-Formel when a = 1, S(h \| k) and the Scheitelpunktform |
 | `/einmaleins/` | Einmaleins trainer (German, with English toggle): keypad, dots picture and working after a mistake, progress board |
 | `/schriftlich/` | Written +, −, · and : (German, EN toggle): step through or do it yourself; `#plus`, `#minus`, `#mal`, `#geteilt` open an operation directly |
 | `/teiler/` | Teiler und Primzahlen (German, EN toggle): divisibility rules, divisor pairs, prime factors, ggT and kgV |
@@ -83,7 +83,7 @@ All functions take `readonly number[]` (ints and floats), never mutate the input
 | `/prozent/` | Prozentrechnung (German, EN toggle): type two of G, W and p and the third is worked out with a Prozentstreifen, the Dreisatz and the formula; everyday examples, percent fractions, a quiz |
 | `/dreisatz/` | Dreisatz (German, EN toggle): the three lines with arrows on both sides ("the right side does the opposite" when antiproportional), a table checker with y : x and x · y and the graph (line through 0 or hyperbola), a quiz |
 | `/gleichungssysteme/` | Gleichungssysteme (German, EN toggle): two equations in boxes, the solution set, both lines drawn, and the Gleichsetzungs-, Einsetzungs- and Additionsverfahren worked line by line, with the Probe; 🎲 tasks hide the answer until asked |
-| `/function/` | Type any f(x): how it was read, its graph, and f(x) worked out step by step |
+| `/function/` | Funktionen (German, EN toggle): type any f(x): how it was read, its graph, and f(x) worked out step by step; typing mistakes explained with a ^ under the problem |
 | `/tests/` | Every test from the deployed build, read from `test-results.json`      |
 
 ## Project layout

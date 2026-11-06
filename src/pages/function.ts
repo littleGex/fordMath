@@ -2,9 +2,40 @@ import "./sw-register";
 import "../styles/zone.css";
 import "../styles/function.css";
 import { ExpressionError, FUNCTIONS, evaluate, formatExpr, parse, type Expr } from "../lib/expression";
-import { parseCoefficient, prettyNumber as n } from "../parse";
-import { explainExpression } from "../explain/expression";
+import { parseCoefficient, prettyFor } from "../parse";
+import { explainExpression, problemText } from "../explain/expression";
+import type { Lang } from "../explain/lang";
 import { renderSections } from "./render";
+import { getLang, setLang } from "./lang";
+
+const UI = {
+  de: {
+    title: "Funktionen", subtitle: "Tipp ein beliebiges f(x) ein, sieh den Graphen und berechne Werte",
+    flip: "Vorzeichen umdrehen", from: "Graph von", to: "bis", value: "Wert", plotLabel: "Graph von f(x)", kPoint: "der Punkt (x | f(x))",
+    howTitle: "So wird gerechnet", helpTitle: "Was kann ich eintippen?",
+    hNumbers: "Zahlen", hNumbersText: "3, 2.5, .5, 1e3 (Dezimalpunkt, weil das Komma hier nicht geht)", hVar: "Die Variable",
+    hOps: "Rechenzeichen", hOpsText: "+ − × ÷ ^ (auch * / und **) und Klammern", hConst: "Konstanten", hConstText: "pi (oder π) und e",
+    hFns: "Funktionen", hShort: "Abkürzungen", hShortText: "2x heißt 2 · x, 3(x + 1) und 2sin(x) gehen auch, und x² heißt x^2",
+    readAs: "Gelesen als", undefinedValue: "nicht definiert", noValues: "keine reellen Werte in diesem Bereich",
+    xName: "x", fromName: "den Anfang des Graphen", toName: "das Ende des Graphen", same: "Der Graph braucht zwei verschiedene x-Werte für von und bis.",
+    point: (x: string, y: string) => `(${x} | ${y})`,
+  },
+  en: {
+    title: "Functions", subtitle: "Type any f(x), see its graph and work out its value",
+    flip: "Flip the sign", from: "graph from", to: "to", value: "Value", plotLabel: "Graph of f(x)", kPoint: "the point (x, f(x))",
+    howTitle: "How it's worked out", helpTitle: "What can I type?",
+    hNumbers: "Numbers", hNumbersText: "3, 2.5, .5, 1e3", hVar: "The variable",
+    hOps: "Operators", hOpsText: "+ − × ÷ ^ (also * / and **), and brackets", hConst: "Constants", hConstText: "pi (or π) and e",
+    hFns: "Functions", hShort: "Shortcuts", hShortText: "2x means 2 × x, 3(x + 1) and 2sin(x) work too, and x² means x^2",
+    readAs: "Read as", undefinedValue: "undefined", noValues: "no real values in this range",
+    xName: "x", fromName: "the start of the graph", toName: "the end of the graph", same: "The graph needs two different x values to go from and to.",
+    point: (x: string, y: string) => `(${x}, ${y})`,
+  },
+};
+type TextKey = { [K in keyof (typeof UI)["de"]]: (typeof UI)["de"][K] extends string ? K : never }[keyof (typeof UI)["de"]];
+let lang: Lang = getLang();
+const t = () => UI[lang];
+let n = prettyFor(lang);
 
 const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
 const exprInput = $<HTMLInputElement>("expr");
@@ -39,7 +70,7 @@ function drawPlot(tree: Expr, x0: number, x1: number, x: number, fx: number): vo
   const X = (v: number) => L + ((v - x0) / (x1 - x0)) * (R - L);
 
   if (finite.length === 0) {
-    el("text", { x: 300, y: 190, "text-anchor": "middle" }, "no real values in this range");
+    el("text", { x: 300, y: 190, "text-anchor": "middle" }, t().noValues);
     return;
   }
   // Ignore the most extreme 3% at each end so tan(x) and 1/x don't flatten everything else.
@@ -84,14 +115,14 @@ function drawPlot(tree: Expr, x0: number, x1: number, x: number, fx: number): vo
     const px = X(x), py = Y(fx);
     el("circle", { cx: px, cy: py, r: 8, fill: "#eef3fb" });
     const anchor = px < 130 ? "start" : px > 470 ? "end" : "middle";
-    el("text", { x: px, y: py < 60 ? py + 32 : py - 16, "text-anchor": anchor, class: "lbl-point" }, `(${n(x)}, ${n(fx)})`);
+    el("text", { x: px, y: py < 60 ? py + 32 : py - 16, "text-anchor": anchor, class: "lbl-point" }, t().point(n(x), n(fx)));
   }
 }
 
 // ---- error with a caret under the problem ----
 function showError(text: string, e: unknown): void {
   const box = $("caret-box");
-  $("error").textContent = e instanceof Error ? e.message : String(e);
+  $("error").textContent = e instanceof ExpressionError ? problemText(e.problem, lang, e.message) : e instanceof Error ? e.message : String(e);
   if (e instanceof ExpressionError && text.trim() !== "") {
     const pre = $("caret");
     pre.replaceChildren(document.createTextNode(text + "\n" + " ".repeat(e.index)), Object.assign(document.createElement("b"), { textContent: "^" }));
@@ -117,20 +148,20 @@ function update(): void {
     return;
   }
   $("caret-box").hidden = true;
-  $("read").textContent = `Read as: ${formatExpr(tree)}`;
+  $("read").textContent = `${t().readAs}: ${formatExpr(tree)}`;
 
   try {
-    const x = parseCoefficient(xAt.value, "x");
-    let x0 = parseCoefficient(xFrom.value, "the start of the graph");
-    let x1 = parseCoefficient(xTo.value, "the end of the graph");
-    if (x0 === x1) throw new Error("The graph needs two different x values to go from and to.");
+    const x = parseCoefficient(xAt.value, t().xName, lang);
+    let x0 = parseCoefficient(xFrom.value, t().fromName, lang);
+    let x1 = parseCoefficient(xTo.value, t().toName, lang);
+    if (x0 === x1) throw new Error(t().same);
     if (x0 > x1) [x0, x1] = [x1, x0];
 
     const fx = evaluate(tree, x);
     $("fx-label").textContent = `f(${n(x)})`;
-    $("fx-value").textContent = Number.isFinite(fx) ? n(fx) : Number.isNaN(fx) ? "undefined" : "∞";
+    $("fx-value").textContent = Number.isFinite(fx) ? n(fx) : Number.isNaN(fx) ? t().undefinedValue : "∞";
     drawPlot(tree, x0, x1, x, fx);
-    renderSections($("explain"), explainExpression(text, x), "c-func");
+    renderSections($("explain"), explainExpression(text, x, lang), "c-func");
   } catch (e) {
     showError("", e);
   }
@@ -154,4 +185,21 @@ document.querySelectorAll<HTMLButtonElement>("[data-flip]").forEach((b) =>
   }),
 );
 
-update();
+// ---- language ----
+function render(): void {
+  n = prettyFor(lang);
+  document.documentElement.lang = lang;
+  document.querySelectorAll<HTMLElement>("[data-t]").forEach((e) => (e.textContent = t()[e.dataset.t as TextKey]));
+  document.querySelectorAll<Element>("[data-t-label]").forEach((e) => e.setAttribute("aria-label", t()[e.getAttribute("data-t-label") as TextKey]));
+  document.querySelectorAll<HTMLButtonElement>("[data-lang]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.lang === lang)));
+  update();
+}
+document.querySelectorAll<HTMLButtonElement>("[data-lang]").forEach((b) =>
+  b.addEventListener("click", () => {
+    lang = b.dataset.lang === "en" ? "en" : "de";
+    setLang(lang);
+    render();
+  }),
+);
+
+render();

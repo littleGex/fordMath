@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="de">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -12,10 +12,16 @@
 </head>
 <body>
 <main class="narrow">
-  <header>
-    <a class="back" href="../">← fordMath</a>
-    <h1>🎢 Quadratics</h1>
-    <p class="subtitle">Solve ax² + bx + c = 0 and see the curve</p>
+  <header class="kid-head">
+    <div>
+      <a class="back" href="../">← fordMath</a>
+      <h1>🎢 <span data-t="title"></span></h1>
+      <p class="subtitle" data-t="subtitle"></p>
+    </div>
+    <div class="lang" role="group" aria-label="Sprache / Language">
+      <button class="chip" type="button" data-lang="de" aria-pressed="true">DE</button>
+      <button class="chip" type="button" data-lang="en" aria-pressed="false">EN</button>
+    </div>
   </header>
 
   <section class="panel coef-panel">
@@ -25,57 +31,57 @@
         <label for="coef-a">a</label>
         <div class="row">
           <input id="coef-a" type="text" inputmode="decimal" autocomplete="off" value="1">
-          <button class="flip" type="button" data-flip="a" aria-label="Flip the sign of a">±</button>
+          <button class="flip" type="button" data-flip="a" data-t-label="flip">±</button>
         </div>
       </div>
       <div class="coef">
         <label for="coef-b">b</label>
         <div class="row">
           <input id="coef-b" type="text" inputmode="decimal" autocomplete="off" value="-5">
-          <button class="flip" type="button" data-flip="b" aria-label="Flip the sign of b">±</button>
+          <button class="flip" type="button" data-flip="b" data-t-label="flip">±</button>
         </div>
       </div>
       <div class="coef">
         <label for="coef-c">c</label>
         <div class="row">
           <input id="coef-c" type="text" inputmode="decimal" autocomplete="off" value="6">
-          <button class="flip" type="button" data-flip="c" aria-label="Flip the sign of c">±</button>
+          <button class="flip" type="button" data-flip="c" data-t-label="flip">±</button>
         </div>
       </div>
     </div>
-    <p class="note">Use ± to make a number negative. Decimals can use a dot or a comma.</p>
+    <p class="note" data-t="note"></p>
     <p class="error" id="error" hidden></p>
   </section>
 
-  <div class="chips" role="group" aria-label="Example equations">
-    <button class="chip" type="button" data-abc="1,-5,6">Two roots</button>
-    <button class="chip" type="button" data-abc="1,-2,1">One root</button>
-    <button class="chip" type="button" data-abc="1,2,5">No real roots</button>
-    <button class="chip" type="button" data-abc="-2,4,6">Opens down</button>
-    <button class="chip" type="button" data-abc="0.5,-1.5,1">Decimals</button>
-    <button class="chip" type="button" data-abc="0,2,-4">Not a quadratic</button>
-    <button class="chip" type="button" data-abc="1,100000000,1">Tricky</button>
+  <div class="chips" role="group">
+    <button class="chip" type="button" data-abc="1,-5,6" data-t="exTwo"></button>
+    <button class="chip" type="button" data-abc="1,-2,1" data-t="exOne"></button>
+    <button class="chip" type="button" data-abc="1,2,5" data-t="exNone"></button>
+    <button class="chip" type="button" data-abc="-2,4,6" data-t="exDown"></button>
+    <button class="chip" type="button" data-abc="0.5,-1.5,1" data-t="exDec"></button>
+    <button class="chip" type="button" data-abc="0,2,-4" data-t="exLine"></button>
+    <button class="chip" type="button" data-abc="1,100000000,1" data-t="exTricky"></button>
   </div>
 
   <div class="qresults">
-    <div class="tile result c-quadratic wide"><span class="sym">x</span><h3>Roots</h3><span class="value" id="out-roots">–</span></div>
-    <div class="tile result c-sd"><span class="sym">D</span><h3>Discriminant</h3><span class="value" id="out-d">–</span><p class="desc" id="out-d-note"></p></div>
-    <div class="tile result c-stats"><span class="sym">(h, k)</span><h3>Vertex</h3><span class="value" id="out-vertex">–</span><p class="desc" id="out-vertex-note"></p></div>
+    <div class="tile result c-quadratic wide"><span class="sym">x</span><h3 data-t="roots"></h3><span class="value" id="out-roots">–</span></div>
+    <div class="tile result c-sd"><span class="sym">D</span><h3 data-t="disc"></h3><span class="value" id="out-d">–</span><p class="desc" id="out-d-note"></p></div>
+    <div class="tile result c-stats"><span class="sym">(h, k)</span><h3 data-t="vertex"></h3><span class="value" id="out-vertex">–</span><p class="desc" id="out-vertex-note"></p></div>
   </div>
 
   <figure class="panel plot">
-    <svg id="plot" viewBox="0 0 600 380" role="img" aria-label="Graph of the equation with its roots and vertex marked"></svg>
+    <svg id="plot" viewBox="0 0 600 380" role="img" data-t-label="plotLabel"></svg>
     <figcaption class="legend">
       <span><i class="k-curve"></i>y = ax² + bx + c</span>
-      <span><i class="k-root"></i>roots (where y = 0)</span>
-      <span><i class="k-vertex"></i>vertex</span>
+      <span><i class="k-root"></i><span data-t="kRoot"></span></span>
+      <span><i class="k-vertex"></i><span data-t="kVertex"></span></span>
     </figcaption>
   </figure>
 
-  <h2 class="section">How it's worked out</h2>
+  <h2 class="section" data-t="howTitle"></h2>
   <div id="explain" class="explain"></div>
 
-  <p class="version"><a href="../tests/">See the tests</a> · <a href="https://github.com/littleGex/fordMath/blob/main/src/lib/quadratic.ts">Source</a></p>
+  <p class="version"><a href="https://github.com/littleGex/fordMath/blob/main/src/lib/quadratic.ts">Source</a></p>
 </main>
 <script type="module" src="/src/pages/quadratic.ts"></script>
 </body>

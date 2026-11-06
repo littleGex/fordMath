@@ -2,9 +2,38 @@ import "./sw-register";
 import "../styles/zone.css";
 import "../styles/quadratic.css";
 import { evaluateQuadratic, solveQuadratic, type QuadraticSolution } from "../lib";
-import { parseCoefficient, prettyNumber as n } from "../parse";
+import { parseCoefficient, prettyFor } from "../parse";
 import { explainQuadratic, formatEquation, formatRoots } from "../explain/quadratic";
+import type { Lang } from "../explain/lang";
 import { renderSections } from "./render";
+import { getLang, setLang } from "./lang";
+
+const UI = {
+  de: {
+    title: "Quadratische Gleichungen", subtitle: "Löse ax² + bx + c = 0 und sieh die Parabel",
+    flip: "Vorzeichen umdrehen", note: "Mit ± wird eine Zahl negativ. Dezimalzahlen mit Komma oder Punkt.",
+    exTwo: "Zwei Lösungen", exOne: "Eine Lösung", exNone: "Keine reelle Lösung", exDown: "Nach unten offen", exDec: "Dezimalzahlen", exLine: "Keine quadratische", exTricky: "Knifflig",
+    roots: "Lösungen", disc: "Diskriminante", vertex: "Scheitelpunkt",
+    plotLabel: "Graph der Gleichung mit Nullstellen und Scheitelpunkt", kRoot: "Nullstellen (wo y = 0)", kVertex: "Scheitelpunkt", howTitle: "So wird gerechnet",
+    dNone: "keine quadratische Gleichung", dPos: "positiv: zwei Lösungen", dZero: "null: eine doppelte Lösung", dNeg: "negativ: keine reelle Lösung",
+    up: "tiefster Punkt, nach oben offen ∪", down: "höchster Punkt, nach unten offen ∩", line: "Gerade, kein Scheitelpunkt", never: "berührt die x-Achse nie",
+    point: (h: string, k: string) => `S(${h} | ${k})`,
+  },
+  en: {
+    title: "Quadratics", subtitle: "Solve ax² + bx + c = 0 and see the curve",
+    flip: "Flip the sign", note: "Use ± to make a number negative. Decimals can use a dot or a comma.",
+    exTwo: "Two roots", exOne: "One root", exNone: "No real roots", exDown: "Opens down", exDec: "Decimals", exLine: "Not a quadratic", exTricky: "Tricky",
+    roots: "Roots", disc: "Discriminant", vertex: "Vertex",
+    plotLabel: "Graph of the equation with its roots and vertex marked", kRoot: "roots (where y = 0)", kVertex: "vertex", howTitle: "How it's worked out",
+    dNone: "not a quadratic", dPos: "positive: two real roots", dZero: "zero: one repeated root", dNeg: "negative: complex roots",
+    up: "lowest point, opens up ∪", down: "highest point, opens down ∩", line: "straight line, no vertex", never: "never crosses the x-axis",
+    point: (h: string, k: string) => `(${h}, ${k})`,
+  },
+};
+type TextKey = { [K in keyof (typeof UI)["de"]]: (typeof UI)["de"][K] extends string ? K : never }[keyof (typeof UI)["de"]];
+let lang: Lang = getLang();
+const t = () => UI[lang];
+let n = prettyFor(lang);
 
 const NAMES = ["a", "b", "c"] as const;
 type Name = (typeof NAMES)[number]; // "a" | "b" | "c"
@@ -95,41 +124,39 @@ function drawPlot(s: QuadraticSolution): void {
     }
   });
   if (parabola && real.length === 0) {
-    el("text", { x: 300, y: opensUp ? Y(0) - 16 : Y(0) + 32, "text-anchor": "middle" }, "never crosses the x-axis");
+    el("text", { x: 300, y: opensUp ? Y(0) - 16 : Y(0) + 32, "text-anchor": "middle" }, t().never);
   }
 
   // vertex
   if (parabola) {
     const { x: h, y: k } = parabola.vertex;
     el("circle", { cx: X(h), cy: Y(k), r: 8, fill: "#b967ff" });
-    el("text", { x: X(h), y: opensUp ? Y(k) + 32 : Y(k) - 18, "text-anchor": anchor(X(h)), class: "lbl-vertex" }, `(${n(h)}, ${n(k)})`);
+    el("text", { x: X(h), y: opensUp ? Y(k) + 32 : Y(k) - 18, "text-anchor": anchor(X(h)), class: "lbl-vertex" }, t().point(n(h), n(k)));
   }
 }
 
 // ---- results ----
 function describeD(s: QuadraticSolution): string {
-  if (s.discriminant === null) return "not a quadratic";
-  if (s.discriminant > 0) return "positive: two real roots";
-  if (s.discriminant === 0) return "zero: one repeated root";
-  return "negative: complex roots";
+  if (s.discriminant === null) return t().dNone;
+  if (s.discriminant > 0) return t().dPos;
+  if (s.discriminant === 0) return t().dZero;
+  return t().dNeg;
 }
 
 function update(): void {
   try {
-    const [a, b, c] = NAMES.map((k) => parseCoefficient(inputs[k].value, k)) as [number, number, number];
+    const [a, b, c] = NAMES.map((k) => parseCoefficient(inputs[k].value, k, lang)) as [number, number, number];
     const s = solveQuadratic(a, b, c);
 
-    $("equation").textContent = formatEquation(a, b, c);
-    $("out-roots").textContent = formatRoots(s.roots);
+    $("equation").textContent = formatEquation(a, b, c, lang);
+    $("out-roots").textContent = formatRoots(s.roots, lang);
     $("out-d").textContent = s.discriminant === null ? "–" : n(s.discriminant);
     $("out-d-note").textContent = describeD(s);
-    $("out-vertex").textContent = s.parabola ? `(${n(s.parabola.vertex.x)}, ${n(s.parabola.vertex.y)})` : "–";
-    $("out-vertex-note").textContent = s.parabola
-      ? s.parabola.opens === "up" ? "lowest point, opens up ∪" : "highest point, opens down ∩"
-      : "straight line, no vertex";
+    $("out-vertex").textContent = s.parabola ? t().point(n(s.parabola.vertex.x), n(s.parabola.vertex.y)) : "–";
+    $("out-vertex-note").textContent = s.parabola ? (s.parabola.opens === "up" ? t().up : t().down) : t().line;
 
     drawPlot(s);
-    renderSections($("explain"), explainQuadratic(a, b, c), "c-quadratic");
+    renderSections($("explain"), explainQuadratic(a, b, c, lang), "c-quadratic");
     $("error").hidden = true;
   } catch (e) {
     for (const id of ["out-roots", "out-d", "out-vertex"]) $(id).textContent = "–";
@@ -156,9 +183,28 @@ document.querySelectorAll<HTMLButtonElement>("[data-flip]").forEach((btn) =>
 document.querySelectorAll<HTMLButtonElement>("[data-abc]").forEach((btn) =>
   btn.addEventListener("click", () => {
     const values = (btn.dataset.abc ?? "").split(",");
-    NAMES.forEach((k, i) => (inputs[k].value = values[i] ?? "0"));
+    NAMES.forEach((k, i) => (inputs[k].value = lang === "de" ? (values[i] ?? "0").replace(".", ",") : (values[i] ?? "0")));
     update();
   }),
 );
 
-update();
+// ---- language ----
+function render(): void {
+  n = prettyFor(lang);
+  document.documentElement.lang = lang;
+  document.querySelectorAll<HTMLElement>("[data-t]").forEach((e) => (e.textContent = t()[e.dataset.t as TextKey]));
+  document.querySelectorAll<Element>("[data-t-label]").forEach((e) => e.setAttribute("aria-label", t()[e.getAttribute("data-t-label") as TextKey]));
+  document.querySelectorAll<HTMLButtonElement>("[data-lang]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.lang === lang)));
+  // Show decimals in the boxes the language's way; both are read either way.
+  for (const k of NAMES) inputs[k].value = lang === "de" ? inputs[k].value.replace(".", ",") : inputs[k].value.replace(",", ".");
+  update();
+}
+document.querySelectorAll<HTMLButtonElement>("[data-lang]").forEach((b) =>
+  b.addEventListener("click", () => {
+    lang = b.dataset.lang === "en" ? "en" : "de";
+    setLang(lang);
+    render();
+  }),
+);
+
+render();

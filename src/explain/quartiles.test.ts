@@ -44,3 +44,19 @@ describe("explainOutliers", () => {
     expect(explainOutliers([1, 2, 3, 4], "halves")[2]).toBe("Every value lies between -1.5 and 6.5, so there are no outliers.");
   });
 });
+
+describe("Quartile auf Deutsch", () => {
+  it("halves", () => {
+    const steps = explainQuartiles([7, 2, 9, 4, 4], "halves", "de");
+    expect(steps[1]).toBe("Der Median (4, der 3. Wert) steht in der Mitte und gehört zu keiner Hälfte, also hat jede Hälfte 2.");
+    expect(steps[2]).toBe("Q1 ist der Median der unteren Hälfte (2; 4): genau zwischen 2 und 4: (2 + 4) : 2 = 3");
+  });
+  it("linear", () => {
+    expect(explainQuartiles([1, 2, 3, 4], "linear", "de")[2]).toBe("Das ist 0,75 des Wegs vom 1. Wert (1) zum 2. (2): Q1 = 1 + 0,75 · (2 − 1) = 1,75");
+  });
+  it("Ausreißer", () => {
+    const steps = explainOutliers([2, 3, 3, 4, 5, 40], "halves", "de");
+    expect(steps[0]).toContain("Untere Grenze: Q1 − 1,5 · IQR");
+    expect(steps[2]).toContain("40 liegt außerhalb der Grenzen");
+  });
+});

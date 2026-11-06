@@ -86,7 +86,7 @@ export function tokenize(text: string): Token[] {
       continue;
     }
 
-    throw new ExpressionError(`Unexpected "${ch}" at position ${i + 1}`, i);
+    throw new ExpressionError(`Unexpected "${ch}" at position ${i + 1}`, i, { kind: "unexpectedChar", ch, at: i + 1 });
   }
 
   tokens.push({ kind: "end", pos: text.length });
