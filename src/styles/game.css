@@ -1,0 +1,39 @@
+/* Shared by the round-based games (Kopfrechnen, …): play screen with keypad, feedback, result. */
+.actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 18px; }
+/* ---- play ---- */
+.play-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; gap: 10px; }
+.dots-progress { display: flex; gap: 6px; flex-wrap: wrap; }
+.dots-progress i { width: 14px; height: 14px; border-radius: 50%; background: var(--tile-hi); }
+.dots-progress i.now { outline: 2px solid var(--ink); outline-offset: 2px; }
+.dots-progress i.ok { background: #4ade80; }
+.dots-progress i.no { background: #ff5566; }
+.streak { font: 600 18px var(--f-body); color: #ffb347; min-height: 1em; }
+
+.question {
+  text-align: center;
+  font: 700 clamp(44px, 15vw, 64px) var(--f-body);
+  padding: 18px 10px;
+  letter-spacing: 1px;
+  transition: background 0.2s ease;
+}
+.question .answer { display: inline-block; min-width: 1.6em; color: #ffd84d; border-bottom: 4px solid var(--line); }
+.question.ok { background: color-mix(in srgb, #4ade80 25%, var(--tile)); }
+.question.no { background: color-mix(in srgb, #ff5566 22%, var(--tile)); }
+
+.stop { display: block; margin: 16px auto 0; }
+
+.feedback { display: grid; gap: 12px; margin-top: 14px; }
+.verdict { margin: 0; font: 700 22px var(--f-body); text-align: center; }
+.verdict.ok { color: #7cfc00; }
+.verdict.no { color: #ffb3bd; }
+.next { margin-top: 2px; }
+
+/* ---- result ---- */
+.result-card { text-align: center; display: grid; gap: 4px; padding: 22px 16px; }
+.stars { margin: 0; font-size: clamp(44px, 14vw, 60px); letter-spacing: 6px; }
+.praise { margin: 0; font: 700 24px var(--f-body); }
+.score { margin: 0; font: 600 18px var(--f-body); color: var(--muted); }
+.mistakes ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.mistakes li { background: var(--tile); border-radius: 12px; padding: 10px 14px; font: 600 18px var(--f-body); display: flex; justify-content: space-between; gap: 8px; }
+.mistakes li span { color: var(--faint); font-weight: 500; font-size: 15px; }
+@media (prefers-reduced-motion: reduce) { .question { transition: none; } }

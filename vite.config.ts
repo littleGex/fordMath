@@ -26,6 +26,7 @@ export default defineConfig({
         groessen: resolve(__dirname, "groessen/index.html"),
         "punkt-vor-strich": resolve(__dirname, "punkt-vor-strich/index.html"),
     gleichungssysteme: resolve(__dirname, "gleichungssysteme/index.html"),
+    kopfrechnen: resolve(__dirname, "kopfrechnen/index.html"),
     tests: resolve(__dirname, "tests/index.html"),
       },
     },

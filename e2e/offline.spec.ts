@@ -19,6 +19,7 @@ const PAGES: Array<[path: string, drawnByScript: string]> = [
   ["groessen/", "#unit-list .unit-row"],
   ["punkt-vor-strich/", "#working .op"],
   ["gleichungssysteme/", "#graph circle"],
+  ["kopfrechnen/", "#levels .level-pick"],
   ["tests/", "#n-pass, #empty"],
 ];
 

@@ -390,6 +390,12 @@ The workings in `src/explain/linear-system.ts` are lists of `{ tag, math, op }` 
 
 One more lesson came from the phone screenshot: "Gleichungssysteme" is a single long word, and it squeezed the DE/EN buttons until EN went off the edge. `flex: none` on `.lang` fixed it on every page at once.
 
+### Kopfrechnen (#19): the strategy is data
+
+`planOf(question)` in `src/lib/mental.ts` doesn't return text. It returns `{ kind, start, jumps }`, e.g. `{ kind: "toTen", start: 47, jumps: [3, 5] }`. The explanation turns that into "47 + 8 = 47 + 3 + 5 = 50 + 5 = 55", and the page draws the same jumps as arcs on a number line. Both come from one source, so the picture and the words can't disagree. A test checks that, for 400 questions per level, the jumps always land on the answer.
+
+The page's shared game styles moved to `src/styles/game.css`, ready for the next game.
+
 ## 7. Warm-up: add Range to Statistics
 
 **Goal:** a new "Range" tile on the Statistics page, showing largest − smallest, with its working. It's small and it touches every layer. #5 (quartiles) left Range out on purpose so it's yours; `boxPlot()` in `src/lib/quartiles.ts` already finds min and max, if you want to peek.
@@ -537,7 +543,7 @@ Open the pull request on GitHub, wait for the green tick, and merge. The site up
 
 ## 8. Your turn: the exercise ladder
 
-Ordered roughly from easiest to hardest to *build*, which isn't the same as the school level. #18 (Punkt vor Strich), #5 (Quartile), #10 (Gleichungssysteme), #7 (Teiler), #13 (Brüche), #16 (Größen), #17 (Stellenwerte), #14 (Einmaleins), #15, #11 and #12 (written +, −, ·, :) are finished. Read #14 as an example of a game. In `src/lib/written.ts`, notice how adding two new members to the `WrittenSum` union made the compiler list every place that needed updating, and how `Extract<WrittenSum, { kind: "divide" }>` gives each function its own precise return type. Each level lists the TypeScript ideas it will exercise. The new Grundschule and class 5 topics (#19 Kopfrechnen, #20 Umfang und Fläche, #21 Dezimalzahlen, #22 Negative Zahlen) are open too, and #21 is a good next step after Größen.
+Ordered roughly from easiest to hardest to *build*, which isn't the same as the school level. #18 (Punkt vor Strich), #5 (Quartile), #10 (Gleichungssysteme), #19 (Kopfrechnen), #7 (Teiler), #13 (Brüche), #16 (Größen), #17 (Stellenwerte), #14 (Einmaleins), #15, #11 and #12 (written +, −, ·, :) are finished. Read #14 as an example of a game. In `src/lib/written.ts`, notice how adding two new members to the `WrittenSum` union made the compiler list every place that needed updating, and how `Extract<WrittenSum, { kind: "divide" }>` gives each function its own precise return type. Each level lists the TypeScript ideas it will exercise. The new Grundschule and class 5 topics (#19 Kopfrechnen, #20 Umfang und Fläche, #21 Dezimalzahlen, #22 Negative Zahlen) are open too, and #21 is a good next step after Größen.
 
 ### Level 1: #9, matrices (and 3×3 systems)
 
