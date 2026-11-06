@@ -29,6 +29,7 @@ const PAGES: Array<[path: string, drawnByScript: string]> = [
   ["quader/", "#cuboid .top"],
   ["heute/", "#topics .topic-row"],
   ["halbschriftlich/", "#working input"],
+  ["prozent/", "#dreisatz span"],
   ["tests/", "#n-pass, #empty"],
 ];
 

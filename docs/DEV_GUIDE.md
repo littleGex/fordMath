@@ -446,6 +446,12 @@ Each topic already had its own question type. Instead of changing them all, `src
 
 Dates are stored as `"2026-11-06"` strings (a template literal type, `Day`), never as `Date` objects or timestamps. A day is a day on the child's calendar: "yesterday" must still be yesterday on the night the clocks change, and a test checks exactly that. `daysBetween()` turns both dates into midnight UTC before subtracting, so the clock change can't make a day 23 or 25 hours long.
 
+### Prozentrechnung (#32): one solver for three questions, and exact cents
+
+Percent problems come in three flavours: find the part (W), the base (G) or the percentage (p). Instead of three pages, `solve()` in `src/lib/percent.ts` takes a `Partial<Record<"G" | "W" | "p", Rational>>` (any two of the three) and works out the missing one. Its return type, `PercentProblem`, carries `find: "G" | "W" | "p"`, so the explanation in `src/explain/percent.ts` can `switch` on it and the compiler checks that the Dreisatz and the formula exist for each case.
+
+All the sums use `Rational`, not floating point. With floats, 19 % VAT on 9,99 € can come out as 1.8980999999999999. With fractions it's exactly 18981/10000, and `num()` decides only at the very end whether to show it exactly or as "≈ 1,90". The quiz has two deliberate traps: taking 19 % off a price *with* tax, and +50 % then −50 %. Their explanations show the wrong path and say why it's wrong, because the base changed.
+
 ## 7. Warm-up: add Range to Statistics
 
 **Goal:** a new "Range" tile on the Statistics page, showing largest − smallest, with its working. It's small and it touches every layer. #5 (quartiles) left Range out on purpose so it's yours; `boxPlot()` in `src/lib/quartiles.ts` already finds min and max, if you want to peek.
@@ -593,7 +599,7 @@ Open the pull request on GitHub, wait for the green tick, and merge. The site up
 
 ## 8. Your turn: the exercise ladder
 
-Ordered roughly from easiest to hardest to *build*, which isn't the same as the school level. #18 (Punkt vor Strich), #5 (Quartile), #10 (Gleichungssysteme), #19 (Kopfrechnen), #20 (Umfang und Fläche), #21 (Dezimalzahlen), #22 (Negative Zahlen), #23 (Sachaufgaben), #24 (Symmetrie), #25 (Winkel), #26 (Quader), #27 (shared quiz), #28 (Heute üben), #31 (Halbschriftlich), #7 (Teiler), #13 (Brüche), #16 (Größen), #17 (Stellenwerte), #14 (Einmaleins), #15, #11 and #12 (written +, −, ·, :) are finished. Read #14 as an example of a game. In `src/lib/written.ts`, notice how adding two new members to the `WrittenSum` union made the compiler list every place that needed updating, and how `Extract<WrittenSum, { kind: "divide" }>` gives each function its own precise return type. Each level lists the TypeScript ideas it will exercise.
+Ordered roughly from easiest to hardest to *build*, which isn't the same as the school level. #18 (Punkt vor Strich), #5 (Quartile), #10 (Gleichungssysteme), #19 (Kopfrechnen), #20 (Umfang und Fläche), #21 (Dezimalzahlen), #22 (Negative Zahlen), #23 (Sachaufgaben), #24 (Symmetrie), #25 (Winkel), #26 (Quader), #27 (shared quiz), #28 (Heute üben), #31 (Halbschriftlich), #32 (Prozentrechnung), #7 (Teiler), #13 (Brüche), #16 (Größen), #17 (Stellenwerte), #14 (Einmaleins), #15, #11 and #12 (written +, −, ·, :) are finished. Read #14 as an example of a game. In `src/lib/written.ts`, notice how adding two new members to the `WrittenSum` union made the compiler list every place that needed updating, and how `Extract<WrittenSum, { kind: "divide" }>` gives each function its own precise return type. Each level lists the TypeScript ideas it will exercise.
 
 ### Level 1: #9, matrices (and 3×3 systems)
 

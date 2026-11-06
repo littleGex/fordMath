@@ -15,6 +15,7 @@ const QUIZZES: Array<[path: string, host: string, before?: string]> = [
   ["quader/", "#quiz"],
   ["symmetrie/", "#axes-mode", '[data-mode="axes"]'],
   ["heute/", "#quiz"],
+  ["prozent/", "#quiz"],
 ];
 
 let server: PreviewServer;
