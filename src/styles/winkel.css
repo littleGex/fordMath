@@ -1,0 +1,30 @@
+.angle-panel { margin-top: 18px; }
+.board { display: block; width: 100%; height: auto; background: #0f1626; border-radius: 14px; touch-action: none; user-select: none; -webkit-user-select: none; }
+.board .arm { stroke: #eef3fb; stroke-width: 3.5; stroke-linecap: round; }
+.board .arc { fill: rgb(255 216 77 / 0.22); stroke: #ffd84d; stroke-width: 2; }
+.board .vertex { fill: #eef3fb; }
+.board .label { font: 700 16px var(--f-body); fill: #eef3fb; }
+.board .size { font: 700 15px var(--f-mono); fill: #ffd84d; }
+.board .handle { fill: #ffd84d; stroke: #141c2e; stroke-width: 3; cursor: grab; }
+.geo { cursor: grab; }
+.geo .body { fill: rgb(200 230 255 / 0.18); stroke: #a9d4ff; stroke-width: 1.5; }
+.geo .tick { stroke: #cfe6ff; stroke-width: 1; }
+.geo .outer { font: 600 7.6px var(--f-mono); fill: #eef3fb; text-anchor: middle; dominant-baseline: central; }
+.geo .inner { font: 500 6.8px var(--f-mono); fill: #9fc4e8; text-anchor: middle; dominant-baseline: central; }
+.geo .zero { stroke: #ff5566; stroke-width: 2; }
+.geo .turn { fill: #4fc3f7; stroke: #141c2e; stroke-width: 2; cursor: alias; }
+.geo .turn-icon { font: 700 14px var(--f-body); fill: #141c2e; text-anchor: middle; dominant-baseline: central; pointer-events: none; }
+.geo-hint { margin: 0; }
+.measure-row { display: flex; gap: 8px; align-items: center; justify-content: center; }
+.measure-row[hidden] { display: none; }
+.measure-row input {
+  width: 5em; font: 700 24px var(--f-mono); text-align: center; padding: 8px; border: 2px solid var(--line); border-radius: 12px; background: var(--bg); color: var(--ink);
+}
+.measure-row input:focus { border-color: #ffd84d; outline: none; }
+.measure-row .deg { font: 700 24px var(--f-mono); }
+.measure-row .chip { background: var(--tile-hi); }
+#feedback { display: grid; gap: 10px; }
+.kinds { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.kinds figure { margin: 0; display: grid; gap: 4px; text-align: center; font-size: 13px; }
+.kinds svg { width: 100%; height: auto; }
+@media (max-width: 380px) { .kinds { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
