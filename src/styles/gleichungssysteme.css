@@ -65,5 +65,3 @@
 .work-lines .math.no { color: #ff8a98; }
 .why-not { margin: 0; color: var(--muted); }
 .work-title { margin: 0; font-size: 17px; }
-.kid-head > div { min-width: 0; }
-.kid-head h1 { hyphens: auto; overflow-wrap: break-word; }

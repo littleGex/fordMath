@@ -28,6 +28,7 @@ export default defineConfig({
     gleichungssysteme: resolve(__dirname, "gleichungssysteme/index.html"),
     kopfrechnen: resolve(__dirname, "kopfrechnen/index.html"),
     "umfang-flaeche": resolve(__dirname, "umfang-flaeche/index.html"),
+    dezimalzahlen: resolve(__dirname, "dezimalzahlen/index.html"),
     tests: resolve(__dirname, "tests/index.html"),
       },
     },
