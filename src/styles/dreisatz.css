@@ -1,0 +1,41 @@
+.ds-panel, .check-panel { display: grid; gap: 12px; }
+.kinds { display: flex; flex-wrap: wrap; gap: 8px; }
+.story { margin: 0; font-size: 16px; line-height: 1.4; min-height: 1.4em; }
+.ds-inputs { display: grid; grid-template-columns: minmax(0, 1fr) auto auto minmax(0, 1fr) auto; gap: 8px 6px; align-items: center; }
+.ds-inputs input, .ztable input {
+  width: 100%; min-width: 0; font: 600 20px var(--f-mono); text-align: center; padding: 10px 4px;
+  border: 2px solid var(--line); border-radius: 12px; background: var(--bg); color: var(--ink);
+}
+.ds-inputs input:focus, .ztable input:focus { border-color: #34d399; outline: none; }
+.ds-inputs .eq { color: var(--faint); font-size: 20px; padding: 0 2px; }
+.ds-inputs .unit { color: var(--muted); font-size: 14px; min-width: 0; max-width: 5.5em; overflow-wrap: anywhere; }
+.ds-inputs .ask { font: 700 22px var(--f-mono); color: #34d399; text-align: center; }
+
+.ds-lines {
+  display: grid; grid-template-columns: auto auto auto auto auto; gap: 2px 8px; justify-content: center; align-items: center;
+  font: 600 clamp(15px, 4.4vw, 18px) var(--f-mono); padding: 12px 8px; background: var(--bg); border-radius: 12px; overflow-x: auto;
+}
+.ds-lines .side { text-align: right; }
+.ds-lines .side.r { text-align: left; }
+.ds-lines .eq { color: var(--faint); }
+.ds-lines .op { color: #34d399; font-size: 0.8em; white-space: nowrap; }
+.ds-lines .op.l { text-align: right; }
+.ds-lines .op.inv { color: #ff4da6; }
+.ds-lines .last { color: #7cfc00; }
+
+.ztable-wrap { overflow-x: auto; }
+.ztable { border-collapse: separate; border-spacing: 4px; width: 100%; table-layout: fixed; font: 600 16px var(--f-mono); }
+.ztable th { color: var(--muted); font-weight: 600; width: 3.6em; text-align: left; font-size: 14px; }
+.ztable td { text-align: center; }
+.ztable input { font-size: 17px; padding: 8px 2px; }
+.ztable .calc td { color: var(--muted); font-size: 14px; background: var(--bg); border-radius: 8px; padding: 6px 2px; overflow-wrap: anywhere; }
+.ztable .calc.same td { color: #7cfc00; }
+.ztable .missing { color: #34d399; }
+.verdict { margin: 0; text-align: center; font: 700 clamp(18px, 5.4vw, 22px) var(--f-body); color: #7cfc00; }
+.verdict.neither { color: var(--muted); }
+.graph-fig { margin: 0; }
+.graph-fig svg { display: block; width: 100%; height: auto; }
+.graph-fig text { font-family: var(--f-mono); }
+
+.quiz-table { margin: 0 auto 4px; max-width: 360px; }
+.quiz-table td { background: var(--bg); border-radius: 8px; padding: 8px 2px; }

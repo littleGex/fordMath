@@ -37,6 +37,7 @@ export default defineConfig({
     heute: resolve(__dirname, "heute/index.html"),
     halbschriftlich: resolve(__dirname, "halbschriftlich/index.html"),
     prozent: resolve(__dirname, "prozent/index.html"),
+    dreisatz: resolve(__dirname, "dreisatz/index.html"),
     tests: resolve(__dirname, "tests/index.html"),
       },
     },

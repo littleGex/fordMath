@@ -452,6 +452,12 @@ Percent problems come in three flavours: find the part (W), the base (G) or the 
 
 All the sums use `Rational`, not floating point. With floats, 19 % VAT on 9,99 € can come out as 1.8980999999999999. With fractions it's exactly 18981/10000, and `num()` decides only at the very end whether to show it exactly or as "≈ 1,90". The quiz has two deliberate traps: taking 19 % off a price *with* tax, and +50 % then −50 %. Their explanations show the wrong path and say why it's wrong, because the base changed.
 
+### Dreisatz (#33): `satisfies`, and one recipe for both directions
+
+The stories in `src/lib/proportion.ts` are written as `{ apples: "proportional", pumps: "inverse", … } as const satisfies Record<string, Kind>`. `satisfies` checks that every value is a real `Kind` (a typo like `"inverted"` is an error), but unlike a type annotation it keeps the exact keys. So `Story = keyof typeof STORIES` is the union `"apples" | "pens" | …`, and the German and English story texts are `Record<Story, …>`: forget one story in one language and the compiler says so.
+
+The Dreisatz itself is one function for both kinds. Only the right-hand side changes: proportional does the same as the left (: 3, then · 5), antiproportional does the opposite (· 4, then : 3). `dreisatzLines()` builds both the arrows and the lines from the same `Dreisatz` object, and the tests check the arrows, not just the answer. Telling the kinds apart is exact too: `classify()` compares the fractions y : x and x · y with `equals`, so 4,5 : 3 and 7,5 : 5 really are the same.
+
 ## 7. Warm-up: add Range to Statistics
 
 **Goal:** a new "Range" tile on the Statistics page, showing largest − smallest, with its working. It's small and it touches every layer. #5 (quartiles) left Range out on purpose so it's yours; `boxPlot()` in `src/lib/quartiles.ts` already finds min and max, if you want to peek.
@@ -599,7 +605,7 @@ Open the pull request on GitHub, wait for the green tick, and merge. The site up
 
 ## 8. Your turn: the exercise ladder
 
-Ordered roughly from easiest to hardest to *build*, which isn't the same as the school level. #18 (Punkt vor Strich), #5 (Quartile), #10 (Gleichungssysteme), #19 (Kopfrechnen), #20 (Umfang und Fläche), #21 (Dezimalzahlen), #22 (Negative Zahlen), #23 (Sachaufgaben), #24 (Symmetrie), #25 (Winkel), #26 (Quader), #27 (shared quiz), #28 (Heute üben), #31 (Halbschriftlich), #32 (Prozentrechnung), #7 (Teiler), #13 (Brüche), #16 (Größen), #17 (Stellenwerte), #14 (Einmaleins), #15, #11 and #12 (written +, −, ·, :) are finished. Read #14 as an example of a game. In `src/lib/written.ts`, notice how adding two new members to the `WrittenSum` union made the compiler list every place that needed updating, and how `Extract<WrittenSum, { kind: "divide" }>` gives each function its own precise return type. Each level lists the TypeScript ideas it will exercise.
+Ordered roughly from easiest to hardest to *build*, which isn't the same as the school level. #18 (Punkt vor Strich), #5 (Quartile), #10 (Gleichungssysteme), #19 (Kopfrechnen), #20 (Umfang und Fläche), #21 (Dezimalzahlen), #22 (Negative Zahlen), #23 (Sachaufgaben), #24 (Symmetrie), #25 (Winkel), #26 (Quader), #27 (shared quiz), #28 (Heute üben), #31 (Halbschriftlich), #32 (Prozentrechnung), #33 (Dreisatz), #7 (Teiler), #13 (Brüche), #16 (Größen), #17 (Stellenwerte), #14 (Einmaleins), #15, #11 and #12 (written +, −, ·, :) are finished. Read #14 as an example of a game. In `src/lib/written.ts`, notice how adding two new members to the `WrittenSum` union made the compiler list every place that needed updating, and how `Extract<WrittenSum, { kind: "divide" }>` gives each function its own precise return type. Each level lists the TypeScript ideas it will exercise.
 
 ### Level 1: #9, matrices (and 3×3 systems)
 
