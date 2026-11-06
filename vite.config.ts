@@ -29,6 +29,7 @@ export default defineConfig({
     kopfrechnen: resolve(__dirname, "kopfrechnen/index.html"),
     "umfang-flaeche": resolve(__dirname, "umfang-flaeche/index.html"),
     dezimalzahlen: resolve(__dirname, "dezimalzahlen/index.html"),
+    "negative-zahlen": resolve(__dirname, "negative-zahlen/index.html"),
     tests: resolve(__dirname, "tests/index.html"),
       },
     },

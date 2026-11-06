@@ -22,6 +22,7 @@ const PAGES: Array<[path: string, drawnByScript: string]> = [
   ["kopfrechnen/", "#levels .level-pick"],
   ["umfang-flaeche/", "#grid .cell"],
   ["dezimalzahlen/", "#pv td"],
+  ["negative-zahlen/", "#thermo circle"],
   ["tests/", "#n-pass, #empty"],
 ];
 

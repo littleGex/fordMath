@@ -408,6 +408,12 @@ The perimeter is easy to count (every side of a square with no neighbour), but t
 
 The quiz's wrong answers are real mistakes: 0,037 for 37/100 (digits in the wrong place), 0,14 for 1/4 (numerator then denominator), and 1,00 for 2,5 + 0,75 (last digits lined up instead of commas). A test makes sure no two choices have the same value written differently, such as 0,5 and 0,50, except in the "gleich groß" question, where that is the trap.
 
+### Negative Zahlen (#22): four cases, one union
+
+`move(a, op, b)` sorts every calculation into one of four cases, `MoveRule = "plus-pos" | "plus-neg" | "minus-pos" | "minus-neg"`, and the explanation has a `switch` with one sentence per case. The tricky ones ("minus a negative is plus") get their own case instead of an `if` hidden inside another. The same `Move` also gives the arrow on the thermometer, so the picture and the words always agree.
+
+A small JavaScript surprise: `2 − 2` can come out as `−0` in some calculations (`-(2) + 2` is fine, but `0 * -1` is `-0`), and `Object.is(-0, 0)` is false. `opposite()` and `move()` add `+ 0`, which turns `−0` into `0`, and a test checks that no answer is ever `−0`.
+
 ## 7. Warm-up: add Range to Statistics
 
 **Goal:** a new "Range" tile on the Statistics page, showing largest − smallest, with its working. It's small and it touches every layer. #5 (quartiles) left Range out on purpose so it's yours; `boxPlot()` in `src/lib/quartiles.ts` already finds min and max, if you want to peek.
@@ -555,7 +561,7 @@ Open the pull request on GitHub, wait for the green tick, and merge. The site up
 
 ## 8. Your turn: the exercise ladder
 
-Ordered roughly from easiest to hardest to *build*, which isn't the same as the school level. #18 (Punkt vor Strich), #5 (Quartile), #10 (Gleichungssysteme), #19 (Kopfrechnen), #20 (Umfang und Fläche), #21 (Dezimalzahlen), #7 (Teiler), #13 (Brüche), #16 (Größen), #17 (Stellenwerte), #14 (Einmaleins), #15, #11 and #12 (written +, −, ·, :) are finished. Read #14 as an example of a game. In `src/lib/written.ts`, notice how adding two new members to the `WrittenSum` union made the compiler list every place that needed updating, and how `Extract<WrittenSum, { kind: "divide" }>` gives each function its own precise return type. Each level lists the TypeScript ideas it will exercise.
+Ordered roughly from easiest to hardest to *build*, which isn't the same as the school level. #18 (Punkt vor Strich), #5 (Quartile), #10 (Gleichungssysteme), #19 (Kopfrechnen), #20 (Umfang und Fläche), #21 (Dezimalzahlen), #22 (Negative Zahlen), #7 (Teiler), #13 (Brüche), #16 (Größen), #17 (Stellenwerte), #14 (Einmaleins), #15, #11 and #12 (written +, −, ·, :) are finished. Read #14 as an example of a game. In `src/lib/written.ts`, notice how adding two new members to the `WrittenSum` union made the compiler list every place that needed updating, and how `Extract<WrittenSum, { kind: "divide" }>` gives each function its own precise return type. Each level lists the TypeScript ideas it will exercise.
 
 ### Level 1: #9, matrices (and 3×3 systems)
 
