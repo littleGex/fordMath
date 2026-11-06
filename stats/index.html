@@ -31,6 +31,7 @@
     <button class="chip" type="button" data-example="7, 2, 9, 4, 4">Odd count</button>
     <button class="chip" type="button" data-example="0.25, 1.75, 3.5, -2">No mode</button>
     <button class="chip" type="button" data-example="2, 3, 3, 4, 5, 40">Outlier</button>
+    <button class="chip" type="button" data-example="6, 7, 15, 36, 39, 40, 41, 42, 43, 47, 49">Box plot</button>
   </div>
 
   <div class="results" id="results"></div>
@@ -43,6 +44,26 @@
       <span><i class="k-median"></i>median</span>
       <span><i class="k-band"></i>mean ± σ</span>
       <span><i class="k-mode"></i>filled dots are the mode</span>
+    </figcaption>
+  </figure>
+
+  <h2 class="section" id="quartiles">Quartiles and box plot</h2>
+  <div class="chips q-methods" role="group" aria-label="Quartile method">
+    <button class="chip" type="button" data-method="halves" aria-pressed="true">School: median of halves</button>
+    <button class="chip" type="button" data-method="linear" aria-pressed="false">Linear (NumPy, Excel)</button>
+  </div>
+  <p class="note method-note" id="method-note"></p>
+  <div class="results" id="q-results"></div>
+  <div class="panel strip-panel">
+    <p class="note">Sorted, with where Q1, the median (M) and Q3 sit</p>
+    <div class="strip" id="strip"></div>
+  </div>
+  <figure class="panel plot">
+    <svg id="boxplot" viewBox="0 0 600 150" role="img" aria-label="Box plot: the box runs from Q1 to Q3 with a line at the median, whiskers reach the furthest values that aren't outliers, and outliers are separate dots"></svg>
+    <figcaption class="legend">
+      <span><i class="k-box"></i>middle half (Q1 to Q3)</span>
+      <span><i class="k-median"></i>median</span>
+      <span><i class="k-out"></i>outlier</span>
     </figcaption>
   </figure>
 

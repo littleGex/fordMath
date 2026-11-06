@@ -18,6 +18,7 @@ Planned helpers are tracked as [issues](https://github.com/littleGex/fordMath/is
 | Variance            | `variance(values, kind?)`             | `kind` is `"population"` (÷ n, default) or `"sample"` (÷ n − 1) |
 | Standard deviation  | `standardDeviation(values, kind?)`    | √variance; sample needs at least 2 values                   |
 | Everything at once  | `getStats(values)`                    | Validates once and computes the mean once                   |
+| Quartiles           | `quartiles(values, method)`, `percentile(values, p)`, `iqr`, `boxPlot`, `quartilePositions` | Q1, Q3 and IQR by the school method (median of each half) or linear interpolation (NumPy, Excel `QUARTILE.INC`); box plot with 1.5 × IQR outliers |
 | Quadratic equation  | `solveQuadratic(a, b, c)`             | Roots as a discriminated union (two real, repeated, complex, linear, none, every x), plus vertex; numerically stable |
 | Discriminant        | `discriminant(a, b, c)`               | b² − 4ac, snapped to 0 within floating-point noise          |
 | Times tables        | `questionsFor`, `makeRound`, `record` in `lib/times-tables` | Einmaleins facts, weighted rounds (Leitner boxes), Kernaufgaben strategies; seeded random in `lib/random` |
@@ -36,7 +37,7 @@ All functions take `readonly number[]` (ints and floats), never mutate the input
 | Path      | What it is                                                             |
 | --------- | ---------------------------------------------------------------------- |
 | `/`       | Homepage: helpers filtered by school level; planned ones link to their issue |
-| `/stats/` | Live calculator, number line with mean ± σ, and the working for each result |
+| `/stats/` | Live calculator, number line with mean ± σ, quartiles with a box plot (`#quartiles`, two methods), and the working for each result |
 | `/quadratic/` | Solver for ax² + bx + c = 0 with a graph and the working |
 | `/einmaleins/` | Einmaleins trainer (German, with English toggle): keypad, dots picture and working after a mistake, progress board |
 | `/schriftlich/` | Written +, −, · and : (German, EN toggle): step through or do it yourself; `#plus`, `#minus`, `#mal`, `#geteilt` open an operation directly |

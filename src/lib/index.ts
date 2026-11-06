@@ -14,3 +14,4 @@ export {
   type Parabola,
   type Complex,
 } from "./quadratic";
+export { percentile, quartiles, quartilePositions, iqr, boxPlot, type QuartileMethod, type Quartiles, type BoxPlot } from "./quartiles";

@@ -374,9 +374,17 @@ The trainer reuses the parser from the Functions page. `parse("3 + 4 · 2")` alr
 
 The page keeps messages as functions of the language (`text: (lang) => string`), so pressing EN rewrites a message that's already on screen. The bracket puzzle tries every way to bracket the numbers (a recursive function that builds every tree) and, as with Brüche, a test runs it hundreds of times. That test found two things: a `3 · (2 − 2)` that came out as `-0` (which `toEqual` treats as different from `0`), and puzzles whose working went below zero, which class 5 hasn't met yet.
 
+### Quartiles (#5): when there's more than one right answer
+
+Ask three calculators for Q1 of `7, 2, 9, 4, 4` and you can get three answers. `src/lib/quartiles.ts` offers two, chosen with a union type, `QuartileMethod = "halves" | "linear"`: the median-of-halves method from German school books, and the linear interpolation that NumPy and Excel use. The `switch` over the method ends in a `default` that assigns the method to a `never` variable, so adding a third method makes the compiler point at every place that needs to handle it.
+
+The tests take their expected numbers from NumPy rather than from working them out by hand, and one test shows the two methods disagreeing about whether a value is an outlier. Two tests had wrong expected values at first; the code was right. When a test fails, check the test's arithmetic too.
+
+`quartilePositions(n, method)` says *where* in the sorted list each quartile sits (1.5 means halfway between the 2nd and 3rd value). The page uses it to mark the list, and a test checks that reading the list at those positions gives exactly the quartiles, for every n from 1 to 15. A test like that, which checks two functions against each other over many inputs, catches mistakes neither would on its own.
+
 ## 7. Warm-up: add Range to Statistics
 
-**Goal:** a new "Range" tile on the Statistics page, showing largest − smallest, with its working. It's small, it touches every layer, and it's the first piece of #5.
+**Goal:** a new "Range" tile on the Statistics page, showing largest − smallest, with its working. It's small and it touches every layer. #5 (quartiles) left Range out on purpose so it's yours; `boxPlot()` in `src/lib/quartiles.ts` already finds min and max, if you want to peek.
 
 ### Step 1: branch
 
@@ -513,7 +521,7 @@ Check `npm run dev`: there's a new tile and a new "Range" section under "How it'
 ```bash
 npm run build && npm test
 git add -A
-git commit -m "Add range to Statistics (part of #5)"
+git commit -m "Add range to Statistics"
 git push -u origin range-warmup
 ```
 
@@ -521,23 +529,19 @@ Open the pull request on GitHub, wait for the green tick, and merge. The site up
 
 ## 8. Your turn: the exercise ladder
 
-Ordered roughly from easiest to hardest to *build*, which isn't the same as the school level. #18 (Punkt vor Strich), #7 (Teiler), #13 (Brüche), #16 (Größen), #17 (Stellenwerte), #14 (Einmaleins), #15, #11 and #12 (written +, −, ·, :) are finished. Read #14 as an example of a game. In `src/lib/written.ts`, notice how adding two new members to the `WrittenSum` union made the compiler list every place that needed updating, and how `Extract<WrittenSum, { kind: "divide" }>` gives each function its own precise return type. Each level lists the TypeScript ideas it will exercise. The new Grundschule and class 5 topics (#19 Kopfrechnen, #20 Umfang und Fläche, #21 Dezimalzahlen, #22 Negative Zahlen) are open too, and #21 is a good next step after Größen.
+Ordered roughly from easiest to hardest to *build*, which isn't the same as the school level. #18 (Punkt vor Strich), #5 (Quartile), #7 (Teiler), #13 (Brüche), #16 (Größen), #17 (Stellenwerte), #14 (Einmaleins), #15, #11 and #12 (written +, −, ·, :) are finished. Read #14 as an example of a game. In `src/lib/written.ts`, notice how adding two new members to the `WrittenSum` union made the compiler list every place that needed updating, and how `Extract<WrittenSum, { kind: "divide" }>` gives each function its own precise return type. Each level lists the TypeScript ideas it will exercise. The new Grundschule and class 5 topics (#19 Kopfrechnen, #20 Umfang und Fläche, #21 Dezimalzahlen, #22 Negative Zahlen) are open too, and #21 is a good next step after Größen.
 
-### Level 1: #5, quartiles
-
-Quartiles reuses the Statistics registry, and adds an SVG box plot alongside the existing number line in `src/pages/stats.ts`. The percentile method needs a decision first (see the issue), which makes it a good test-first exercise.
-
-### Level 2: #10, two equations with two unknowns
+### Level 1: #10, two equations with two unknowns
 
 Class 8 solves these with the Einsetzungs-, Gleichsetzungs- and Additionsverfahren. Model the answer as a discriminated union, exactly like `QuadraticRoots`: one solution, none (parallel lines) or infinitely many (the same line).
 
-### Level 3: #9, matrices (and 3×3 systems)
+### Level 2: #9, matrices (and 3×3 systems)
 
 *Practises: type-heavy code, `readonly` nested arrays, careful floating-point work.*
 
 Start with the `Matrix` type and an `assertMatrix` guard. Write `multiply` with a test-first loop. Then extend #10's solver to 3 unknowns with Gaussian elimination, returning the same `unique` / `none` / `infinite` union.
 
-### Level 4: #3 integration and #4 differentiation
+### Level 3: #3 integration and #4 differentiation
 
 *Practises: functions as values. `compile()` returns `(x: number) => number`, so your integrator takes `f: (x: number) => number`.*
 

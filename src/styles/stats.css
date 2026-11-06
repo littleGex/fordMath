@@ -28,3 +28,23 @@
 .k-median { background: #ffb347; }
 .k-band { background: color-mix(in srgb, #b967ff 45%, transparent); height: 10px !important; }
 .k-mode { background: var(--ink); width: 10px !important; height: 10px !important; border-radius: 50% !important; }
+
+/* ---------- Quartiles and box plot ---------- */
+.q-methods { margin: 0 0 6px; flex-wrap: wrap; overflow: visible; }
+.method-note { margin: 0 2px 12px; }
+.strip-panel { display: grid; gap: 10px; margin: 12px 0; }
+.strip { display: flex; flex-wrap: wrap; gap: 6px 4px; align-items: flex-start; }
+.strip .cell { display: grid; justify-items: center; gap: 2px; min-width: 34px; }
+.strip .cell b {
+  font: 600 16px var(--f-mono); font-variant-numeric: tabular-nums;
+  padding: 6px 8px; border-radius: 10px; background: var(--bg); min-width: 34px; text-align: center;
+}
+.strip .cell.on b { background: color-mix(in srgb, var(--mark) 30%, var(--tile)); color: var(--ink); }
+.strip .gap { display: grid; justify-items: center; gap: 2px; width: 4px; }
+.strip .gap i { width: 3px; height: 31px; border-radius: 2px; background: var(--mark); }
+.strip .tag { font: 700 12px var(--f-mono); color: var(--mark); white-space: nowrap; }
+.strip .gap .tag { width: 0; display: flex; justify-content: center; }
+.strip .out b { color: #ff8a98; }
+.k-box { background: color-mix(in srgb, #ff7043 45%, transparent); height: 10px !important; }
+.k-out { background: #ff5566; width: 10px !important; height: 10px !important; border-radius: 50% !important; }
+.plot .lbl-q { fill: #ff7043; font-weight: 700; }
