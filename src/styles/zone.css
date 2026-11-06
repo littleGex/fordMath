@@ -151,6 +151,9 @@ a.tile:active {
 .version { margin: 32px 0 0; font-size: 13px; color: var(--faint); text-align: center; }
 .version a { color: var(--muted); }
 .version .offline { color: #4ade80; }
+.grown-ups { margin: 40px 0 0; padding-top: 14px; border-top: 1px solid var(--line); }
+.grown-ups-title { margin: 0; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--faint); text-align: center; }
+.grown-ups .version { margin-top: 6px; line-height: 1.8; }
 
 @media (prefers-reduced-motion: reduce) {
   .tile, a.tile:active { transition: none; }

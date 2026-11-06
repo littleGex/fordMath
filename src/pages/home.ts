@@ -3,11 +3,15 @@ import { version } from "../../package.json";
 import { loadTestReport } from "./report";
 import { offlineReady } from "./sw-register";
 
-// ---- version footer, plus a note once everything is stored for offline use ----
+// ---- the grown-ups' footer: tests, source, plans, version, offline ----
 const footer = document.getElementById("version")!;
-footer.innerHTML =
-  `v${version} · <a href="https://github.com/littleGex/fordMath">GitHub</a> · ` +
-  `<a href="https://github.com/littleGex/fordMath/issues">Ideas and plans</a>`;
+const testsLink = Object.assign(document.createElement("a"), { href: "tests/", textContent: "✅ Tests" });
+footer.append(
+  testsLink, " · ",
+  Object.assign(document.createElement("a"), { href: "https://github.com/littleGex/fordMath", textContent: "Source" }), " · ",
+  Object.assign(document.createElement("a"), { href: "https://github.com/littleGex/fordMath/issues", textContent: "Ideas and plans" }), " · ",
+  `v${version}`,
+);
 offlineReady.then((ready) => {
   if (ready) footer.append(" · ", Object.assign(document.createElement("span"), { textContent: "✓ works offline", className: "offline" }));
 });
@@ -43,9 +47,8 @@ let saved: string | null = null;
 try { saved = localStorage.getItem(LEVEL_KEY); } catch { /* ignore */ }
 applyLevel(isLevel(saved) ? saved : "all");
 
-// ---- live test count on the Tests tile ----
+// ---- live test count in the footer ----
 loadTestReport().then((r) => {
   if (!r) return;
-  const badge = document.getElementById("tests-badge")!;
-  badge.textContent = r.numFailedTests ? `${r.numFailedTests} failing` : `${r.numPassedTests} ✓`;
+  testsLink.textContent = r.numFailedTests ? `⚠️ ${r.numFailedTests} tests failing` : `✅ ${r.numPassedTests} tests`;
 });

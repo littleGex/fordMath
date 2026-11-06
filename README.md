@@ -45,7 +45,7 @@ All functions take `readonly number[]` (ints and floats), never mutate the input
 
 | Path      | What it is                                                             |
 | --------- | ---------------------------------------------------------------------- |
-| `/`       | Homepage: helpers filtered by school level; planned ones link to their issue |
+| `/`       | Homepage: helpers filtered by school level; planned ones link to their issue; a "Für Eltern" footer with the test count, source and plans |
 | `/stats/` | Live calculator, number line with mean ± σ, quartiles with a box plot (`#quartiles`, two methods), and the working for each result |
 | `/quadratic/` | Solver for ax² + bx + c = 0 with a graph and the working |
 | `/einmaleins/` | Einmaleins trainer (German, with English toggle): keypad, dots picture and working after a mistake, progress board |
