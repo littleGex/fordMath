@@ -31,6 +31,7 @@ export default defineConfig({
     dezimalzahlen: resolve(__dirname, "dezimalzahlen/index.html"),
     "negative-zahlen": resolve(__dirname, "negative-zahlen/index.html"),
     sachaufgaben: resolve(__dirname, "sachaufgaben/index.html"),
+    symmetrie: resolve(__dirname, "symmetrie/index.html"),
     tests: resolve(__dirname, "tests/index.html"),
       },
     },

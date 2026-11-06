@@ -32,6 +32,7 @@ Planned helpers are tracked as [issues](https://github.com/littleGex/fordMath/is
 | Decimals            | `parseDecimal`, `compare`, `add`, `subtract`, `roundDecimal`, `fromFraction`, `placeDigits`, `writtenDecimalAdd` in `lib/decimal` | Exact decimals as whole numbers with a scale (0,1 + 0,2 = 0,3); places after the comma, comparing, rounding, fractions with 10/100/1000, comma under comma |
 | Negative numbers    | `move(a, op, b)`, `opposite`, `distanceFromZero`, `makeStory`, `makeIntQuestion` in `lib/integers` | Every ± as a move with one of four rules (plus or minus, a positive or a negative); temperature, bank account and lift stories |
 | Word problems       | `makeProblem(template, random)`, `makeProblemRound`, `checkNumbers` in `lib/word-problems` | Ten kinds of story (six Grundschule, four Klasse 5) with the numbers needed and some that aren't, the right calculation and tempting wrong ones, each checked to have exactly one right choice |
+| Symmetry            | `mirror`, `mirrorCell`, `isSymmetric`, `axesOf`, `makeMirrorTask`, `checkMirror` in `lib/symmetry` | Mirror lines on squared paper: vertical, horizontal (on a grid line or through the middle of a square) and diagonal; all mirror lines of a shape; half-figure tasks |
 | Two equations       | `solveSystem(e1, e2)`, `makeSystem` in `lib/linear-system`; `rat`, `parseRational` in `lib/rational` | Exact fractions throughout; the answer as a union (one point, none, the same line, every pair); practice tasks with whole-number answers |
 | Expressions         | `compile(text)` → `(x) => number`     | Safe parser for f(x): never uses eval; `parse`, `evaluate`, `formatExpr` and `ExpressionError` (with a position) also exported from `lib/expression` |
 | Order of operations | `allowedPaths`, `whyNot`, `collapse`, `workedLines`, `makeOrderTask`, `makeBracketTask` in `lib/expression/steps` | Which operation the school rules allow next (Klammern, Punkt vor Strich, links nach rechts) and which rule a wrong choice breaks; tasks that stay whole and positive for class 5 |
@@ -57,6 +58,7 @@ All functions take `readonly number[]` (ints and floats), never mutate the input
 | `/dezimalzahlen/` | Dezimalzahlen (German, EN toggle): Stellenwerttafel with a comma, a number line you can zoom into, rounding, comparing, written + and − with the commas lined up, 10-question quiz |
 | `/negative-zahlen/` | Negative Zahlen (German, EN toggle): a thermometer with the move drawn as an arrow, the four rules, stories, comparing with Gegenzahl and Betrag, 10-question quiz |
 | `/sachaufgaben/` | Sachaufgaben (German, EN toggle): find the question, tap the numbers you need, choose and work out the calculation, choose the answer sentence; the worked solution at the end |
+| `/symmetrie/` | Symmetrie (German, EN toggle): mirror half a figure and check it, a "Zaubertafel" that mirrors as you draw (one, two or a diagonal line), and "how many lines of symmetry?" with the lines drawn |
 | `/gleichungssysteme/` | Gleichungssysteme (German, EN toggle): two equations in boxes, the solution set, both lines drawn, and the Gleichsetzungs-, Einsetzungs- and Additionsverfahren worked line by line, with the Probe; 🎲 tasks hide the answer until asked |
 | `/function/` | Type any f(x): how it was read, its graph, and f(x) worked out step by step |
 | `/tests/` | Every test from the deployed build, read from `test-results.json`      |
@@ -64,7 +66,7 @@ All functions take `readonly number[]` (ints and floats), never mutate the input
 ## Project layout
 
 ```
-index.html  stats/  quadratic/  function/  einmaleins/  schriftlich/  teiler/  brueche/  stellenwerte/  groessen/  punkt-vor-strich/  gleichungssysteme/  kopfrechnen/  umfang-flaeche/  dezimalzahlen/  negative-zahlen/  sachaufgaben/  tests/   pages (Vite multi-page build)
+index.html  stats/  quadratic/  function/  einmaleins/  schriftlich/  teiler/  brueche/  stellenwerte/  groessen/  punkt-vor-strich/  gleichungssysteme/  kopfrechnen/  umfang-flaeche/  dezimalzahlen/  negative-zahlen/  sachaufgaben/  symmetrie/  tests/   pages (Vite multi-page build)
 public/          favicon, Home Screen icons, manifest
 src/
   lib/           pure maths, no DOM; one module + one test file per helper

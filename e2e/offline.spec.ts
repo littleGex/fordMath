@@ -24,6 +24,7 @@ const PAGES: Array<[path: string, drawnByScript: string]> = [
   ["dezimalzahlen/", "#pv td"],
   ["negative-zahlen/", "#thermo circle"],
   ["sachaufgaben/", "#story .sentence"],
+  ["symmetrie/", "#mirror-grid .given"],
   ["tests/", "#n-pass, #empty"],
 ];
 

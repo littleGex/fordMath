@@ -1,0 +1,22 @@
+.modes { margin: 18px 0 12px; }
+.sym-panel { display: grid; gap: 12px; }
+.sub-chips { margin: 0; flex-wrap: wrap; overflow: visible; align-items: center; }
+.sub-chips .chip { background: var(--tile-hi); }
+.sub-chips .chip[aria-pressed="true"] { background: var(--ink); }
+.count { margin-left: auto; font: 600 15px var(--f-body); color: #7cfc00; }
+
+.sym-grid, .pic { display: block; width: 100%; height: auto; touch-action: none; user-select: none; -webkit-user-select: none; }
+.sym-grid { cursor: pointer; }
+.pic { max-width: 220px; margin-inline: auto; touch-action: auto; }
+.sym-grid .paper, .pic .paper { fill: #0f1626; }
+.sym-grid .line, .pic .line { stroke: #24324d; stroke-width: 1; }
+.sym-grid .given, .pic .given { fill: color-mix(in srgb, #4fc3f7 60%, #141c2e); }
+.sym-grid .drawn { fill: color-mix(in srgb, #ffb347 65%, #141c2e); }
+.sym-grid .right { fill: color-mix(in srgb, #4ade80 60%, #141c2e); }
+.sym-grid .wrong { fill: color-mix(in srgb, #ff5566 65%, #141c2e); }
+.sym-grid .missing { fill: none; stroke: #ffd84d; stroke-width: 2.5; stroke-dasharray: 5 4; }
+.axis { stroke: #ff5566; stroke-width: 4; stroke-dasharray: 10 6; stroke-linecap: round; }
+.pic .axis { stroke-width: 3; }
+
+.actions-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+#mirror-steps { margin: 0; }
