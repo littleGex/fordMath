@@ -2,6 +2,7 @@ import "../styles/zone.css";
 import { version } from "../../package.json";
 import { loadTestReport } from "./report";
 import { offlineReady } from "./sw-register";
+import { currentStreak, dayOf, daysBetween, type Streak } from "../lib/daily";
 
 // ---- the grown-ups' footer: tests, source, plans, version, offline ----
 const footer = document.getElementById("version")!;
@@ -52,3 +53,16 @@ loadTestReport().then((r) => {
   if (!r) return;
   testsLink.textContent = r.numFailedTests ? `⚠️ ${r.numFailedTests} tests failing` : `✅ ${r.numPassedTests} tests`;
 });
+
+// ---- the day streak on the "Heute üben" tile ----
+try {
+  const daily = JSON.parse(localStorage.getItem("fm.daily.v1") ?? "null") as { streak?: Streak } | null;
+  const streak = daily?.streak;
+  const today = dayOf(new Date());
+  if (streak?.last && currentStreak(streak, today) > 0) {
+    const doneToday = daysBetween(streak.last, today) === 0;
+    document.getElementById("daily-desc")!.textContent = `🔥 ${streak.days} · ${doneToday ? "done today ✓" : "keep it going today!"}`;
+  }
+} catch {
+  /* storage blocked: the tile just shows its usual text */
+}

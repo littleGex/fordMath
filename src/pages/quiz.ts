@@ -37,6 +37,8 @@ export interface QuizSpec<Q> {
   startExtra?: (lang: Lang) => Node | null;
   /** Start straight away, without a start screen. */
   skipStart?: boolean;
+  /** Told after each pick, e.g. to remember how a topic is going. */
+  onPick?: (q: Q, ok: boolean) => void;
   /** Told when a round ends, e.g. to remember progress. */
   onFinish?: (right: number, total: number) => void;
 }
@@ -134,7 +136,9 @@ export function mountQuiz<Q>(spec: QuizSpec<Q>): QuizHandle {
       if (answered && i === right) b.classList.add("right");
       if (answered && i === s.picked && i !== right) b.classList.add("wrong");
       b.addEventListener("click", () => {
+        if (state.stage !== "play" || state.picked !== null) return;
         state = pick(state, i, right);
+        spec.onPick?.(q, i === right);
         render();
       });
       return b;

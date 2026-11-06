@@ -440,6 +440,12 @@ Seven pages had the same quiz loop copied in: dots, streak, choices, feedback, s
 
 The rules of a quiz (you can't pick twice, "next" only after a pick, the last question leads to the result) live in `src/lib/quiz-state.ts` as small pure functions that return a new state: `begin`, `pick`, `next`. They're generic too, and tested without a browser. The browser part has its own test, `e2e/quiz.spec.ts`, which plays a whole round on every page that uses the component.
 
+### Heute üben (#28): adapters, and dates without time zones
+
+Each topic already had its own question type. Instead of changing them all, `src/pages/daily-topics.ts` has one small **adapter** per topic that wraps the topic's generator and explanation in a common shape, `MixedQuestion` (prompt, choices, answer, steps). The shared quiz from #27 only ever sees that shape. A new topic joins the daily mix with one adapter and one line in `TOPICS`, and a test runs every adapter 150 times in both languages.
+
+Dates are stored as `"2026-11-06"` strings (a template literal type, `Day`), never as `Date` objects or timestamps. A day is a day on the child's calendar: "yesterday" must still be yesterday on the night the clocks change, and a test checks exactly that. `daysBetween()` turns both dates into midnight UTC before subtracting, so the clock change can't make a day 23 or 25 hours long.
+
 ## 7. Warm-up: add Range to Statistics
 
 **Goal:** a new "Range" tile on the Statistics page, showing largest − smallest, with its working. It's small and it touches every layer. #5 (quartiles) left Range out on purpose so it's yours; `boxPlot()` in `src/lib/quartiles.ts` already finds min and max, if you want to peek.
@@ -587,7 +593,7 @@ Open the pull request on GitHub, wait for the green tick, and merge. The site up
 
 ## 8. Your turn: the exercise ladder
 
-Ordered roughly from easiest to hardest to *build*, which isn't the same as the school level. #18 (Punkt vor Strich), #5 (Quartile), #10 (Gleichungssysteme), #19 (Kopfrechnen), #20 (Umfang und Fläche), #21 (Dezimalzahlen), #22 (Negative Zahlen), #23 (Sachaufgaben), #24 (Symmetrie), #25 (Winkel), #26 (Quader), #27 (shared quiz), #7 (Teiler), #13 (Brüche), #16 (Größen), #17 (Stellenwerte), #14 (Einmaleins), #15, #11 and #12 (written +, −, ·, :) are finished. Read #14 as an example of a game. In `src/lib/written.ts`, notice how adding two new members to the `WrittenSum` union made the compiler list every place that needed updating, and how `Extract<WrittenSum, { kind: "divide" }>` gives each function its own precise return type. Each level lists the TypeScript ideas it will exercise.
+Ordered roughly from easiest to hardest to *build*, which isn't the same as the school level. #18 (Punkt vor Strich), #5 (Quartile), #10 (Gleichungssysteme), #19 (Kopfrechnen), #20 (Umfang und Fläche), #21 (Dezimalzahlen), #22 (Negative Zahlen), #23 (Sachaufgaben), #24 (Symmetrie), #25 (Winkel), #26 (Quader), #27 (shared quiz), #28 (Heute üben), #7 (Teiler), #13 (Brüche), #16 (Größen), #17 (Stellenwerte), #14 (Einmaleins), #15, #11 and #12 (written +, −, ·, :) are finished. Read #14 as an example of a game. In `src/lib/written.ts`, notice how adding two new members to the `WrittenSum` union made the compiler list every place that needed updating, and how `Extract<WrittenSum, { kind: "divide" }>` gives each function its own precise return type. Each level lists the TypeScript ideas it will exercise.
 
 ### Level 1: #9, matrices (and 3×3 systems)
 

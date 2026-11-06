@@ -36,6 +36,7 @@ Planned helpers are tracked as [issues](https://github.com/littleGex/fordMath/is
 | Angles              | `angleKind`, `otherScale`, `snapPose`, `readScales`, `makeAngleTask`, `makeAngleRound` in `lib/angles` | Kinds of angle, the Geodreieck's two scales, snapping it onto the vertex and an arm, tasks for naming, estimating, measuring and drawing |
 | Cuboids and nets    | `volume`, `surface`, `fold`, `isCubeNet`, `oppositeSquare`, `hexominoes`, `cubeNets`, `makeCuboidQuestion` in `lib/cuboid` | Volume by layers and V = a·b·c, surface in pairs, volume units and litres; folding a net by rolling a die across it (finds all 11 cube nets among the 35 hexominoes) |
 | Quiz state          | `begin`, `pick`, `next`, `current` in `lib/quiz-state`; `mountQuiz<Q>()` in `pages/quiz.ts` | One generic quiz for every topic page: the state machine is pure and tested, the component builds the start, play and result screens from a page's own question type |
+| Daily practice      | `chooseTopics`, `recordAnswer`, `finishRound`, `currentStreak`, `topicWeight` in `lib/daily`; topic adapters in `pages/daily-topics.ts` | A weighted mix of topics (weak and long-unpractised ones more often), progress per topic and a day streak, all kept on the device |
 | Two equations       | `solveSystem(e1, e2)`, `makeSystem` in `lib/linear-system`; `rat`, `parseRational` in `lib/rational` | Exact fractions throughout; the answer as a union (one point, none, the same line, every pair); practice tasks with whole-number answers |
 | Expressions         | `compile(text)` → `(x) => number`     | Safe parser for f(x): never uses eval; `parse`, `evaluate`, `formatExpr` and `ExpressionError` (with a position) also exported from `lib/expression` |
 | Order of operations | `allowedPaths`, `whyNot`, `collapse`, `workedLines`, `makeOrderTask`, `makeBracketTask` in `lib/expression/steps` | Which operation the school rules allow next (Klammern, Punkt vor Strich, links nach rechts) and which rule a wrong choice breaks; tasks that stay whole and positive for class 5 |
@@ -64,6 +65,7 @@ All functions take `readonly number[]` (ints and floats), never mutate the input
 | `/symmetrie/` | Symmetrie (German, EN toggle): mirror half a figure and check it, a "Zaubertafel" that mirrors as you draw (one, two or a diagonal line), and "how many lines of symmetry?" with the lines drawn |
 | `/winkel/` | Winkel (German, EN toggle): rounds of 8 (kind, estimate, measure with a draggable, turnable Geodreieck that clicks into place, draw by dragging an arm), and a card of the angle kinds |
 | `/quader/` | Quader und Würfelnetze (German, EN toggle): a 3D cuboid you size with + and −, V and O worked out, volume units, tap 6 squares to test a net (opposite faces coloured), all 11 nets, 10-question quiz |
+| `/heute/` | Heute üben (German, EN toggle): 10 mixed questions from the child's level (Grundschule or Klasse 5–7) drawn from ten topics, a day streak 🔥, and progress per topic; featured at the top of the homepage |
 | `/gleichungssysteme/` | Gleichungssysteme (German, EN toggle): two equations in boxes, the solution set, both lines drawn, and the Gleichsetzungs-, Einsetzungs- and Additionsverfahren worked line by line, with the Probe; 🎲 tasks hide the answer until asked |
 | `/function/` | Type any f(x): how it was read, its graph, and f(x) worked out step by step |
 | `/tests/` | Every test from the deployed build, read from `test-results.json`      |
@@ -71,7 +73,7 @@ All functions take `readonly number[]` (ints and floats), never mutate the input
 ## Project layout
 
 ```
-index.html  stats/  quadratic/  function/  einmaleins/  schriftlich/  teiler/  brueche/  stellenwerte/  groessen/  punkt-vor-strich/  gleichungssysteme/  kopfrechnen/  umfang-flaeche/  dezimalzahlen/  negative-zahlen/  sachaufgaben/  symmetrie/  winkel/  quader/  tests/   pages (Vite multi-page build)
+index.html  stats/  quadratic/  function/  einmaleins/  schriftlich/  teiler/  brueche/  stellenwerte/  groessen/  punkt-vor-strich/  gleichungssysteme/  kopfrechnen/  umfang-flaeche/  dezimalzahlen/  negative-zahlen/  sachaufgaben/  symmetrie/  winkel/  quader/  heute/  tests/   pages (Vite multi-page build)
 public/          favicon, Home Screen icons, manifest
 src/
   lib/           pure maths, no DOM; one module + one test file per helper

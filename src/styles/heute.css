@@ -1,0 +1,16 @@
+.levels { margin: 18px 0 12px; }
+.streak-card { display: flex; gap: 14px; align-items: center; margin-bottom: 14px; }
+.flame { font-size: 40px; line-height: 1; }
+.flame.off { filter: grayscale(1); opacity: 0.4; }
+.streak-days { margin: 0; font: 700 22px var(--f-body); }
+.streak-card .note { margin: 2px 0 0; }
+
+.topics { display: grid; gap: 10px; }
+.topic-row { display: grid; grid-template-columns: 2em minmax(0, 1fr) auto; gap: 10px; align-items: center; color: inherit; text-decoration: none; }
+.topic-row .emoji { font-size: 22px; text-align: center; }
+.topic-row .name { font-weight: 600; }
+.topic-row .meta { font-size: 13px; color: var(--muted); }
+.topic-row .bar { grid-column: 2 / 3; height: 8px; border-radius: 4px; background: var(--bg); overflow: hidden; }
+.topic-row .bar i { display: block; height: 100%; background: #4ade80; border-radius: 4px; }
+.topic-row .stars { font-size: 15px; letter-spacing: 1px; margin: 0; }
+.reset-row { margin: 12px 2px 0; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }

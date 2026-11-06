@@ -14,6 +14,7 @@ const QUIZZES: Array<[path: string, host: string, before?: string]> = [
   ["negative-zahlen/", "#quiz"],
   ["quader/", "#quiz"],
   ["symmetrie/", "#axes-mode", '[data-mode="axes"]'],
+  ["heute/", "#quiz"],
 ];
 
 let server: PreviewServer;

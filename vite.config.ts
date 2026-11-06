@@ -34,6 +34,7 @@ export default defineConfig({
     symmetrie: resolve(__dirname, "symmetrie/index.html"),
     winkel: resolve(__dirname, "winkel/index.html"),
     quader: resolve(__dirname, "quader/index.html"),
+    heute: resolve(__dirname, "heute/index.html"),
     tests: resolve(__dirname, "tests/index.html"),
       },
     },
