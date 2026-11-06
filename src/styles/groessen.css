@@ -1,0 +1,107 @@
+.q-chips, .unit-chips, .pay-chips { margin: 0; flex-wrap: wrap; overflow: visible; }
+.convert, .span, .shop { display: grid; gap: 12px; }
+.amount-row { display: grid; gap: 10px; }
+.amount-row input, .price input {
+  width: 100%;
+  min-width: 0;
+  font: 700 26px var(--f-mono);
+  text-align: center;
+  padding: 10px 6px;
+  border: 2px solid var(--line);
+  border-radius: 14px;
+  background: var(--bg);
+  color: var(--ink);
+}
+.amount-row input:focus, .price input:focus, .times input:focus { border-color: #7cfc00; }
+
+/* every unit at once; tap one to see how */
+.unit-list { display: grid; gap: 6px; }
+.unit-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: baseline;
+  gap: 10px;
+  font: inherit;
+  text-align: left;
+  padding: 8px 12px;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  background: var(--tile-hi);
+  color: var(--ink);
+  cursor: pointer;
+}
+.unit-row b { font: 700 20px var(--f-mono); overflow-wrap: anywhere; }
+.unit-row.from { background: color-mix(in srgb, #7cfc00 14%, var(--tile-hi)); }
+.unit-row[aria-pressed="true"] { border-color: #7cfc00; }
+.mixed { margin: 0; text-align: center; font: 700 20px var(--f-mono); color: #7cfc00; }
+
+/* place-value table for units */
+.ut-scroll { overflow-x: auto; }
+.unit-table { display: grid; width: max-content; margin-inline: auto; gap: 3px 2px; }
+.ut-head {
+  grid-row: 1;
+  font: 700 13px var(--f-body);
+  text-align: center;
+  padding: 3px 0;
+  border-radius: 6px;
+  color: #0c1220;
+  background: var(--g);
+}
+.ut-sub { grid-row: 2; font: 600 11px var(--f-mono); color: var(--faint); text-align: center; }
+.ut-digit {
+  grid-row: 3;
+  width: clamp(24px, 6.6vw, 36px);
+  height: clamp(34px, 9vw, 44px);
+  display: grid;
+  place-items: center;
+  font: 700 clamp(18px, 5.4vw, 26px) var(--f-mono);
+  background: color-mix(in srgb, var(--g) 15%, var(--bg));
+  border-radius: 6px;
+  position: relative;
+}
+.ut-digit.blank { color: var(--faint); }
+.ut-digit.comma::after {
+  content: ",";
+  position: absolute;
+  right: -5px;
+  bottom: 2px;
+  font-size: 0.9em;
+  color: #ffd84d;
+}
+.g0 { --g: #7cfc00; }
+.g1 { --g: #4fc3f7; }
+
+/* time span */
+.times { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.times label { display: grid; gap: 4px; font-weight: 600; color: var(--muted); }
+.times input {
+  font: 700 22px var(--f-mono);
+  padding: 8px;
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  background: var(--bg);
+  color: var(--ink);
+  min-width: 0;
+}
+.big-result { margin: 0; text-align: center; font: 700 26px var(--f-body); color: #7cfc00; }
+.tl { margin: 0; }
+.tl svg { width: 100%; height: auto; display: block; }
+.tl text { font: 600 17px var(--f-mono); fill: var(--muted); }
+.tl .jump { font-weight: 700; fill: #ffd84d; }
+
+/* shopping */
+.price { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 10px; align-items: center; font-weight: 600; color: var(--muted); }
+.price span:last-child { font: 700 24px var(--f-body); color: var(--ink); }
+.pay-label { align-self: center; font-weight: 600; color: var(--muted); margin-right: 4px; }
+.pieces { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; align-items: center; }
+.coin, .banknote {
+  display: grid;
+  place-items: center;
+  font: 700 14px var(--f-body);
+  color: #0c1220;
+}
+.coin { width: 52px; height: 52px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff5c2, #e0b400 70%); }
+.coin.copper { background: radial-gradient(circle at 35% 30%, #ffd2b0, #b8652a 70%); }
+.coin.two { background: radial-gradient(circle at 50% 50%, #e9edf2 38%, #e0b400 40%); }
+.coin.one { background: radial-gradient(circle at 50% 50%, #e0b400 38%, #e9edf2 40%); }
+.banknote { width: 84px; height: 46px; border-radius: 6px; background: var(--n); }

@@ -343,6 +343,22 @@ The question generator test is worth reading too. It generates 300 questions per
 
 In the first version of `e2e/offline.spec.ts`, the loop over all pages only checked that each heading appeared offline, and it passed while every script was failing to load; only the final "start a game" check caught it. The headings are plain HTML; the scripts weren't being found in the store, because the server adds `Vary: Origin` and module scripts are requested with an `Origin` header. The fix was one option (`ignoreVary: true` in `build/sw-template.js`), but the lesson is in the test: check for something only the *script* draws (a tile, a plot line), not something that's there anyway.
 
+### Größen (#16): types built from data, and exact amounts
+
+`src/lib/units.ts` keeps every amount as a whole number of the smallest unit (cents, millimetres, milligrams, seconds), and reads "2,35" from text digit by digit instead of through a float. That's why `0,1 m + 0,2 m` is exactly `300` mm here.
+
+The unit list is written once, `as const`, and the types come from it:
+
+```ts
+export const UNITS = { money: [{ symbol: "€", factor: 100 }, { symbol: "ct", factor: 1 }], /* … */ } as const satisfies Record<string, readonly Unit[]>;
+export type Quantity = keyof typeof UNITS;                                    // "money" | "length" | "mass" | "time"
+export type UnitSymbol<Q extends Quantity = Quantity> = (typeof UNITS)[Q][number]["symbol"]; // UnitSymbol<"money"> = "€" | "ct"
+```
+
+`UnitSymbol` is a **generic type**: give it a quantity and it works out that quantity's symbols. Errors are a class with a `code` from a union (`"empty" | "format" | …`), and the page maps each code to German or English text with `satisfies Record<UnitErrorCode, string>`, so a new error code can't be left without a message.
+
+One more lesson from this page: a drawn banknote was given the class name `note`, which is also the site-wide class for small grey text, and the quiz intro shrank to the size of a banknote. Class names share one global space, so specific names (`banknote`) are safer.
+
 ## 7. Warm-up: add Range to Statistics
 
 **Goal:** a new "Range" tile on the Statistics page, showing largest − smallest, with its working. It's small, it touches every layer, and it's the first piece of #5.
@@ -490,7 +506,7 @@ Open the pull request on GitHub, wait for the green tick, and merge. The site up
 
 ## 8. Your turn: the exercise ladder
 
-Ordered roughly from easiest to hardest to *build*, which isn't the same as the school level. #7 (Teiler), #13 (Brüche), #17 (Stellenwerte), #14 (Einmaleins), #15, #11 and #12 (written +, −, ·, :) are finished. Read #14 as an example of a game. In `src/lib/written.ts`, notice how adding two new members to the `WrittenSum` union made the compiler list every place that needed updating, and how `Extract<WrittenSum, { kind: "divide" }>` gives each function its own precise return type. Each level lists the TypeScript ideas it will exercise.
+Ordered roughly from easiest to hardest to *build*, which isn't the same as the school level. #7 (Teiler), #13 (Brüche), #16 (Größen), #17 (Stellenwerte), #14 (Einmaleins), #15, #11 and #12 (written +, −, ·, :) are finished. Read #14 as an example of a game. In `src/lib/written.ts`, notice how adding two new members to the `WrittenSum` union made the compiler list every place that needed updating, and how `Extract<WrittenSum, { kind: "divide" }>` gives each function its own precise return type. Each level lists the TypeScript ideas it will exercise.
 
 ### Level 1: #18, Punkt vor Strich trainer
 
@@ -498,21 +514,19 @@ Ordered roughly from easiest to hardest to *build*, which isn't the same as the 
 
 Add a helper in `src/lib/expression/` that finds which node of the tree should be worked out next (the deepest, leftmost one whose children are numbers), and one that replaces that node by its value. Test both on `3 + 4 · 2` and `(3 + 4) · 2`. Then copy the setup/play/result shape of `src/pages/einmaleins.ts`.
 
-### Level 2: #16, units and measures
+### Level 2: #5, quartiles
 
-*Practises: exact arithmetic with integers (store money in cents and lengths in millimetres so 0,1 + 0,2 problems can't happen), a table of units as data, and the place-value table from #17.*
+Quartiles reuses the Statistics registry, and adds an SVG box plot alongside the existing number line in `src/pages/stats.ts`. The percentile method needs a decision first (see the issue), which makes it a good test-first exercise.
 
-Start with a `Unit` table per quantity (`{ name: "cm", factor: 10 }` in mm for length) and one `convert(value, from, to)`. `src/lib/place-value.ts` and `src/pages/stellenwerte.ts` show how to draw a place-value table, which is how class 5 converts units.
+### Level 3: #10, two equations with two unknowns
 
-### Level 3: #5, quartiles
+Class 8 solves these with the Einsetzungs-, Gleichsetzungs- and Additionsverfahren. Model the answer as a discriminated union, exactly like `QuadraticRoots`: one solution, none (parallel lines) or infinitely many (the same line).
 
-Quartiles reuses the Statistics registry, and adds an SVG box plot alongside the existing number line in `src/pages/stats.ts`.
+### Level 4: #9, matrices (and 3×3 systems)
 
-### Level 4: #9 matrices, then #10 simultaneous equations
+*Practises: type-heavy code, `readonly` nested arrays, careful floating-point work.*
 
-*Practises: generics-free but type-heavy code, `readonly` nested arrays, careful floating-point work.*
-
-Start with the `Matrix` type and an `assertMatrix` guard. Write `multiply` with a test-first loop. Then let `solveLinearSystem` return a discriminated union (`unique` / `none` / `infinite`), exactly like `QuadraticRoots`.
+Start with the `Matrix` type and an `assertMatrix` guard. Write `multiply` with a test-first loop. Then extend #10's solver to 3 unknowns with Gaussian elimination, returning the same `unique` / `none` / `infinite` union.
 
 ### Level 5: #3 integration and #4 differentiation
 

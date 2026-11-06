@@ -1,6 +1,7 @@
 import "./sw-register";
 import "../styles/zone.css";
 import "../styles/stellenwerte.css";
+import "../styles/quiz.css";
 import {
   MAX_PLACE_NUMBER, digitAt, makePlaceRound, roundTo, setDigit, type PlaceLevel, type PlaceQuestion, type Rounding,
 } from "../lib/place-value";

@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#141c2e">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="apple-mobile-web-app-title" content="fordMath">
+<title>Größen · fordMath</title>
+</head>
+<body>
+<main class="narrow">
+  <header class="kid-head">
+    <div>
+      <a class="back" href="../">← fordMath</a>
+      <h1>📏 <span data-t="title"></span></h1>
+      <p class="subtitle" data-t="subtitle"></p>
+    </div>
+    <div class="lang" role="group" aria-label="Sprache / Language">
+      <button class="chip" type="button" data-lang="de" aria-pressed="true">DE</button>
+      <button class="chip" type="button" data-lang="en" aria-pressed="false">EN</button>
+    </div>
+  </header>
+
+  <!-- ===== Umrechnen ===== -->
+  <h2 class="section" data-t="convertTitle"></h2>
+  <section class="panel convert">
+    <div class="chips q-chips" role="group" id="quantities"></div>
+    <div class="amount-row">
+      <input id="amount" type="text" inputmode="decimal" autocomplete="off" aria-label="Betrag">
+      <div class="chips unit-chips" role="group" id="from-units"></div>
+    </div>
+    <p class="error" id="convert-error" hidden></p>
+    <div id="convert-out">
+      <div class="unit-list" id="unit-list"></div>
+      <p class="mixed" id="mixed"></p>
+      <div class="ut-scroll" id="ut-wrap"><div class="unit-table" id="unit-table"></div></div>
+      <ol class="steps" id="convert-steps"></ol>
+    </div>
+  </section>
+
+  <!-- ===== Zeitspanne ===== -->
+  <h2 class="section" data-t="spanTitle"></h2>
+  <section class="panel span">
+    <div class="times">
+      <label><span data-t="from"></span><input id="time-from" type="time" value="08:45"></label>
+      <label><span data-t="to"></span><input id="time-to" type="time" value="10:20"></label>
+    </div>
+    <p class="big-result" id="span-result"></p>
+    <figure class="tl"><svg id="timeline" viewBox="0 0 600 120" role="img"></svg></figure>
+    <ol class="steps" id="span-steps"></ol>
+  </section>
+
+  <!-- ===== Einkaufen ===== -->
+  <h2 class="section" data-t="shopTitle"></h2>
+  <section class="panel shop">
+    <label class="price"><span data-t="price"></span><input id="price" type="text" inputmode="decimal" autocomplete="off" value="3,65"><span>€</span></label>
+    <div class="chips pay-chips" role="group" id="paid">
+      <span class="pay-label" data-t="payWith"></span>
+      <button class="chip" type="button" data-paid="500">5 €</button>
+      <button class="chip" type="button" data-paid="1000">10 €</button>
+      <button class="chip" type="button" data-paid="2000">20 €</button>
+      <button class="chip" type="button" data-paid="5000">50 €</button>
+    </div>
+    <p class="error" id="shop-error" hidden></p>
+    <div id="shop-out">
+      <p class="big-result" id="change-result"></p>
+      <div class="pieces" id="pieces"></div>
+      <ol class="steps" id="change-steps"></ol>
+    </div>
+  </section>
+
+  <!-- ===== Üben ===== -->
+  <h2 class="section" data-t="quizTitle"></h2>
+  <section class="panel quiz-panel" id="quiz">
+    <div id="quiz-start">
+      <div class="chips" role="group" id="quiz-levels">
+        <button class="chip" type="button" data-qlevel="grundschule" data-t="gs"></button>
+        <button class="chip" type="button" data-qlevel="sek1" data-t="k5"></button>
+      </div>
+      <p class="note" data-t="quizIntro"></p>
+      <button class="tile big-btn c-units" type="button" id="quiz-go"><span class="emoji" aria-hidden="true">🎯</span><h3 data-t="quizGo"></h3></button>
+    </div>
+    <div id="quiz-play" hidden>
+      <div class="quiz-top"><span class="dots-progress" id="quiz-progress"></span><span class="streak" id="quiz-streak"></span></div>
+      <p class="quiz-q" id="quiz-q" aria-live="polite"></p>
+      <div class="quiz-choices" id="quiz-choices"></div>
+      <div id="quiz-feedback" hidden>
+        <p class="verdict" id="quiz-verdict"></p>
+        <ol class="steps" id="quiz-steps"></ol>
+        <button class="tile big-btn c-units" type="button" id="quiz-next"><h3 data-t="next"></h3></button>
+      </div>
+    </div>
+    <div id="quiz-done" hidden>
+      <p class="stars" id="quiz-stars"></p>
+      <p class="score" id="quiz-score"></p>
+      <button class="tile big-btn c-units" type="button" id="quiz-again"><span class="emoji" aria-hidden="true">🔁</span><h3 data-t="again"></h3></button>
+    </div>
+  </section>
+
+  <p class="version"><a href="../tests/">Tests</a> · <a href="https://github.com/littleGex/fordMath/blob/main/src/lib/units.ts">Source</a></p>
+</main>
+<script type="module" src="/src/pages/groessen.ts"></script>
+</body>
+</html>
