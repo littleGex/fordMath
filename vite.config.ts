@@ -41,6 +41,7 @@ export default defineConfig({
     gleichungen: resolve(__dirname, "gleichungen/index.html"),
     koordinaten: resolve(__dirname, "koordinaten/index.html"),
     "lineare-funktionen": resolve(__dirname, "lineare-funktionen/index.html"),
+    bruchrechnen: resolve(__dirname, "bruchrechnen/index.html"),
     tests: resolve(__dirname, "tests/index.html"),
       },
     },

@@ -149,7 +149,9 @@ export function mountQuiz<Q>(spec: QuizSpec<Q>): QuizHandle {
     if (answered) {
       const ok = s.picked === right;
       const rightLabel = labels[right];
-      verdict.textContent = ok ? w.right : w.wrong(typeof rightLabel === "string" ? rightLabel : "");
+      // A drawn choice (a shape, a stacked fraction) can name itself with an aria-label.
+      const rightText = typeof rightLabel === "string" ? rightLabel : rightLabel instanceof Element ? rightLabel.getAttribute("aria-label") ?? "" : "";
+      verdict.textContent = ok ? w.right : w.wrong(rightText);
       verdict.className = `verdict ${ok ? "ok" : "no"}`;
       steps.replaceChildren(...spec.steps(q, lang).map((x) => el("li", "", x)));
     }

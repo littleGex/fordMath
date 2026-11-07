@@ -34,6 +34,7 @@ const PAGES: Array<[path: string, drawnByScript: string]> = [
   ["gleichungen/", "#choices button"],
   ["koordinaten/", "#draw polygon"],
   ["lineare-funktionen/", "#explore circle"],
+  ["bruchrechnen/", "#pic rect"],
   ["tests/", "#n-pass, #empty"],
 ];
 

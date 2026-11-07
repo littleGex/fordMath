@@ -490,6 +490,14 @@ All the maths in `src/lib/linear-function.ts` uses `Rational`. A slope of 2/3 st
 
 The "which line?" quiz question shows four look-alikes: m with the other sign, b with the other sign, and m and b swapped. Those are the mix-ups children really make. The test checks that exactly one of the four is the asked-for line.
 
+### Bruchrechnen (#35): when not to simplify, and wrong answers built from mistakes
+
+`Rational` simplifies itself straight away, which is right for algebra but wrong for teaching: the working has to show 3/6 before it's gekürzt to 1/2. So `src/lib/fraction-calc.ts` uses a plain `Frac` pair and returns a `Working` object (a discriminated union per operation) that holds every intermediate number: the Hauptnenner, both factors for Erweitern, the raw sum, what it was gekürzt by. The explanation only formats those numbers; it never recalculates.
+
+The quiz's wrong answers aren't random. `mistakes()` builds them from what children really do: adding the denominators, forgetting to expand the numerator, multiplying across when dividing, or forgetting the Kehrwert. The test checks over 1 000 questions that exactly one choice has the right value. That's harder than it sounds, because 2/4 and 1/2 are different texts with the same value.
+
+One small change to the shared quiz came with it: a drawn choice (here a stacked fraction) can name itself with an `aria-label`. Then "Richtig ist: 1/15" works, and screen readers can read the choice too.
+
 ## 7. Warm-up: add Range to Statistics
 
 **Goal:** a new "Range" tile on the Statistics page, showing largest − smallest, with its working. It's small and it touches every layer. #5 (quartiles) left Range out on purpose so it's yours; `boxPlot()` in `src/lib/quartiles.ts` already finds min and max, if you want to peek.
@@ -644,7 +652,7 @@ Open the pull request on GitHub, wait for the green tick, and merge. The site up
 
 ## 8. Your turn: the exercise ladder
 
-Ordered roughly from easiest to hardest to *build*, which isn't the same as the school level. #18 (Punkt vor Strich), #5 (Quartile), #10 (Gleichungssysteme), #19 (Kopfrechnen), #20 (Umfang und Fläche), #21 (Dezimalzahlen), #22 (Negative Zahlen), #23 (Sachaufgaben), #24 (Symmetrie), #25 (Winkel), #26 (Quader), #27 (shared quiz), #28 (Heute üben), #31 (Halbschriftlich), #32 (Prozentrechnung), #33 (Dreisatz), #36 (DE/EN for the older pages), #34 (Gleichungen), #30 (Koordinaten), #37 (Lineare Funktionen), #7 (Teiler), #13 (Brüche), #16 (Größen), #17 (Stellenwerte), #14 (Einmaleins), #15, #11 and #12 (written +, −, ·, :) are finished. Read #14 as an example of a game. In `src/lib/written.ts`, notice how adding two new members to the `WrittenSum` union made the compiler list every place that needed updating, and how `Extract<WrittenSum, { kind: "divide" }>` gives each function its own precise return type. Each level lists the TypeScript ideas it will exercise.
+Ordered roughly from easiest to hardest to *build*, which isn't the same as the school level. #18 (Punkt vor Strich), #5 (Quartile), #10 (Gleichungssysteme), #19 (Kopfrechnen), #20 (Umfang und Fläche), #21 (Dezimalzahlen), #22 (Negative Zahlen), #23 (Sachaufgaben), #24 (Symmetrie), #25 (Winkel), #26 (Quader), #27 (shared quiz), #28 (Heute üben), #31 (Halbschriftlich), #32 (Prozentrechnung), #33 (Dreisatz), #36 (DE/EN for the older pages), #34 (Gleichungen), #30 (Koordinaten), #37 (Lineare Funktionen), #35 (Bruchrechnen), #7 (Teiler), #13 (Brüche), #16 (Größen), #17 (Stellenwerte), #14 (Einmaleins), #15, #11 and #12 (written +, −, ·, :) are finished. Read #14 as an example of a game. In `src/lib/written.ts`, notice how adding two new members to the `WrittenSum` union made the compiler list every place that needed updating, and how `Extract<WrittenSum, { kind: "divide" }>` gives each function its own precise return type. Each level lists the TypeScript ideas it will exercise.
 
 ### Level 1: #9, matrices (and 3×3 systems)
 

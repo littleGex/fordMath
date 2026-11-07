@@ -13,6 +13,7 @@ import { makePercentQuestion } from "../lib/percent";
 import { makeProportionQuestion } from "../lib/proportion";
 import { apply, makeTask, solveAll } from "../lib/linear-equation";
 import { makeFunctionQuestion } from "../lib/linear-function";
+import { makeCalcQuestion } from "../lib/fraction-calc";
 import * as area from "../explain/area";
 import * as cuboid from "../explain/cuboid";
 import * as decimal from "../explain/decimal";
@@ -26,6 +27,7 @@ import * as percent from "../explain/percent";
 import * as proportion from "../explain/proportion";
 import * as linEq from "../explain/linear-equation";
 import * as linFn from "../explain/linear-function";
+import * as fracCalc from "../explain/fraction-calc";
 import type { Lang } from "../explain/lang";
 
 /**
@@ -56,6 +58,7 @@ export const TOPICS = {
   prozent: { de: "Prozente", en: "Percentages", emoji: "💯", href: "prozent/", levels: ["sek1"] },
   dreisatz: { de: "Dreisatz", en: "Rule of three", emoji: "🛒", href: "dreisatz/", levels: ["sek1"] },
   gleichungen: { de: "Gleichungen", en: "Equations", emoji: "🟰", href: "gleichungen/", levels: ["sek1"] },
+  bruchrechnen: { de: "Bruchrechnen", en: "Fraction arithmetic", emoji: "➗", href: "bruchrechnen/", levels: ["sek1"] },
   funktionen: { de: "Lineare Funktionen", en: "Linear functions", emoji: "📈", href: "lineare-funktionen/", levels: ["sek1"] },
 } as const satisfies Record<string, { de: string; en: string; emoji: string; href: string; levels: readonly DailyLevel[] }>;
 export type TopicId = keyof typeof TOPICS;
@@ -187,6 +190,10 @@ const ADAPTERS: Record<TopicId, (level: DailyLevel, random: Random) => MixedQues
     const wrongs = [A * x, -x, wrongSign].filter((v) => Number.isInteger(v));
     const c = signedChoices(x, wrongs, r);
     return { topic: "gleichungen", prompt: (l) => `${l === "de" ? "Löse" : "Solve"}: ${linEq.equationText(e)}`, choices: () => c.choices, answer: c.answer, steps: (l) => linEq.workedSteps(e, l) };
+  },
+  bruchrechnen(_level, r) {
+    const q = makeCalcQuestion(pick(["add", "sub", "mul", "div", "mixed"] as const, r), r);
+    return { topic: "bruchrechnen", prompt: (l) => fracCalc.quizPrompt(q, l), choices: () => q.choices.map(fracCalc.quizChoice), answer: q.answer, steps: (l) => fracCalc.quizSteps(q, l) };
   },
   funktionen(_level, r) {
     // Only the kinds that need no drawing: m from two points, Punktprobe, Nullstelle, tariffs.

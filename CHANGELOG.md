@@ -2,6 +2,15 @@
 
 All notable changes to fordMath. Every page is in German with an English toggle, works offline after the first visit, and shows its working step by step.
 
+## 1.5.0 (2026-11-07)
+
+- **Bruchrechnen** (`/bruchrechnen/`, #35): +, −, · and : with fractions and mixed numbers.
+  - Results are shown as stacked fractions and as mixed numbers.
+  - The working is the school way: Hauptnenner by kgV, Erweitern, kürzen über Kreuz, and dividing with the Kehrwert.
+  - Pictures: bars for + and −, and a rectangle "part of a part" for ·.
+  - A 10-question quiz whose wrong answers are the classic mistakes. Bruchrechnen also comes up in Heute üben for Klasse 5–7.
+- The shared quiz names drawn answers in "Richtig ist: …".
+
 ## 1.4.0 (2026-11-07)
 
 - **Lineare Funktionen** (`/lineare-funktionen/`, #37): set m and b and watch y = m·x + b.
