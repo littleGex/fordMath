@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#141c2e">
+<link rel="icon" type="image/svg+xml" href="/fordMath/favicon.svg">
+<link rel="apple-touch-icon" href="/fordMath/icons/apple-touch-icon.png">
+<link rel="manifest" href="/fordMath/manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="fordMath">
+<title>fordMath</title>
+  <script type="module" crossorigin src="/fordMath/assets/home-B2c01iJc.js"></script>
+  <link rel="modulepreload" crossorigin href="/fordMath/assets/zone-2S0LliKN.js">
+  <link rel="modulepreload" crossorigin href="/fordMath/assets/report-DSDQhGSj.js">
+  <link rel="modulepreload" crossorigin href="/fordMath/assets/random-BYFHwryz.js">
+  <link rel="modulepreload" crossorigin href="/fordMath/assets/daily-CtXOtCH0.js">
+  <link rel="stylesheet" crossorigin href="/fordMath/assets/zone-DujYQsVA.css">
+</head>
+<body>
+<main>
+  <header>
+    <h1>🧮 fordMath</h1>
+    <p class="subtitle">Pick your class level, then a helper</p>
+  </header>
+
+  <a class="tile feature c-mental" href="heute/">
+    <span class="emoji" aria-hidden="true">🌞</span>
+    <div>
+      <h3>Heute üben</h3>
+      <p class="desc" id="daily-desc">10 mixed questions from your topics, every day</p>
+    </div>
+  </a>
+
+  <div class="chips" role="group" aria-label="Show helpers for a school level">
+    <button class="chip" type="button" data-level="all" aria-pressed="true">Everything</button>
+    <button class="chip" type="button" data-level="grundschule" aria-pressed="false">Grundschule <span class="sub">1–4</span></button>
+    <button class="chip" type="button" data-level="sek1" aria-pressed="false">Sek I <span class="sub">5–10</span></button>
+    <button class="chip" type="button" data-level="oberstufe" aria-pressed="false">Oberstufe <span class="sub">11–13</span></button>
+  </div>
+  <p class="note level-note" id="level-note"></p>
+
+  <div class="grid" id="helpers">
+    <a class="tile c-stats" href="stats/" data-levels="sek1 oberstufe">
+      <span class="badge">Ready</span>
+      <span class="emoji" aria-hidden="true">📊</span>
+      <h3>Statistics</h3>
+      <p class="desc">Mean, median, mode, spread and box plots</p>
+    </a>
+    <a class="tile c-func" href="function/" data-levels="sek1 oberstufe">
+      <span class="badge">Ready</span>
+      <span class="emoji" aria-hidden="true">📐</span>
+      <h3>Functions</h3>
+      <p class="desc">Graph any f(x)</p>
+    </a>
+    <a class="tile c-quadratic" href="quadratic/" data-levels="sek1">
+      <span class="badge">Ready</span>
+      <span class="emoji" aria-hidden="true">🎢</span>
+      <h3>Quadratics</h3>
+      <p class="desc">Solve ax² + bx + c = 0</p>
+    </a>
+    <a class="tile c-times" href="einmaleins/" data-levels="grundschule">
+      <span class="badge">Ready</span>
+      <span class="emoji" aria-hidden="true">✖️</span>
+      <h3>Einmaleins</h3>
+      <p class="desc">Times tables trainer</p>
+    </a>
+    <a class="tile c-written" href="schriftlich/#plus" data-levels="grundschule">
+      <span class="badge">Ready</span>
+      <span class="emoji" aria-hidden="true">➕</span>
+      <h3>Plus and minus</h3>
+      <p class="desc">Written in columns</p>
+    </a>
+    <a class="tile c-written" href="schriftlich/#mal" data-levels="grundschule sek1">
+      <span class="badge">Ready</span>
+      <span class="emoji" aria-hidden="true">✏️</span>
+      <h3>Written ×</h3>
+      <p class="desc">Schriftlich multiplizieren</p>
+    </a>
+    <a class="tile c-written" href="schriftlich/#geteilt" data-levels="grundschule sek1">
+      <span class="badge">Ready</span>
+      <span class="emoji" aria-hidden="true">➗</span>
+      <h3>Written ÷</h3>
+      <p class="desc">Schriftlich dividieren</p>
+    </a>
+    <a class="tile c-place" href="stellenwerte/" data-levels="grundschule sek1">
+      <span class="badge">Ready</span>
+      <span class="emoji" aria-hidden="true">🔟</span>
+      <h3>Stellenwerte</h3>
+      <p class="desc">Stellenwerte und Runden</p>
+    </a>
+    <a class="tile c-units" href="groessen/" data-levels="grundschule sek1">
+      <span class="badge">Ready</span>
+      <span class="emoji" aria-hidden="true">📏</span>
+      <h3>Größen</h3>
+      <p class="desc">Money, length, weight, time</p>
+    </a>
+    <a class="tile c-fraction" href="brueche/" data-levels="grundschule sek1">
+      <span class="badge">Ready</span>
+      <span class="emoji" aria-hidden="true">🍕</span>
+      <h3>Brüche</h3>
+      <p class="desc">A game for halves and quarters</p>
+    </a>
+    <a class="tile c-primes" href="teiler/" data-levels="sek1">
+      <span class="badge">Ready</span>
+      <span class="emoji" aria-hidden="true">🔢</span>
+      <h3>Teiler &amp; Primzahlen</h3>
+      <p class="desc">Divisors, primes, ggT and kgV</p>
+    </a>
+    <a class="tile c-order" href="punkt-vor-strich/" data-levels="grundschule sek1">
+      <span class="badge">Ready</span>
+      <span class="emoji" aria-hidden="true">🧩</span>
+      <h3>Punkt vor Strich</h3>
+      <p class="desc">Order of operations</p>
+    </a>
+    <a class="tile c-mental" href="kopfrechnen/" data-levels="grundschule">
+      <span class="badge">Ready</span>
+      <span class="emoji" aria-hidden="true">🧠</span>
+      <h3>Kopfrechnen</h3>
+      <p class="desc">Plus and minus up to 1 000</p>
+    </a>
+    <a class="tile c-area" href="umfang-flaeche/" data-levels="grundschule sek1">
+      <span class="badge">Ready</span>
+      <span class="emoji" aria-hidden="true">📐</span>
+      <h3>Umfang &amp; Fläche</h3>
+      <p class="desc">Perimeter and area on squared paper</p>
+    </a>
+    <a class="tile c-decimal" href="dezimalzahlen/" data-levels="sek1">
+      <span class="badge">Ready</span>
+      <span class="emoji" aria-hidden="true">🔸</span>
+      <h3>Dezimalzahlen</h3>
+      <p class="desc">Decimals on the number line</p>
+    </a>
+    <a class="tile c-negative" href="negative-zahlen/" data-levels="sek1">
+      <span class="badge">Ready</span>
+      <span class="emoji" aria-hidden="true">🌡️</span>
+      <h3>Negative Zahlen</h3>
+      <p class="desc">Below zero</p>
+    </a>
+    <a class="tile c-word" href="sachaufgaben/" data-levels="grundschule sek1">
+      <span class="badge">Ready</span>
+      <span class="emoji" aria-hidden="true">📖</span>
+      <h3>Sachaufgaben</h3>
+      <p class="desc">Word problems: question, calculation, answer</p>
+    </a>
+    <a class="tile c-halb" href="halbschriftlich/" data-levels="grundschule">
+      <span class="badge">Ready</span>
+      <span class="emoji" aria-hidden="true">✂️</span>
+      <h3>Halbschriftlich</h3>
+      <p class="desc">7 · 46 = 7 · 40 + 7 · 6</p>
+    </a>
+    <a class="tile c-symmetry" href="symmetrie/" data-levels="grundschule sek1">
+      <span class="badge">Ready</span>
+      <span class="emoji" aria-hidden="true">🦋</span>
+      <h3>Symmetrie</h3>
+      <p class="desc">Mirror shapes on squared paper</p>
+    </a>
+    <a class="tile c-angle" href="winkel/" data-levels="sek1">
+      <span class="badge">Ready</span>
+      <span class="emoji" aria-hidden="true">📐</span>
+      <h3>Winkel</h3>
+      <p class="desc">Angles and the protractor</p>
+    </a>
+    <a class="tile c-cuboid" href="quader/" data-levels="sek1">
+      <span class="badge">Ready</span>
+      <span class="emoji" aria-hidden="true">🧊</span>
+      <h3>Quader</h3>
+      <p class="desc">Volume, surface and cube nets</p>
+    </a>
+    <a class="tile c-coords" href="koordinaten/" data-levels="grundschule sek1">
+      <span class="badge">Ready</span>
+      <span class="emoji" aria-hidden="true">📍</span>
+      <h3>Koordinaten</h3>
+      <p class="desc">The coordinate system</p>
+    </a>
+    <a class="tile c-percent" href="prozent/" data-levels="sek1">
+      <span class="badge">Ready</span>
+      <span class="emoji" aria-hidden="true">💯</span>
+      <h3>Prozent</h3>
+      <p class="desc">Percentages: G, W and p %</p>
+    </a>
+    <a class="tile c-dreisatz" href="dreisatz/" data-levels="sek1">
+      <span class="badge">Ready</span>
+      <span class="emoji" aria-hidden="true">🛒</span>
+      <h3>Dreisatz</h3>
+      <p class="desc">Proportional relationships</p>
+    </a>
+    <a class="tile c-equation" href="gleichungen/" data-levels="sek1">
+      <span class="badge">Ready</span>
+      <span class="emoji" aria-hidden="true">🟰</span>
+      <h3>Gleichungen</h3>
+      <p class="desc">Solving linear equations</p>
+    </a>
+    <a class="tile c-linfunc" href="lineare-funktionen/" data-levels="sek1">
+      <span class="badge">Ready</span>
+      <span class="emoji" aria-hidden="true">📈</span>
+      <h3>Lineare Funktionen</h3>
+      <p class="desc">y = mx + b</p>
+    </a>
+    <a class="tile c-fraction" href="bruchrechnen/" data-levels="sek1">
+      <span class="badge">Ready</span>
+      <span class="emoji" aria-hidden="true">➗</span>
+      <h3>Bruchrechnen</h3>
+      <p class="desc">Calculating with fractions</p>
+    </a>
+    <a class="tile c-quartiles" href="stats/#quartiles" data-levels="sek1">
+      <span class="badge">Ready</span>
+      <span class="emoji" aria-hidden="true">📦</span>
+      <h3>Quartiles</h3>
+      <p class="desc">Percentiles and box plots</p>
+    </a>
+    <a class="tile c-simul" href="gleichungssysteme/" data-levels="sek1">
+      <span class="badge">Ready</span>
+      <span class="emoji" aria-hidden="true">⚖️</span>
+      <h3>Gleichungs&shy;systeme</h3>
+      <p class="desc">Two equations, three school methods</p>
+    </a>
+    <a class="tile c-regression planned" href="https://github.com/littleGex/fordMath/issues/6" data-levels="oberstufe">
+      <span class="badge">#6</span>
+      <span class="emoji" aria-hidden="true">📈</span>
+      <h3>Best fit line</h3>
+      <p class="desc">Correlation and regression</p>
+    </a>
+    <a class="tile c-matrix planned" href="https://github.com/littleGex/fordMath/issues/9" data-levels="oberstufe">
+      <span class="badge">#9</span>
+      <span class="emoji" aria-hidden="true">🔲</span>
+      <h3>Matrices</h3>
+      <p class="desc">Multiply, invert, determinant</p>
+    </a>
+    <a class="tile c-integral planned" href="https://github.com/littleGex/fordMath/issues/3" data-levels="oberstufe">
+      <span class="badge">#3</span>
+      <span class="emoji" aria-hidden="true">⛰️</span>
+      <h3>Integration</h3>
+      <p class="desc">Area under a curve</p>
+    </a>
+    <a class="tile c-derivative planned" href="https://github.com/littleGex/fordMath/issues/4" data-levels="oberstufe">
+      <span class="badge">#4</span>
+      <span class="emoji" aria-hidden="true">⛷️</span>
+      <h3>Slopes</h3>
+      <p class="desc">Differentiation</p>
+    </a>
+  </div>
+
+  <footer class="grown-ups">
+    <p class="grown-ups-title">Für Eltern · For parents</p>
+    <p class="version" id="version"></p>
+  </footer>
+</main>
+</body>
+</html>

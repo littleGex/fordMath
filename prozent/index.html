@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#141c2e">
+<link rel="icon" type="image/svg+xml" href="/fordMath/favicon.svg">
+<link rel="apple-touch-icon" href="/fordMath/icons/apple-touch-icon.png">
+<link rel="manifest" href="/fordMath/manifest.webmanifest">
+<meta name="apple-mobile-web-app-title" content="fordMath">
+<title>Prozentrechnung · fordMath</title>
+  <script type="module" crossorigin src="/fordMath/assets/prozent-CVEn5uvn.js"></script>
+  <link rel="modulepreload" crossorigin href="/fordMath/assets/zone-2S0LliKN.js">
+  <link rel="modulepreload" crossorigin href="/fordMath/assets/rational-rTKY84ys.js">
+  <link rel="modulepreload" crossorigin href="/fordMath/assets/random-BYFHwryz.js">
+  <link rel="modulepreload" crossorigin href="/fordMath/assets/percent-CpaxLubZ.js">
+  <link rel="modulepreload" crossorigin href="/fordMath/assets/times-tables-CKGHodou.js">
+  <link rel="modulepreload" crossorigin href="/fordMath/assets/quiz-fjiUZjG6.js">
+  <link rel="modulepreload" crossorigin href="/fordMath/assets/lang-dy_RFBaf.js">
+  <link rel="stylesheet" crossorigin href="/fordMath/assets/zone-DujYQsVA.css">
+  <link rel="stylesheet" crossorigin href="/fordMath/assets/prozent-BTvQN0aX.css">
+  <link rel="stylesheet" crossorigin href="/fordMath/assets/quiz-B91ond9q.css">
+</head>
+<body>
+<main class="narrow">
+  <header class="kid-head">
+    <div>
+      <a class="back" href="../">← fordMath</a>
+      <h1>💯 <span data-t="title"></span></h1>
+      <p class="subtitle" data-t="subtitle"></p>
+    </div>
+    <div class="lang" role="group" aria-label="Sprache / Language">
+      <button class="chip" type="button" data-lang="de" aria-pressed="true">DE</button>
+      <button class="chip" type="button" data-lang="en" aria-pressed="false">EN</button>
+    </div>
+  </header>
+
+  <section class="panel calc-panel">
+    <p class="note" data-t="hint"></p>
+    <div class="fields">
+      <label><span data-t="gName"></span><input id="G" type="text" inputmode="decimal" autocomplete="off"><small>G</small></label>
+      <label><span data-t="wName"></span><input id="W" type="text" inputmode="decimal" autocomplete="off"><small>W</small></label>
+      <label><span data-t="pName"></span><input id="p" type="text" inputmode="decimal" autocomplete="off"><small>p %</small></label>
+    </div>
+    <p class="error" id="error" hidden></p>
+    <p class="answer" id="answer"></p>
+    <figure class="bar-fig"><svg id="bar" role="img"></svg></figure>
+    <div class="ways" id="ways" hidden>
+      <h3 data-t="dreisatzTitle"></h3>
+      <div class="dreisatz" id="dreisatz"></div>
+      <h3 data-t="formulaTitle"></h3>
+      <p class="formula" id="formula"></p>
+    </div>
+  </section>
+  <div class="chips" id="examples"></div>
+
+  <h2 class="section" data-t="fractionsTitle"></h2>
+  <div class="panel fractions" id="fractions"></div>
+
+  <h2 class="section" data-t="quizTitle"></h2>
+  <section class="panel quiz-panel" id="quiz"></section>
+
+  <p class="version"><a href="../tests/">Tests</a> · <a href="https://github.com/littleGex/fordMath/blob/main/src/lib/percent.ts">Source</a></p>
+</main>
+</body>
+</html>

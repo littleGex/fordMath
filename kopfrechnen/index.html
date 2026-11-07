@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#141c2e">
+<link rel="icon" type="image/svg+xml" href="/fordMath/favicon.svg">
+<link rel="apple-touch-icon" href="/fordMath/icons/apple-touch-icon.png">
+<link rel="manifest" href="/fordMath/manifest.webmanifest">
+<meta name="apple-mobile-web-app-title" content="fordMath">
+<title>Kopfrechnen · fordMath</title>
+  <script type="module" crossorigin src="/fordMath/assets/kopfrechnen-1ufUjG2V.js"></script>
+  <link rel="modulepreload" crossorigin href="/fordMath/assets/zone-2S0LliKN.js">
+  <link rel="modulepreload" crossorigin href="/fordMath/assets/random-BYFHwryz.js">
+  <link rel="modulepreload" crossorigin href="/fordMath/assets/mental-BzvbMgiQ.js">
+  <link rel="modulepreload" crossorigin href="/fordMath/assets/times-tables-CKGHodou.js">
+  <link rel="modulepreload" crossorigin href="/fordMath/assets/lang-dy_RFBaf.js">
+  <link rel="stylesheet" crossorigin href="/fordMath/assets/zone-DujYQsVA.css">
+  <link rel="stylesheet" crossorigin href="/fordMath/assets/kopfrechnen-BWLTgIZg.css">
+  <link rel="stylesheet" crossorigin href="/fordMath/assets/quiz-B91ond9q.css">
+  <link rel="stylesheet" crossorigin href="/fordMath/assets/game-CrRXyYpb.css">
+</head>
+<body>
+<main class="narrow">
+  <header class="kid-head">
+    <div>
+      <a class="back" href="../">← fordMath</a>
+      <h1>🧠 <span data-t="title"></span></h1>
+      <p class="subtitle" data-t="subtitle"></p>
+    </div>
+    <div class="lang" role="group" aria-label="Sprache / Language">
+      <button class="chip" type="button" data-lang="de" aria-pressed="true">DE</button>
+      <button class="chip" type="button" data-lang="en" aria-pressed="false">EN</button>
+    </div>
+  </header>
+
+  <!-- ===== Setup ===== -->
+  <section id="setup">
+    <h2 class="section" data-t="levelTitle"></h2>
+    <div class="levels" id="levels"></div>
+    <div class="chips setup-chips">
+      <button class="chip" type="button" id="timer" data-t="timer"></button>
+    </div>
+    <div class="actions">
+      <button class="tile big-btn c-mental" type="button" id="start"><span class="emoji" aria-hidden="true">🚀</span><h3 data-t="start"></h3></button>
+      <button class="tile big-btn c-order" type="button" id="tricky"><span class="emoji" aria-hidden="true">🔁</span><h3 id="tricky-label"></h3></button>
+    </div>
+  </section>
+
+  <!-- ===== Play ===== -->
+  <section id="play" hidden>
+    <div class="play-top">
+      <div class="dots-progress" id="progress" aria-hidden="true"></div>
+      <span class="streak" id="streak"></span>
+    </div>
+    <div class="question panel" id="question-card" aria-live="polite"></div>
+    <div class="feedback" id="feedback" hidden>
+      <p class="verdict" id="verdict"></p>
+      <figure class="panel jumps-fig" id="jumps-fig" hidden><svg id="jumps" role="img"></svg></figure>
+      <ol class="panel steps working" id="working" hidden></ol>
+      <button class="tile big-btn c-mental next" type="button" id="next"><h3 data-t="next"></h3></button>
+    </div>
+    <div class="keypad" id="keypad">
+      <button type="button" data-key="1">1</button><button type="button" data-key="2">2</button><button type="button" data-key="3">3</button>
+      <button type="button" data-key="4">4</button><button type="button" data-key="5">5</button><button type="button" data-key="6">6</button>
+      <button type="button" data-key="7">7</button><button type="button" data-key="8">8</button><button type="button" data-key="9">9</button>
+      <button type="button" data-key="del" aria-label="Löschen">⌫</button><button type="button" data-key="0">0</button><button type="button" data-key="ok" class="ok">OK</button>
+    </div>
+    <button class="link-btn stop" type="button" id="stop" data-t="stop"></button>
+  </section>
+
+  <!-- ===== Result ===== -->
+  <section id="result" hidden>
+    <div class="panel result-card">
+      <p class="stars" id="stars"></p>
+      <p class="praise" id="praise"></p>
+      <p class="score" id="score"></p>
+      <p class="note" id="result-extra"></p>
+    </div>
+    <div class="mistakes" id="mistakes-box" hidden>
+      <h2 class="section" data-t="mistakes"></h2>
+      <ul id="mistakes"></ul>
+    </div>
+    <div class="actions">
+      <button class="tile big-btn c-mental" type="button" id="again"><span class="emoji" aria-hidden="true">🔁</span><h3 data-t="again"></h3></button>
+      <button class="tile big-btn c-order" type="button" id="change"><span class="emoji" aria-hidden="true">🎯</span><h3 data-t="change"></h3></button>
+    </div>
+  </section>
+
+  <p class="version"><a href="../tests/">Tests</a> · <a href="https://github.com/littleGex/fordMath/blob/main/src/lib/mental.ts">Source</a></p>
+</main>
+</body>
+</html>

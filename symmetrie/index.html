@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#141c2e">
+<link rel="icon" type="image/svg+xml" href="/fordMath/favicon.svg">
+<link rel="apple-touch-icon" href="/fordMath/icons/apple-touch-icon.png">
+<link rel="manifest" href="/fordMath/manifest.webmanifest">
+<meta name="apple-mobile-web-app-title" content="fordMath">
+<title>Symmetrie · fordMath</title>
+  <script type="module" crossorigin src="/fordMath/assets/symmetrie-BJNs4Mn8.js"></script>
+  <link rel="modulepreload" crossorigin href="/fordMath/assets/zone-2S0LliKN.js">
+  <link rel="modulepreload" crossorigin href="/fordMath/assets/random-BYFHwryz.js">
+  <link rel="modulepreload" crossorigin href="/fordMath/assets/times-tables-CKGHodou.js">
+  <link rel="modulepreload" crossorigin href="/fordMath/assets/quiz-fjiUZjG6.js">
+  <link rel="modulepreload" crossorigin href="/fordMath/assets/area-CeVYCO2P.js">
+  <link rel="modulepreload" crossorigin href="/fordMath/assets/lang-dy_RFBaf.js">
+  <link rel="stylesheet" crossorigin href="/fordMath/assets/zone-DujYQsVA.css">
+  <link rel="stylesheet" crossorigin href="/fordMath/assets/symmetrie-CDJqQraU.css">
+  <link rel="stylesheet" crossorigin href="/fordMath/assets/quiz-B91ond9q.css">
+</head>
+<body>
+<main class="narrow">
+  <header class="kid-head">
+    <div>
+      <a class="back" href="../">← fordMath</a>
+      <h1>🦋 <span data-t="title"></span></h1>
+      <p class="subtitle" data-t="subtitle"></p>
+    </div>
+    <div class="lang" role="group" aria-label="Sprache / Language">
+      <button class="chip" type="button" data-lang="de" aria-pressed="true">DE</button>
+      <button class="chip" type="button" data-lang="en" aria-pressed="false">EN</button>
+    </div>
+  </header>
+
+  <div class="chips modes" role="group" aria-label="Modus">
+    <button class="chip" type="button" data-mode="mirror" aria-pressed="true" data-t="modeMirror"></button>
+    <button class="chip" type="button" data-mode="magic" aria-pressed="false" data-t="modeMagic"></button>
+    <button class="chip" type="button" data-mode="axes" aria-pressed="false" data-t="modeAxes"></button>
+  </div>
+
+  <!-- Spiegeln -->
+  <section id="mirror-mode" class="panel sym-panel">
+    <div class="chips sub-chips" role="group">
+      <button class="chip" type="button" data-level="grundschule" aria-pressed="true" data-t="gs"></button>
+      <button class="chip" type="button" data-level="sek1" aria-pressed="false" data-t="sek1"></button>
+      <span class="count" id="solved"></span>
+    </div>
+    <p class="note" data-t="mirrorHint"></p>
+    <svg id="mirror-grid" class="sym-grid" role="img"></svg>
+    <div class="actions-row">
+      <button class="tile big-btn c-symmetry" type="button" id="mirror-check"><h3 data-t="check"></h3></button>
+      <button class="tile big-btn c-order" type="button" id="mirror-new"><h3 data-t="newTask"></h3></button>
+    </div>
+    <ol class="steps" id="mirror-steps" hidden></ol>
+  </section>
+
+  <!-- Zaubertafel -->
+  <section id="magic-mode" class="panel sym-panel" hidden>
+    <div class="chips sub-chips" role="group" id="magic-axes"></div>
+    <p class="note" data-t="magicHint"></p>
+    <svg id="magic-grid" class="sym-grid" role="img"></svg>
+    <div class="chips sub-chips"><button class="chip" type="button" id="magic-clear" data-t="clear"></button></div>
+  </section>
+
+  <!-- Achsen finden -->
+  <section id="axes-mode" class="panel quiz-panel" hidden></section>
+
+  <p class="version"><a href="../tests/">Tests</a> · <a href="https://github.com/littleGex/fordMath/blob/main/src/lib/symmetry.ts">Source</a></p>
+</main>
+</body>
+</html>

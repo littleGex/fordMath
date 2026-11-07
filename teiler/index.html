@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#141c2e">
+<link rel="icon" type="image/svg+xml" href="/fordMath/favicon.svg">
+<link rel="apple-touch-icon" href="/fordMath/icons/apple-touch-icon.png">
+<link rel="manifest" href="/fordMath/manifest.webmanifest">
+<meta name="apple-mobile-web-app-title" content="fordMath">
+<title>Teiler und Primzahlen · fordMath</title>
+  <script type="module" crossorigin src="/fordMath/assets/teiler-CSOYbbtO.js"></script>
+  <link rel="modulepreload" crossorigin href="/fordMath/assets/zone-2S0LliKN.js">
+  <link rel="modulepreload" crossorigin href="/fordMath/assets/number-theory-bLnR-YN0.js">
+  <link rel="modulepreload" crossorigin href="/fordMath/assets/lang-dy_RFBaf.js">
+  <link rel="stylesheet" crossorigin href="/fordMath/assets/zone-DujYQsVA.css">
+  <link rel="stylesheet" crossorigin href="/fordMath/assets/teiler-i8PJ0jvT.css">
+</head>
+<body>
+<main class="narrow">
+  <header class="kid-head">
+    <div>
+      <a class="back" href="../">← fordMath</a>
+      <h1>🔢 <span data-t="title"></span></h1>
+      <p class="subtitle" data-t="subtitle"></p>
+    </div>
+    <div class="lang" role="group" aria-label="Sprache / Language">
+      <button class="chip" type="button" data-lang="de" aria-pressed="true">DE</button>
+      <button class="chip" type="button" data-lang="en" aria-pressed="false">EN</button>
+    </div>
+  </header>
+
+  <section class="panel numbers">
+    <div class="num-row">
+      <label for="num-n" data-t="number"></label>
+      <input id="num-n" type="text" inputmode="numeric" autocomplete="off" value="36">
+      <label for="num-m" data-t="and"></label>
+      <input id="num-m" type="text" inputmode="numeric" autocomplete="off" value="">
+    </div>
+    <p class="note" data-t="secondHint"></p>
+    <p class="error" id="error" hidden></p>
+  </section>
+  <div class="chips" role="group" aria-label="Beispiele">
+    <button class="chip" type="button" data-n="36">36</button>
+    <button class="chip" type="button" data-n="2754">2754</button>
+    <button class="chip" type="button" data-n="360">360</button>
+    <button class="chip" type="button" data-n="97">97</button>
+    <button class="chip" type="button" data-n="91">91</button>
+    <button class="chip" type="button" data-n="12" data-m="18">12 &amp; 18</button>
+    <button class="chip" type="button" data-n="48" data-m="36">48 &amp; 36</button>
+  </div>
+
+  <div id="results">
+    <h2 class="section" data-t="rulesTitle"></h2>
+    <div class="rules" id="rules"></div>
+    <div class="panel rule-why" id="rule-why" aria-live="polite"><p class="verdict" id="rule-verdict"></p><p id="rule-text"></p></div>
+
+    <h2 class="section" data-t="divisorsTitle"></h2>
+    <div class="panel">
+      <p class="prime-badge" id="prime"></p>
+      <div class="pairs" id="pairs"></div>
+      <ol class="steps" id="divisor-steps"></ol>
+    </div>
+
+    <h2 class="section" data-t="factorsTitle"></h2>
+    <div class="panel factor-panel">
+      <p class="note" id="factor-intro"></p>
+      <div class="ladder" id="ladder"></div>
+      <p class="factor-result" id="factor-result"></p>
+    </div>
+
+    <h2 class="section" data-t="gcdTitle"></h2>
+    <div class="panel" id="pair-empty"><p class="note" data-t="pairEmpty"></p></div>
+    <div id="pair-box" hidden>
+      <div class="panel pair-panel">
+        <h3 class="pair-head" id="gcd-head"></h3>
+        <div class="list-row"><span class="list-label" id="div-a-label"></span><div class="nums" id="div-a"></div></div>
+        <div class="list-row"><span class="list-label" id="div-b-label"></span><div class="nums" id="div-b"></div></div>
+        <ol class="steps" id="gcd-steps"></ol>
+        <details class="euclid"><summary data-t="euclidTitle"></summary><ol class="steps" id="euclid-steps"></ol></details>
+      </div>
+      <div class="panel pair-panel">
+        <h3 class="pair-head" id="lcm-head"></h3>
+        <div id="mult-lists">
+          <div class="list-row"><span class="list-label" id="mul-a-label"></span><div class="nums" id="mul-a"></div></div>
+          <div class="list-row"><span class="list-label" id="mul-b-label"></span><div class="nums" id="mul-b"></div></div>
+        </div>
+        <ol class="steps" id="lcm-steps"></ol>
+      </div>
+    </div>
+  </div>
+
+  <p class="version"><a href="../tests/">Tests</a> · <a href="https://github.com/littleGex/fordMath/blob/main/src/lib/number-theory.ts">Source</a></p>
+</main>
+</body>
+</html>

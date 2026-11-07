@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#141c2e">
+<link rel="icon" type="image/svg+xml" href="/fordMath/favicon.svg">
+<link rel="apple-touch-icon" href="/fordMath/icons/apple-touch-icon.png">
+<link rel="manifest" href="/fordMath/manifest.webmanifest">
+<meta name="apple-mobile-web-app-title" content="fordMath">
+<title>Schriftlich rechnen · fordMath</title>
+  <script type="module" crossorigin src="/fordMath/assets/schriftlich-epPCGwJy.js"></script>
+  <link rel="modulepreload" crossorigin href="/fordMath/assets/zone-2S0LliKN.js">
+  <link rel="modulepreload" crossorigin href="/fordMath/assets/random-BYFHwryz.js">
+  <link rel="modulepreload" crossorigin href="/fordMath/assets/written-Eu04ZSTK.js">
+  <link rel="modulepreload" crossorigin href="/fordMath/assets/lang-dy_RFBaf.js">
+  <link rel="stylesheet" crossorigin href="/fordMath/assets/zone-DujYQsVA.css">
+  <link rel="stylesheet" crossorigin href="/fordMath/assets/schriftlich-B-txzCI0.css">
+</head>
+<body>
+<main class="narrow">
+  <header class="kid-head">
+    <div>
+      <a class="back" href="../">← fordMath</a>
+      <h1>➕ <span data-t="title"></span></h1>
+      <p class="subtitle" data-t="subtitle"></p>
+    </div>
+    <div class="lang" role="group" aria-label="Sprache / Language">
+      <button class="chip" type="button" data-lang="de" aria-pressed="true">DE</button>
+      <button class="chip" type="button" data-lang="en" aria-pressed="false">EN</button>
+    </div>
+  </header>
+
+  <section class="panel task">
+    <div class="ops" role="group" id="ops">
+      <button class="op-btn" type="button" data-op="add" aria-label="Plus">+</button>
+      <button class="op-btn" type="button" data-op="subtract" aria-label="Minus">−</button>
+      <button class="op-btn" type="button" data-op="multiply" aria-label="Mal">·</button>
+      <button class="op-btn" type="button" data-op="divide" aria-label="Geteilt">:</button>
+    </div>
+    <div class="sum-inputs">
+      <input id="num-a" type="text" inputmode="numeric" autocomplete="off" aria-label="Erste Zahl">
+      <span class="op-symbol" id="op-symbol" aria-hidden="true">+</span>
+      <input id="num-b" type="text" inputmode="numeric" autocomplete="off" aria-label="Zweite Zahl">
+    </div>
+    <div class="chips task-chips" role="group" id="levels">
+      <button class="chip" type="button" data-max="100"></button>
+      <button class="chip" type="button" data-max="1000"></button>
+      <button class="chip" type="button" data-max="10000"></button>
+      <button class="chip" type="button" id="carry"></button>
+    </div>
+    <button class="tile big-btn c-written new-btn" type="button" id="new"><h3 data-t="newSum"></h3></button>
+    <p class="error" id="error" hidden></p>
+  </section>
+
+  <div class="chips mode-chips" role="group" id="modes">
+    <button class="chip" type="button" data-mode="show" data-t="modeShow"></button>
+    <button class="chip" type="button" data-mode="try" data-t="modeTry"></button>
+  </div>
+
+  <section class="panel board-wrap">
+    <div class="board-scroll"><div class="board" id="board" aria-hidden="true"></div></div>
+    <p class="say" id="say" aria-live="polite"></p>
+  </section>
+
+  <div class="nav" id="nav">
+    <button class="tile big-btn c-written" type="button" id="back"><h3 data-t="back"></h3></button>
+    <button class="tile big-btn c-written" type="button" id="next"><h3 data-t="next"></h3></button>
+  </div>
+
+  <div class="keypad" id="keypad" hidden>
+    <button type="button" data-key="1">1</button><button type="button" data-key="2">2</button><button type="button" data-key="3">3</button>
+    <button type="button" data-key="4">4</button><button type="button" data-key="5">5</button><button type="button" data-key="6">6</button>
+    <button type="button" data-key="7">7</button><button type="button" data-key="8">8</button><button type="button" data-key="9">9</button>
+    <button type="button" data-key="hint" class="hint" data-t="hint"></button><button type="button" data-key="0">0</button><span></span>
+  </div>
+
+  <section class="panel finish" id="finish" hidden>
+    <p class="finish-result" id="finish-result"></p>
+    <p class="finish-check" id="finish-check"></p>
+    <button class="tile big-btn c-units" type="button" id="new2"><h3 data-t="newSum"></h3></button>
+  </section>
+
+  <details class="panel settings">
+    <summary data-t="settings"></summary>
+    <p class="note" data-t="methodNote"></p>
+    <div class="method-choices" role="group">
+      <button class="method" type="button" data-method="complement">
+        <b data-t="complementName"></b><span data-t="complementHow"></span>
+      </button>
+      <button class="method" type="button" data-method="borrow">
+        <b data-t="borrowName"></b><span data-t="borrowHow"></span>
+      </button>
+    </div>
+  </details>
+</main>
+</body>
+</html>

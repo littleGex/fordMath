@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#141c2e">
+<link rel="icon" type="image/svg+xml" href="/fordMath/favicon.svg">
+<link rel="apple-touch-icon" href="/fordMath/icons/apple-touch-icon.png">
+<link rel="manifest" href="/fordMath/manifest.webmanifest">
+<meta name="apple-mobile-web-app-title" content="fordMath">
+<title>Umfang und Fläche · fordMath</title>
+  <script type="module" crossorigin src="/fordMath/assets/umfang-flaeche--s-Ytsl0.js"></script>
+  <link rel="modulepreload" crossorigin href="/fordMath/assets/zone-2S0LliKN.js">
+  <link rel="modulepreload" crossorigin href="/fordMath/assets/random-BYFHwryz.js">
+  <link rel="modulepreload" crossorigin href="/fordMath/assets/times-tables-CKGHodou.js">
+  <link rel="modulepreload" crossorigin href="/fordMath/assets/quiz-fjiUZjG6.js">
+  <link rel="modulepreload" crossorigin href="/fordMath/assets/area-CeVYCO2P.js">
+  <link rel="modulepreload" crossorigin href="/fordMath/assets/rational-rTKY84ys.js">
+  <link rel="modulepreload" crossorigin href="/fordMath/assets/area-CuYk6fpe.js">
+  <link rel="modulepreload" crossorigin href="/fordMath/assets/lang-dy_RFBaf.js">
+  <link rel="stylesheet" crossorigin href="/fordMath/assets/zone-DujYQsVA.css">
+  <link rel="stylesheet" crossorigin href="/fordMath/assets/umfang-flaeche-Bv-th7A9.css">
+  <link rel="stylesheet" crossorigin href="/fordMath/assets/quiz-B91ond9q.css">
+</head>
+<body>
+<main class="narrow">
+  <header class="kid-head">
+    <div>
+      <a class="back" href="../">← fordMath</a>
+      <h1>📐 <span data-t="title"></span></h1>
+      <p class="subtitle" data-t="subtitle"></p>
+    </div>
+    <div class="lang" role="group" aria-label="Sprache / Language">
+      <button class="chip" type="button" data-lang="de" aria-pressed="true">DE</button>
+      <button class="chip" type="button" data-lang="en" aria-pressed="false">EN</button>
+    </div>
+  </header>
+
+  <section class="panel draw-panel">
+    <p class="note" data-t="drawHint"></p>
+    <svg id="grid" class="grid" role="img"></svg>
+    <div class="readout">
+      <div class="tile result c-area"><span class="sym">A</span><h3 data-t="areaName"></h3><span class="value" id="area-value">0</span></div>
+      <div class="tile result c-area"><span class="sym" id="per-sym">U</span><h3 data-t="perName"></h3><span class="value" id="per-value">0</span></div>
+    </div>
+    <div class="chips draw-chips">
+      <button class="chip" type="button" id="count" data-t="count"></button>
+      <button class="chip" type="button" id="rect" data-t="rect"></button>
+      <button class="chip" type="button" id="lshape" data-t="lshape"></button>
+      <button class="chip" type="button" id="random" data-t="random"></button>
+      <button class="chip" type="button" id="clear" data-t="clear"></button>
+    </div>
+  </section>
+
+  <h2 class="section" data-t="howTitle"></h2>
+  <ol class="panel steps shape-steps" id="shape-steps"></ol>
+
+  <h2 class="section" data-t="sameTitle"></h2>
+  <div class="panel">
+    <ul class="range" id="range"></ul>
+    <p class="note" id="range-empty" data-t="sameEmpty"></p>
+  </div>
+
+  <h2 class="section" data-t="unitsTitle"></h2>
+  <section class="panel units-panel">
+    <div class="unit-input">
+      <input id="amount" type="text" inputmode="decimal" autocomplete="off" value="3" aria-label="Fläche">
+      <div class="chips unit-chips" id="unit-chips" role="group"></div>
+    </div>
+    <div class="unit-table" id="unit-table"></div>
+    <p class="note" data-t="unitsNote"></p>
+    <p class="error" id="unit-error" hidden></p>
+  </section>
+
+  <h2 class="section" data-t="quizTitle"></h2>
+  <section class="panel quiz-panel" id="quiz"></section>
+
+  <p class="version"><a href="../tests/">Tests</a> · <a href="https://github.com/littleGex/fordMath/blob/main/src/lib/area.ts">Source</a></p>
+</main>
+</body>
+</html>

@@ -1,0 +1,1 @@
+function l(r,n,o){return n+Math.floor(r()*(o-n+1))}function a(r,n,o){if(r.length===0)throw new Error("Nothing to pick from");const e=r.map(n),c=e.reduce((t,f)=>t+f,0);let h=o()*c;for(let t=0;t<r.length;t++)if(h-=e[t],h<0)return r[t];return r[r.length-1]}export{a as p,l as r};
