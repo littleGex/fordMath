@@ -1,0 +1,29 @@
+.explore-panel, .two-panel { display: grid; gap: 12px; }
+.equation { margin: 0; text-align: center; font: 700 clamp(26px, 8vw, 36px) var(--f-mono); color: #ffb347; }
+.knobs { display: flex; gap: 10px 16px; justify-content: center; flex-wrap: wrap; }
+.knobs[hidden] { display: none; }
+.knob { display: flex; align-items: center; gap: 6px; }
+.knob span { font: 700 20px var(--f-mono); font-style: italic; min-width: 1.4em; text-align: right; }
+.k-m { color: #ffd84d; }
+.k-b { color: #ff4da6; }
+.k-m2 { color: #7c8cff; }
+.knob .chip { font: 700 20px var(--f-body); padding: 6px 13px; background: var(--tile-hi); color: var(--ink); }
+.knob input, .probe input {
+  width: 4.2em; min-width: 0; font: 600 19px var(--f-mono); text-align: center; padding: 8px 4px;
+  border: 2px solid var(--line); border-radius: 12px; background: var(--bg); color: var(--ink);
+}
+.knob input:focus, .probe input:focus { border-color: #ffb347; outline: none; }
+.grid-fig { margin: 0; }
+.grid-fig svg, .quiz-grid { display: block; width: 100%; max-width: 440px; height: auto; margin: 0 auto; touch-action: manipulation; }
+.grid-fig text, .quiz-grid text { font-family: var(--f-mono); }
+#two { cursor: crosshair; }
+.quiz-grid { max-width: 300px; }
+.facts { margin: 0; padding-left: 20px; display: grid; gap: 6px; line-height: 1.45; }
+.facts li::marker { color: #ffb347; }
+.second { display: grid; gap: 10px; justify-items: center; }
+.second .steps { justify-self: stretch; }
+.probe { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px; font-size: 16px; }
+.pp { display: inline-flex; align-items: center; gap: 4px; font: 700 20px var(--f-mono); }
+.pp input { width: 3.2em; }
+.sep { color: var(--muted); }
+#examples { flex-wrap: wrap; overflow: visible; }

@@ -33,6 +33,7 @@ const PAGES: Array<[path: string, drawnByScript: string]> = [
   ["dreisatz/", "#graph circle"],
   ["gleichungen/", "#choices button"],
   ["koordinaten/", "#draw polygon"],
+  ["lineare-funktionen/", "#explore circle"],
   ["tests/", "#n-pass, #empty"],
 ];
 

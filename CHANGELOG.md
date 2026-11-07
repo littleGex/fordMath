@@ -2,6 +2,16 @@
 
 All notable changes to fordMath. Every page is in German with an English toggle, works offline after the first visit, and shows its working step by step.
 
+## 1.4.0 (2026-11-07)
+
+- **Lineare Funktionen** (`/lineare-funktionen/`, #37): set m and b and watch y = m·x + b.
+  - The line is drawn with its Steigungsdreieck, its y-axis point and its Nullstelle, and each is explained in words.
+  - Add a second line to see where the two meet, or that they're parallel. A taxi example compares two tariffs.
+  - Punktprobe for any point you type.
+  - Tap two points to get the line through them, with Δx, Δy and the working for m and b.
+  - A 10-question quiz: read m and b, pick the right line from four look-alikes, m from two points, Punktprobe, Nullstelle, tariffs.
+  - Lineare Funktionen also come up in Heute üben for Klasse 5–7.
+
 ## 1.3.0 (2026-11-07)
 
 - **Koordinaten** (`/koordinaten/`, #30): plot points by tapping and join them up. Each point is explained as "erst gehen, dann steigen" (first along, then up), and named shapes are recognised.

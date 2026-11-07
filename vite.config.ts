@@ -40,6 +40,7 @@ export default defineConfig({
     dreisatz: resolve(__dirname, "dreisatz/index.html"),
     gleichungen: resolve(__dirname, "gleichungen/index.html"),
     koordinaten: resolve(__dirname, "koordinaten/index.html"),
+    "lineare-funktionen": resolve(__dirname, "lineare-funktionen/index.html"),
     tests: resolve(__dirname, "tests/index.html"),
       },
     },
