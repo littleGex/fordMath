@@ -3,7 +3,7 @@ import "../styles/zone.css";
 import "../styles/quiz.css";
 import "../styles/gleichungen.css";
 import {
-  apply, choicesFor, hasBracket, LEVELS, makeRound, outcome, readEquation, type Choice, type Level, type LinearEquation,
+  BALANCE_BOXES, BALANCE_WEIGHTS, apply, choicesFor, hasBracket, LEVELS, makeRound, outcome, readEquation, type Choice, type Level, type LinearEquation,
 } from "../lib/linear-equation";
 import { equationText, opLabel, opSay, probeText, resultText, verdictText } from "../explain/linear-equation";
 import type { Lang } from "../explain/lang";
@@ -193,7 +193,7 @@ function drawBalance(eq: LinearEquation): boolean {
   const sides = [eq.left, eq.right];
   const fits = (e: LinearEquation) => [e.left, e.right].every((s) => !hasBracket(s) && [s.x, s.c].every((v) => v.d === 1 && v.n >= 0));
   const ok = fits(lines[0]!.eq) && sides.every((s) => !hasBracket(s) && [s.x, s.c].every((v) => v.d === 1 && v.n >= 0)) &&
-    sides.every((s) => s.x.n <= 8 && s.c.n <= 24) && (own || level <= 2);
+    sides.every((s) => s.x.n <= BALANCE_BOXES && s.c.n <= BALANCE_WEIGHTS) && (own || level <= 2);
   fig.hidden = !ok;
   if (!ok) return false;
   const svg = $("balance") as unknown as SVGSVGElement;

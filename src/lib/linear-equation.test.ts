@@ -1,5 +1,5 @@
 import {
-  apply, bestOperation, bracketSide, choicesFor, LEVELS, makeTask, outcome, readEquation, side, solveAll, valueAt, type LinearEquation,
+  BALANCE_BOXES, BALANCE_WEIGHTS, apply, bestOperation, bracketSide, choicesFor, LEVELS, makeTask, outcome, readEquation, side, solveAll, valueAt, type LinearEquation,
 } from "./linear-equation";
 import { seededRandom } from "./random";
 import { equals, rat } from "./rational";
@@ -70,6 +70,10 @@ describe("lineare Gleichungen", () => {
       for (let i = 0; i < 100; i++) {
         const { left, right } = makeTask(level, r);
         for (const v of [left.x, left.c, right.x, right.c]) expect(v.d === 1 && v.n >= 0).toBe(true);
+        for (const p of [left, right]) {
+          expect(p.x.n).toBeLessThanOrEqual(BALANCE_BOXES);
+          expect(p.c.n).toBeLessThanOrEqual(BALANCE_WEIGHTS);
+        }
       }
     }
   });

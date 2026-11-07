@@ -26,6 +26,8 @@ for (const level of [1, 2, 3, 4, 5]) {
     await page.goto(`${origin}/fordMath/gleichungen/`);
     await page.locator("#levels button").nth(level - 1).click();
     for (let task = 0; task < 5; task++) {
+      // The first two levels are drawn on the balance.
+      await expect(page.locator("#balance-fig")).toBeVisible({ visible: level <= 2 });
       for (let tap = 0; tap < 40 && !(await page.locator("#end").isVisible()); tap++) {
         const lines = await page.locator("#book .math").count();
         await page.locator("#choices button:not([disabled])").first().click();

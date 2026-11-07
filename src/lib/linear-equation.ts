@@ -168,6 +168,9 @@ export function solveAll(e: LinearEquation): { lines: LinearEquation[]; ops: Ope
 // ---------- tasks ----------
 
 export type Level = 1 | 2 | 3 | 4 | 5;
+/** The most x boxes and weights the balance (levels 1 and 2) draws on one pan. */
+export const BALANCE_BOXES = 8;
+export const BALANCE_WEIGHTS = 24;
 /** 1 Waage: 3x + 2 = 11 · 2 x on both sides · 3 with negatives · 4 brackets · 5 fractions, no solution, every number */
 export const LEVELS: readonly Level[] = [1, 2, 3, 4, 5];
 
@@ -192,7 +195,9 @@ function draft(level: Level, random: Random): LinearEquation {
   switch (level) {
     case 1: {
       // The balance: a boxes and b weights on the left, c weights on the right; everything positive.
-      const a = randomInt(random, 2, 5), x = randomInt(random, 1, 6), b = randomInt(random, 1, 9);
+      // At most BALANCE_WEIGHTS weights on a pan, so the balance can always be drawn.
+      const a = randomInt(random, 2, 5), b = randomInt(random, 1, 9);
+      const x = randomInt(random, 1, Math.min(6, Math.floor((BALANCE_WEIGHTS - b) / a)));
       return { left: side(a, b), right: side(0, a * x + b) };
     }
     case 2: {
