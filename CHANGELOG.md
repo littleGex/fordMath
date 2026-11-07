@@ -2,6 +2,15 @@
 
 All notable changes to fordMath. Every page is in German with an English toggle, works offline after the first visit, and shows its working step by step.
 
+## 1.2.0 (2026-11-07)
+
+- **Gleichungen lösen** (`/gleichungen/`, #34): linear equations step by step, written like in the exercise book with the step on the right ("| − 2", "| : 3").
+  - Five levels: a balance (Waage), x on both sides, negatives, brackets, and special cases (fraction answers, L = { }, L = ℚ).
+  - The child picks each step. Wrong steps are explained with their own numbers, for example "3x heißt 3 · x. Das Gegenteil von · 3 ist : 3, nicht − 3."
+  - The Probe at the end. You can also type your own equation from homework.
+  - Gleichungen also come up in Heute üben for Klasse 5–7.
+- Planned: **Lineare Funktionen** (#37), with a tile on the homepage.
+
 ## 1.1.0 (2026-11-06)
 
 - **Statistik, Quadratische Gleichungen and Funktionen in German** (#36): the DE/EN toggle on the last three English-only pages, sharing the language setting with every other page.

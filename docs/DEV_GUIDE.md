@@ -468,6 +468,14 @@ Statistics, Quadratics and Functions were written in English before the toggle e
 
 One trap: `values.map(formatNumber)` passes *two* arguments (the value and its index), so a formatter that takes `(n, lang)` would get the index as the language. That's why the language-aware formatters are made by `formatFor(lang)`, which returns a one-argument function.
 
+### Gleichungen (#34): a solver that knows the next step, and wrong answers with reasons
+
+`src/lib/linear-equation.ts` keeps an equation as two `Side`s: an optional bracket k·(bx·x + bc), then x·x + c. Every Äquivalenzumformung is one `Operation` (a discriminated union: `expand`, `add` the same term to both sides, `mul` both sides) and `apply()` returns a new equation. Nothing is changed in place, so the page can keep every line for the exercise book.
+
+`bestOperation()` is the school recipe as four `if`s: brackets first, x terms to the left, numbers to the right, divide. `choicesFor()` puts the best step next to the mistakes children really make, and tags each with a `Verdict` ("wrongSign", "divideEarly", "subtractCoef" …). The explanation in `src/explain/linear-equation.ts` is a `switch` over that verdict, so every wrong button has its own sentence with the child's numbers.
+
+The test that matters most solves 750 generated tasks with the recipe and checks, at every line, that exactly one choice is "best" and that it's the step the recipe takes. Typed equations reuse the expression parser from the Functions page: `readEquation()` walks its tree and accepts only what's linear, keeping a number times a bracket as a bracket so it can be shown and expanded.
+
 ## 7. Warm-up: add Range to Statistics
 
 **Goal:** a new "Range" tile on the Statistics page, showing largest − smallest, with its working. It's small and it touches every layer. #5 (quartiles) left Range out on purpose so it's yours; `boxPlot()` in `src/lib/quartiles.ts` already finds min and max, if you want to peek.
@@ -622,7 +630,7 @@ Open the pull request on GitHub, wait for the green tick, and merge. The site up
 
 ## 8. Your turn: the exercise ladder
 
-Ordered roughly from easiest to hardest to *build*, which isn't the same as the school level. #18 (Punkt vor Strich), #5 (Quartile), #10 (Gleichungssysteme), #19 (Kopfrechnen), #20 (Umfang und Fläche), #21 (Dezimalzahlen), #22 (Negative Zahlen), #23 (Sachaufgaben), #24 (Symmetrie), #25 (Winkel), #26 (Quader), #27 (shared quiz), #28 (Heute üben), #31 (Halbschriftlich), #32 (Prozentrechnung), #33 (Dreisatz), #36 (DE/EN for the older pages), #7 (Teiler), #13 (Brüche), #16 (Größen), #17 (Stellenwerte), #14 (Einmaleins), #15, #11 and #12 (written +, −, ·, :) are finished. Read #14 as an example of a game. In `src/lib/written.ts`, notice how adding two new members to the `WrittenSum` union made the compiler list every place that needed updating, and how `Extract<WrittenSum, { kind: "divide" }>` gives each function its own precise return type. Each level lists the TypeScript ideas it will exercise.
+Ordered roughly from easiest to hardest to *build*, which isn't the same as the school level. #18 (Punkt vor Strich), #5 (Quartile), #10 (Gleichungssysteme), #19 (Kopfrechnen), #20 (Umfang und Fläche), #21 (Dezimalzahlen), #22 (Negative Zahlen), #23 (Sachaufgaben), #24 (Symmetrie), #25 (Winkel), #26 (Quader), #27 (shared quiz), #28 (Heute üben), #31 (Halbschriftlich), #32 (Prozentrechnung), #33 (Dreisatz), #36 (DE/EN for the older pages), #34 (Gleichungen), #7 (Teiler), #13 (Brüche), #16 (Größen), #17 (Stellenwerte), #14 (Einmaleins), #15, #11 and #12 (written +, −, ·, :) are finished. Read #14 as an example of a game. In `src/lib/written.ts`, notice how adding two new members to the `WrittenSum` union made the compiler list every place that needed updating, and how `Extract<WrittenSum, { kind: "divide" }>` gives each function its own precise return type. Each level lists the TypeScript ideas it will exercise.
 
 ### Level 1: #9, matrices (and 3×3 systems)
 

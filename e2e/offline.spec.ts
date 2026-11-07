@@ -31,6 +31,7 @@ const PAGES: Array<[path: string, drawnByScript: string]> = [
   ["halbschriftlich/", "#working input"],
   ["prozent/", "#dreisatz span"],
   ["dreisatz/", "#graph circle"],
+  ["gleichungen/", "#balance rect"],
   ["tests/", "#n-pass, #empty"],
 ];
 

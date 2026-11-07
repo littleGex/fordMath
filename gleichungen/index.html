@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#141c2e">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="apple-mobile-web-app-title" content="fordMath">
+<title>Gleichungen · fordMath</title>
+</head>
+<body>
+<main class="narrow">
+  <header class="kid-head">
+    <div>
+      <a class="back" href="../">← fordMath</a>
+      <h1>🟰 <span data-t="title"></span></h1>
+      <p class="subtitle" data-t="subtitle"></p>
+    </div>
+    <div class="lang" role="group" aria-label="Sprache / Language">
+      <button class="chip" type="button" data-lang="de" aria-pressed="true">DE</button>
+      <button class="chip" type="button" data-lang="en" aria-pressed="false">EN</button>
+    </div>
+  </header>
+
+  <div class="chips levels" id="levels" role="group"></div>
+
+  <section id="play">
+    <div class="panel play-panel">
+      <div class="quiz-top">
+        <div class="dots-progress" id="dots"></div>
+        <span class="streak" id="count"></span>
+      </div>
+      <p class="note" id="hint"></p>
+      <figure class="balance-fig" id="balance-fig" hidden><svg id="balance" role="img"></svg></figure>
+      <div class="book" id="book" aria-live="polite"></div>
+      <div class="quiz-choices eq-choices" id="choices"></div>
+      <p class="message" id="message" aria-live="polite" hidden></p>
+      <div class="end" id="end" hidden>
+        <p class="result" id="result"></p>
+        <p class="note" id="probe"></p>
+      </div>
+      <button class="tile big-btn c-equation next" type="button" id="next" hidden><h3 id="next-label"></h3></button>
+    </div>
+  </section>
+
+  <section id="done" hidden>
+    <div class="panel result-card">
+      <p class="stars" id="stars"></p>
+      <p class="praise" id="praise"></p>
+      <p class="score" id="score"></p>
+    </div>
+    <button class="tile big-btn c-equation again" type="button" id="again"><span class="emoji" aria-hidden="true">🔁</span><h3 data-t="again"></h3></button>
+  </section>
+
+  <h2 class="section" data-t="ownTitle"></h2>
+  <section class="panel own-panel">
+    <p class="note" data-t="ownHint"></p>
+    <div class="own-row">
+      <input id="own" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="4(x − 1) = 2x + 6">
+      <button class="chip" type="button" id="own-go" data-t="ownGo"></button>
+    </div>
+    <p class="error" id="own-error" hidden></p>
+  </section>
+
+  <p class="version"><a href="https://github.com/littleGex/fordMath/blob/main/src/lib/linear-equation.ts">Source</a></p>
+</main>
+<script type="module" src="/src/pages/gleichungen.ts"></script>
+</body>
+</html>

@@ -12,11 +12,11 @@ Planned helpers are tracked as [issues](https://github.com/littleGex/fordMath/is
 
 **Grundschule (class 3–4):** Einmaleins, Kopfrechnen, Halbschriftlich, Schriftlich rechnen, Stellenwerte, Größen, Umfang und Fläche, Symmetrie, Sachaufgaben, and Brüche to start with.
 
-**Sek I (Klasse 5–8):** Punkt vor Strich, Teiler und Primzahlen, Brüche, Dezimalzahlen, Negative Zahlen, Winkel, Quader und Würfelnetze, Prozentrechnung, Dreisatz, Gleichungssysteme and Statistik.
+**Sek I (Klasse 5–8):** Punkt vor Strich, Teiler und Primzahlen, Brüche, Dezimalzahlen, Negative Zahlen, Winkel, Quader und Würfelnetze, Prozentrechnung, Dreisatz, Gleichungen, Gleichungssysteme and Statistik.
 
 **Every day:** "Heute üben" mixes 10 questions from the child's level, keeps a streak and shows progress per topic.
 
-**Planned next:** Koordinatensystem (#30), lineare Gleichungen (#34) and Bruchrechnen (#35) for Sek I; for the Oberstufe, integration (#3), differentiation (#4), correlation and regression (#6) and matrices with 3×3 systems (#9). See [CHANGELOG.md](CHANGELOG.md) for the full list.
+**Planned next:** Koordinatensystem (#30), Bruchrechnen (#35) and lineare Funktionen (#37) for Sek I; for the Oberstufe, integration (#3), differentiation (#4), correlation and regression (#6) and matrices with 3×3 systems (#9). See [CHANGELOG.md](CHANGELOG.md) for the full list.
 
 ## Helpers
 
@@ -50,6 +50,7 @@ Planned helpers are tracked as [issues](https://github.com/littleGex/fordMath/is
 | Partly written      | `splitMultiply`, `splitDivide`, `placeParts`, `makeSplitTask` in `lib/partly-written` | Halbschriftlich: split by place value (7 · 46 = 7 · 40 + 7 · 6), divide in easy multiples (96 : 4 = 80 : 4 + 16 : 4), remainders at the top level |
 | Percentages         | `solve`, `percentValue`, `baseValue`, `percentRate`, `afterDiscount`, `gross`, `net`, `interest`, `makePercentRound` in `lib/percent` | Grundwert, Prozentwert and Prozentsatz from any two of the three, exactly; discounts, 19 % VAT both ways, simple interest, percent ↔ fraction, quiz with the classic traps |
 | Proportions         | `classify`, `yFor`, `perOne`, `answer`, `makeProportionRound` in `lib/proportion` | Proportional, antiproportional or neither (y : x or x · y the same), missing values, the Dreisatz both ways, all exact; everyday stories with one right answer |
+| Linear equations    | `solveAll`, `bestOperation`, `choicesFor`, `apply`, `readEquation`, `makeTask` in `lib/linear-equation` | One Äquivalenzumformung per line (brackets, x to the left, numbers to the right, divide); the best next step plus tempting wrong ones, each with a reason; no solution and every number; reads a typed equation; five levels, exact fractions |
 | Two equations       | `solveSystem(e1, e2)`, `makeSystem` in `lib/linear-system`; `rat`, `parseRational` in `lib/rational` | Exact fractions throughout; the answer as a union (one point, none, the same line, every pair); practice tasks with whole-number answers |
 | Expressions         | `compile(text)` → `(x) => number`     | Safe parser for f(x): never uses eval; `parse`, `evaluate`, `formatExpr` and `ExpressionError` (with a position) also exported from `lib/expression` |
 | Order of operations | `allowedPaths`, `whyNot`, `collapse`, `workedLines`, `makeOrderTask`, `makeBracketTask` in `lib/expression/steps` | Which operation the school rules allow next (Klammern, Punkt vor Strich, links nach rechts) and which rule a wrong choice breaks; tasks that stay whole and positive for class 5 |
@@ -82,6 +83,7 @@ All functions take `readonly number[]` (ints and floats), never mutate the input
 | `/halbschriftlich/` | Halbschriftlich (German, EN toggle): three levels, fill in each part's result and the total, a picture of the split, the "digit then add the zeros" trick explained |
 | `/prozent/` | Prozentrechnung (German, EN toggle): type two of G, W and p and the third is worked out with a Prozentstreifen, the Dreisatz and the formula; everyday examples, percent fractions, a quiz |
 | `/dreisatz/` | Dreisatz (German, EN toggle): the three lines with arrows on both sides ("the right side does the opposite" when antiproportional), a table checker with y : x and x · y and the graph (line through 0 or hyperbola), a quiz |
+| `/gleichungen/` | Gleichungen lösen (German, EN toggle): choose each step and see it written like in the exercise book ("| − 2", "| : 3"), a balance (Waage) for the first two levels, wrong steps explained, the Probe at the end; or type your own equation from homework |
 | `/gleichungssysteme/` | Gleichungssysteme (German, EN toggle): two equations in boxes, the solution set, both lines drawn, and the Gleichsetzungs-, Einsetzungs- and Additionsverfahren worked line by line, with the Probe; 🎲 tasks hide the answer until asked |
 | `/function/` | Funktionen (German, EN toggle): type any f(x): how it was read, its graph, and f(x) worked out step by step; typing mistakes explained with a ^ under the problem |
 | `/tests/` | Every test from the deployed build, read from `test-results.json`      |
@@ -89,7 +91,7 @@ All functions take `readonly number[]` (ints and floats), never mutate the input
 ## Project layout
 
 ```
-index.html  stats/  quadratic/  function/  einmaleins/  schriftlich/  teiler/  brueche/  stellenwerte/  groessen/  punkt-vor-strich/  gleichungssysteme/  kopfrechnen/  umfang-flaeche/  dezimalzahlen/  negative-zahlen/  sachaufgaben/  symmetrie/  winkel/  quader/  heute/  halbschriftlich/  prozent/  dreisatz/  tests/   pages (Vite multi-page build)
+index.html  stats/  quadratic/  function/  einmaleins/  schriftlich/  teiler/  brueche/  stellenwerte/  groessen/  punkt-vor-strich/  gleichungssysteme/  kopfrechnen/  umfang-flaeche/  dezimalzahlen/  negative-zahlen/  sachaufgaben/  symmetrie/  winkel/  quader/  heute/  halbschriftlich/  prozent/  dreisatz/  gleichungen/  tests/   pages (Vite multi-page build)
 public/          favicon, Home Screen icons, manifest
 src/
   lib/           pure maths, no DOM; one module + one test file per helper

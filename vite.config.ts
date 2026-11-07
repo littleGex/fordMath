@@ -38,6 +38,7 @@ export default defineConfig({
     halbschriftlich: resolve(__dirname, "halbschriftlich/index.html"),
     prozent: resolve(__dirname, "prozent/index.html"),
     dreisatz: resolve(__dirname, "dreisatz/index.html"),
+    gleichungen: resolve(__dirname, "gleichungen/index.html"),
     tests: resolve(__dirname, "tests/index.html"),
       },
     },

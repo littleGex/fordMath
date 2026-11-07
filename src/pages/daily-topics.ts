@@ -11,6 +11,7 @@ import { TABLES, answerOf as tableAnswer, questionsFor } from "../lib/times-tabl
 import { makeUnitsQuestion } from "../lib/units-quiz";
 import { makePercentQuestion } from "../lib/percent";
 import { makeProportionQuestion } from "../lib/proportion";
+import { apply, makeTask, solveAll } from "../lib/linear-equation";
 import * as area from "../explain/area";
 import * as cuboid from "../explain/cuboid";
 import * as decimal from "../explain/decimal";
@@ -22,6 +23,7 @@ import { explainQuestion as explainTable } from "../explain/times-tables";
 import * as units from "../explain/units";
 import * as percent from "../explain/percent";
 import * as proportion from "../explain/proportion";
+import * as linEq from "../explain/linear-equation";
 import type { Lang } from "../explain/lang";
 
 /**
@@ -51,6 +53,7 @@ export const TOPICS = {
   quader: { de: "Quader", en: "Cuboids", emoji: "🧊", href: "quader/", levels: ["sek1"] },
   prozent: { de: "Prozente", en: "Percentages", emoji: "💯", href: "prozent/", levels: ["sek1"] },
   dreisatz: { de: "Dreisatz", en: "Rule of three", emoji: "🛒", href: "dreisatz/", levels: ["sek1"] },
+  gleichungen: { de: "Gleichungen", en: "Equations", emoji: "🟰", href: "gleichungen/", levels: ["sek1"] },
 } as const satisfies Record<string, { de: string; en: string; emoji: string; href: string; levels: readonly DailyLevel[] }>;
 export type TopicId = keyof typeof TOPICS;
 
@@ -58,6 +61,19 @@ export const topicsFor = (level: DailyLevel): TopicId[] =>
   (Object.keys(TOPICS) as TopicId[]).filter((id) => (TOPICS[id].levels as readonly DailyLevel[]).includes(level));
 
 const pick = <T>(xs: readonly T[], random: Random): T => xs[randomInt(random, 0, xs.length - 1)]!;
+
+/** Whole-number choices that may be negative: the right one plus three distinct wrong ones, shuffled. */
+function signedChoices(right: number, wrongs: number[], random: Random): { choices: string[]; answer: number } {
+  const picked = [...new Set(wrongs.filter((w) => w !== right && Number.isInteger(w)))].slice(0, 3);
+  for (let k = 1; picked.length < 3; k++) for (const w of [right + k, right - k]) if (!picked.includes(w) && w !== right && picked.length < 3) picked.push(w);
+  const all = [right, ...picked];
+  for (let i = all.length - 1; i > 0; i--) {
+    const j = randomInt(random, 0, i);
+    [all[i], all[j]] = [all[j]!, all[i]!];
+  }
+  const show = (n: number) => (n < 0 ? `−${-n}` : String(n));
+  return { choices: all.map((n) => `x = ${show(n)}`), answer: all.indexOf(right) };
+}
 
 /** Number choices: the right one plus distinct wrong ones (0 or more), shuffled. */
 function numberChoices(right: number, wrongs: number[], random: Random, show: (n: number) => string = String): { choices: string[]; answer: number } {
@@ -153,6 +169,21 @@ const ADAPTERS: Record<TopicId, (level: DailyLevel, random: Random) => MixedQues
   prozent(_level, r) {
     const q = makePercentQuestion(r);
     return { topic: "prozent", prompt: (l) => percent.quizPrompt(q, l), choices: (l) => q.choices.map((c) => `${percent.choiceText(c, l)}${percent.quizUnit(q)}`), answer: q.answer, steps: (l) => percent.quizSteps(q, l) };
+  },
+  gleichungen(_level, r) {
+    const e = makeTask(randomInt(r, 2, 4) as 2 | 3 | 4, r);
+    const s = solveAll(e);
+    const x = s.result.kind === "value" ? s.result.x.n : 0; // levels 2 to 4 always give a whole number
+    // Typical slips, after the brackets are gone and it reads A·x + lc = rx·x + rc:
+    // stopping before dividing (A·x), the wrong sign when dividing by a negative (−x),
+    // and moving the number over with the wrong sign ((rc + lc) : A).
+    const flat = e.left.k.n || e.right.k.n ? apply(e, { kind: "expand" }) : e;
+    const val = (q: { n: number; d: number }) => q.n / q.d;
+    const A = val(flat.left.x) - val(flat.right.x);
+    const wrongSign = (val(flat.right.c) + val(flat.left.c)) / A;
+    const wrongs = [A * x, -x, wrongSign].filter((v) => Number.isInteger(v));
+    const c = signedChoices(x, wrongs, r);
+    return { topic: "gleichungen", prompt: (l) => `${l === "de" ? "Löse" : "Solve"}: ${linEq.equationText(e)}`, choices: () => c.choices, answer: c.answer, steps: (l) => linEq.workedSteps(e, l) };
   },
   dreisatz(_level, r) {
     // Only the stories: the table questions need the table drawn.
