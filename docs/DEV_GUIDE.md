@@ -476,6 +476,12 @@ One trap: `values.map(formatNumber)` passes *two* arguments (the value and its i
 
 The test that matters most solves 750 generated tasks with the recipe and checks, at every line, that exactly one choice is "best" and that it's the step the recipe takes. Typed equations reuse the expression parser from the Functions page: `readEquation()` walks its tree and accepts only what's linear, keeping a number times a bracket as a bracket so it can be shown and expanded.
 
+### Koordinaten (#30): a class for the grid, and fair ships
+
+Both coordinate pages draw on the same squared paper, so `src/pages/coord-grid.ts` is a small **class**, `CoordGrid`. It remembers the view (which x and y fit on the paper) and turns maths coordinates into SVG pixels with `sx()` and `sy()`; y is flipped, because on paper y goes up but on screen it goes down. Its drawing methods return `this`, so a picture reads as one chain: `grid.begin().polygon(points).dot(p, colour, "A").end()`. `onTap()` does the reverse: it turns a tap back into the nearest grid point with `Math.round`.
+
+In `src/lib/coordinates.ts`, `classify()` decides square, rectangle or parallelogram from the sides as **vectors**: opposite sides equal means a parallelogram, a dot product of 0 means a right angle, equal lengths make it a square. The ships in Schiffe versenken may not touch, not even at a corner, so each placed ship marks itself and all 8 neighbours of every point as taken; the test places 400 fleets and measures the gaps.
+
 ## 7. Warm-up: add Range to Statistics
 
 **Goal:** a new "Range" tile on the Statistics page, showing largest − smallest, with its working. It's small and it touches every layer. #5 (quartiles) left Range out on purpose so it's yours; `boxPlot()` in `src/lib/quartiles.ts` already finds min and max, if you want to peek.
@@ -630,7 +636,7 @@ Open the pull request on GitHub, wait for the green tick, and merge. The site up
 
 ## 8. Your turn: the exercise ladder
 
-Ordered roughly from easiest to hardest to *build*, which isn't the same as the school level. #18 (Punkt vor Strich), #5 (Quartile), #10 (Gleichungssysteme), #19 (Kopfrechnen), #20 (Umfang und Fläche), #21 (Dezimalzahlen), #22 (Negative Zahlen), #23 (Sachaufgaben), #24 (Symmetrie), #25 (Winkel), #26 (Quader), #27 (shared quiz), #28 (Heute üben), #31 (Halbschriftlich), #32 (Prozentrechnung), #33 (Dreisatz), #36 (DE/EN for the older pages), #34 (Gleichungen), #7 (Teiler), #13 (Brüche), #16 (Größen), #17 (Stellenwerte), #14 (Einmaleins), #15, #11 and #12 (written +, −, ·, :) are finished. Read #14 as an example of a game. In `src/lib/written.ts`, notice how adding two new members to the `WrittenSum` union made the compiler list every place that needed updating, and how `Extract<WrittenSum, { kind: "divide" }>` gives each function its own precise return type. Each level lists the TypeScript ideas it will exercise.
+Ordered roughly from easiest to hardest to *build*, which isn't the same as the school level. #18 (Punkt vor Strich), #5 (Quartile), #10 (Gleichungssysteme), #19 (Kopfrechnen), #20 (Umfang und Fläche), #21 (Dezimalzahlen), #22 (Negative Zahlen), #23 (Sachaufgaben), #24 (Symmetrie), #25 (Winkel), #26 (Quader), #27 (shared quiz), #28 (Heute üben), #31 (Halbschriftlich), #32 (Prozentrechnung), #33 (Dreisatz), #36 (DE/EN for the older pages), #34 (Gleichungen), #30 (Koordinaten), #7 (Teiler), #13 (Brüche), #16 (Größen), #17 (Stellenwerte), #14 (Einmaleins), #15, #11 and #12 (written +, −, ·, :) are finished. Read #14 as an example of a game. In `src/lib/written.ts`, notice how adding two new members to the `WrittenSum` union made the compiler list every place that needed updating, and how `Extract<WrittenSum, { kind: "divide" }>` gives each function its own precise return type. Each level lists the TypeScript ideas it will exercise.
 
 ### Level 1: #9, matrices (and 3×3 systems)
 

@@ -17,6 +17,7 @@ const QUIZZES: Array<[path: string, host: string, before?: string]> = [
   ["heute/", "#quiz"],
   ["prozent/", "#quiz"],
   ["dreisatz/", "#quiz"],
+  ["koordinaten/", "#quiz"],
 ];
 
 let server: PreviewServer;

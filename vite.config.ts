@@ -39,6 +39,7 @@ export default defineConfig({
     prozent: resolve(__dirname, "prozent/index.html"),
     dreisatz: resolve(__dirname, "dreisatz/index.html"),
     gleichungen: resolve(__dirname, "gleichungen/index.html"),
+    koordinaten: resolve(__dirname, "koordinaten/index.html"),
     tests: resolve(__dirname, "tests/index.html"),
       },
     },

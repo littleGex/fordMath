@@ -2,6 +2,14 @@
 
 All notable changes to fordMath. Every page is in German with an English toggle, works offline after the first visit, and shows its working step by step.
 
+## 1.3.0 (2026-11-07)
+
+- **Koordinaten** (`/koordinaten/`, #30): plot points by tapping and join them up. Each point is explained as "erst gehen, dann steigen" (first along, then up), and named shapes are recognised.
+  - Schiffe versenken: set x and y, then fire.
+  - A 10-question quiz: read a point, find a point, which quadrant, which shape, the fourth corner of a rectangle.
+  - First quadrant for class 4–5, or all four quadrants.
+  - Shown for Grundschule and Sek I.
+
 ## 1.2.0 (2026-11-07)
 
 - **Gleichungen lösen** (`/gleichungen/`, #34): linear equations step by step, written like in the exercise book with the step on the right ("| − 2", "| : 3").
